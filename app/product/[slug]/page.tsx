@@ -1,0 +1,47 @@
+import { notFound } from "next/navigation";
+import Link from "next/link";
+import { getProductBySlug, getRentalPlans } from "@/lib/data/products";
+import { PlanSelector } from "./plan-selector";
+
+export default async function ProductPage({ params }: { params: { slug: string } }) {
+  const product = await getProductBySlug(params.slug);
+  if (!product) notFound();
+
+  const plans = await getRentalPlans(product.id);
+
+  return (
+    <div className="mx-auto max-w-6xl px-6 py-12">
+      <div className="grid gap-12 md:grid-cols-2">
+        <div className="aspect-square rounded-lg bg-slate-50 flex items-center justify-center">
+          <span className="font-display text-3xl text-slate-300">{product.brand}</span>
+        </div>
+
+        <div>
+          <p className="text-sm text-slate-400">{product.brand}</p>
+          <h1 className="font-display text-3xl">{product.name}</h1>
+          <p className="mt-3 text-slate-600">{product.description}</p>
+
+          <PlanSelector product={product} plans={plans} />
+
+          <div className="mt-10 border-t border-slate-200 pt-6">
+            <p className="mb-3 font-medium text-ink">Specifications</p>
+            <dl className="grid grid-cols-2 gap-y-2 text-sm">
+              {Object.entries(product.specifications).map(([key, value]) => (
+                <div key={key} className="contents">
+                  <dt className="text-slate-500">{key}</dt>
+                  <dd className="text-slate-800">{value}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-16 border-t border-slate-200 pt-8">
+        <Link href="/how-it-works" className="text-sm font-medium text-signal hover:text-signal-dark">
+          How ownership works →
+        </Link>
+      </div>
+    </div>
+  );
+}

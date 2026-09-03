@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-display: "Fraunces", serif;
+  --font-body: "Inter", sans-serif;
+}
+
+body {
+  background-color: #F7F7F5;
+  color: #12151B;
+}
+
+.meter-track {
+  height: 8px;
+  border-radius: 999px;
+  background: #E7E9EC;
+  overflow: hidden;
+}
+
+.meter-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: #2F6F5E;
+  transition: width 400ms ease;
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid #2F6F5E;
+  outline-offset: 2px;
+}
+
+.input {
+  @apply w-full rounded-md border border-slate-300 px-3 py-2 text-ink;
+}
+.input:focus-visible {
+  @apply outline outline-2 outline-signal;
+}
