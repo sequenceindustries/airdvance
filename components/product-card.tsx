@@ -8,8 +8,12 @@ export function ProductCard({ product, fromPrice }: { product: Product; fromPric
       href={`/product/${product.slug}`}
       className="group flex flex-col overflow-hidden rounded-lg border border-slate-200 bg-white transition hover:border-slate-300 hover:shadow-sm"
     >
-      <div className="aspect-square bg-slate-50 flex items-center justify-center">
-        <span className="font-display text-lg text-slate-300">{product.brand}</span>
+      <div className="aspect-square bg-slate-50 flex items-center justify-center overflow-hidden">
+        {product.images?.[0] ? (
+          <img src={product.images[0]} alt={product.name} className="h-full w-full object-cover" />
+        ) : (
+          <span className="font-display text-lg text-slate-300">{product.brand}</span>
+        )}
       </div>
       <div className="flex flex-1 flex-col gap-1 p-4">
         <p className="text-xs text-slate-400">{product.brand}</p>

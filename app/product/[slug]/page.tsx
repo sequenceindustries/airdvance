@@ -12,8 +12,12 @@ export default async function ProductPage({ params }: { params: { slug: string }
   return (
     <div className="mx-auto max-w-6xl px-6 py-12">
       <div className="grid gap-12 md:grid-cols-2">
-        <div className="aspect-square rounded-lg bg-slate-50 flex items-center justify-center">
-          <span className="font-display text-3xl text-slate-300">{product.brand}</span>
+        <div className="aspect-square rounded-lg bg-slate-50 flex items-center justify-center overflow-hidden">
+          {product.images?.[0] ? (
+            <img src={product.images[0]} alt={product.name} className="h-full w-full object-cover" />
+          ) : (
+            <span className="font-display text-3xl text-slate-300">{product.brand}</span>
+          )}
         </div>
 
         <div>
