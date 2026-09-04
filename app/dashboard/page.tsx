@@ -16,7 +16,7 @@ export default async function DashboardPage() {
     return (
       <div className="mx-auto max-w-xl px-6 py-20 text-center">
         <h1 className="font-display text-3xl">Welcome, {profile.full_name.split(" ")[0]}</h1>
-        <p className="mt-3 text-slate-600">You don't have an active agreement yet.</p>
+        <p className="mt-3 text-slate-300">You don't have an active agreement yet.</p>
         <Link href="/shop" className="mt-6 inline-block rounded-md bg-brand px-6 py-3 font-medium text-white hover:bg-brand-dark">
           Shop devices
         </Link>
@@ -33,12 +33,12 @@ export default async function DashboardPage() {
           const restricted = agreement.device_control?.status === "RESTRICTED";
           const nextPayment = null; // fetched in agreement detail page
           return (
-            <div key={agreement.id} className="rounded-lg border border-slate-200 bg-white p-6">
+            <div key={agreement.id} className="rounded-lg border border-white/10 bg-surface p-6">
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
-                  <p className="text-sm text-slate-500">{agreement.agreement_number}</p>
+                  <p className="text-sm text-slate-400">{agreement.agreement_number}</p>
                   <p className="font-display text-xl">{agreement.product.name}</p>
-                  <p className="mt-1 text-sm text-slate-600">
+                  <p className="mt-1 text-sm text-slate-300">
                     {formatCurrency(agreement.monthly_payment)} / month
                   </p>
                 </div>
@@ -49,7 +49,7 @@ export default async function DashboardPage() {
                       ? "bg-alert-light text-alert-dark"
                       : agreement.ownership_status === "OWNED"
                         ? "bg-signal-light text-signal-dark"
-                        : "bg-slate-100 text-slate-600")
+                        : "bg-white/10 text-slate-300")
                   }
                 >
                   {agreement.ownership_status === "OWNED"

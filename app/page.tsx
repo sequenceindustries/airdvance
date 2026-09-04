@@ -30,7 +30,7 @@ export default async function HomePage() {
           <h1 className="font-display text-4xl leading-[1.1] text-ink md:text-6xl">
             Get the device you need now. Pay over time. Own it.
           </h1>
-          <p className="mt-6 max-w-lg text-lg text-slate-600">
+          <p className="mt-6 max-w-lg text-lg text-slate-300">
             Choose a smartphone, tablet or laptop and spread the cost over an agreed rental
             term. When you've made every payment, it's yours — no strings attached.
           </p>
@@ -43,7 +43,7 @@ export default async function HomePage() {
             </Link>
             <Link
               href="/how-it-works"
-              className="rounded-md border border-slate-300 px-6 py-3 font-medium text-ink hover:bg-slate-100 focus-ring"
+              className="rounded-md border border-white/20 px-6 py-3 font-medium text-ink hover:bg-white/10 focus-ring"
             >
               How it works
             </Link>
@@ -62,10 +62,10 @@ export default async function HomePage() {
             <Link
               key={c.href}
               href={c.href}
-              className="rounded-lg border border-slate-200 bg-white p-6 transition hover:border-slate-300 hover:shadow-sm"
+              className="rounded-lg border border-white/10 bg-surface p-6 transition hover:border-white/30 hover:shadow-sm"
             >
               <p className="font-display text-xl">{c.label}</p>
-              <p className="mt-1 text-sm text-slate-600">{c.copy}</p>
+              <p className="mt-1 text-sm text-slate-300">{c.copy}</p>
             </Link>
           ))}
         </div>
@@ -87,7 +87,7 @@ export default async function HomePage() {
       </section>
 
       {/* How it works */}
-      <section className="border-t border-slate-200 bg-white py-20">
+      <section className="border-t border-white/10 bg-surface py-20">
         <div className="mx-auto max-w-6xl px-6">
           <h2 className="font-display text-2xl">How Airdvance works</h2>
           <div className="mt-8 grid gap-8 md:grid-cols-4">
@@ -99,7 +99,7 @@ export default async function HomePage() {
             ].map((step) => (
               <div key={step.title}>
                 <p className="font-display text-lg">{step.title}</p>
-                <p className="mt-2 text-sm text-slate-600">{step.copy}</p>
+                <p className="mt-2 text-sm text-slate-300">{step.copy}</p>
               </div>
             ))}
           </div>
@@ -111,19 +111,19 @@ export default async function HomePage() {
         <div className="grid gap-8 md:grid-cols-3">
           <div>
             <p className="font-display text-lg">Clear pricing</p>
-            <p className="mt-2 text-sm text-slate-600">
+            <p className="mt-2 text-sm text-slate-300">
               You always see your monthly payment and total payable up front — no hidden costs.
             </p>
           </div>
           <div>
             <p className="font-display text-lg">A real path to ownership</p>
-            <p className="mt-2 text-sm text-slate-600">
+            <p className="mt-2 text-sm text-slate-300">
               Every payment moves you closer to owning your device outright.
             </p>
           </div>
           <div>
             <p className="font-display text-lg">Support when you need it</p>
-            <p className="mt-2 text-sm text-slate-600">
+            <p className="mt-2 text-sm text-slate-300">
               Your dashboard always shows exactly where you stand and what's next.
             </p>
           </div>

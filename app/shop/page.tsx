@@ -43,7 +43,7 @@ export default async function ShopPage() {
   return (
     <div className="mx-auto max-w-6xl px-6 py-12">
       <h1 className="font-display text-3xl">Shop devices</h1>
-      <p className="mt-2 max-w-xl text-slate-600">
+      <p className="mt-2 max-w-xl text-slate-300">
         Pick a category to browse, or head straight to a device you already have in mind.
       </p>
 

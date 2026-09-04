@@ -27,11 +27,11 @@ export default async function ApplicationStatusPage({ params }: { params: { id: 
 
   return (
     <div className="mx-auto max-w-lg px-6 py-20 text-center">
-      <p className="text-sm text-slate-500">Application status</p>
+      <p className="text-sm text-slate-400">Application status</p>
       <h1 className="mt-2 font-display text-3xl">{copy.title}</h1>
-      <p className="mt-4 text-slate-600">{copy.body}</p>
+      <p className="mt-4 text-slate-300">{copy.body}</p>
       {application.product?.name && (
-        <p className="mt-6 text-sm text-slate-500">Device: {application.product.name}</p>
+        <p className="mt-6 text-sm text-slate-400">Device: {application.product.name}</p>
       )}
       <Link href="/dashboard" className="mt-8 inline-block rounded-md bg-brand px-6 py-3 font-medium text-white hover:bg-brand-dark">
         Go to my account

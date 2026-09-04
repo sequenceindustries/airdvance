@@ -11,17 +11,17 @@ export function PlanSelector({ product, plans }: { product: Product; plans: Rent
   const selected = plans.find((p) => p.id === selectedId) ?? plans[0];
 
   if (!selected) {
-    return <p className="mt-6 text-slate-500">No rental plans are currently available for this device.</p>;
+    return <p className="mt-6 text-slate-400">No rental plans are currently available for this device.</p>;
   }
 
   return (
     <div className="mt-6">
-      <div className="rounded-lg border border-slate-200 bg-white p-5">
+      <div className="rounded-lg border border-white/10 bg-surface p-5">
         <p className="text-3xl font-semibold text-ink">
           {formatCurrency(selected.monthly_payment)}
-          <span className="text-base font-normal text-slate-500"> / month</span>
+          <span className="text-base font-normal text-slate-400"> / month</span>
         </p>
-        <p className="mt-1 text-sm text-slate-500">{selected.term_months} month plan</p>
+        <p className="mt-1 text-sm text-slate-400">{selected.term_months} month plan</p>
 
         <div className="mt-4 flex flex-wrap gap-2">
           {plans.map((plan) => (
@@ -32,7 +32,7 @@ export function PlanSelector({ product, plans }: { product: Product; plans: Rent
                 "rounded-md border px-4 py-2 text-sm font-medium transition focus-ring",
                 plan.id === selected.id
                   ? "border-accent bg-accent-light text-accent-dark"
-                  : "border-slate-200 text-slate-600 hover:border-slate-300",
+                  : "border-white/10 text-slate-300 hover:border-white/30",
               )}
             >
               {plan.term_months} months
@@ -40,7 +40,7 @@ export function PlanSelector({ product, plans }: { product: Product; plans: Rent
           ))}
         </div>
 
-        <dl className="mt-5 space-y-1 text-sm text-slate-600">
+        <dl className="mt-5 space-y-1 text-sm text-slate-300">
           {selected.deposit > 0 ? (
             <div className="flex justify-between">
               <dt>Deposit</dt>
@@ -57,7 +57,7 @@ export function PlanSelector({ product, plans }: { product: Product; plans: Rent
           </div>
         </dl>
 
-        <p className="mt-4 text-xs text-slate-500">
+        <p className="mt-4 text-xs text-slate-400">
           After completing the required payments, the device becomes yours.
         </p>
 

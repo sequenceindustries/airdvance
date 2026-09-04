@@ -7,11 +7,11 @@ import { recordPayment } from "@/lib/actions/payments";
 
 const statusStyles: Record<string, string> = {
   PAID: "bg-signal-light text-signal-dark",
-  SCHEDULED: "bg-slate-100 text-slate-600",
+  SCHEDULED: "bg-white/10 text-slate-300",
   OVERDUE: "bg-alert-light text-alert-dark",
   PROCESSING: "bg-amber-100 text-amber-800",
   FAILED: "bg-alert-light text-alert-dark",
-  CANCELLED: "bg-slate-100 text-slate-400",
+  CANCELLED: "bg-white/10 text-slate-500",
 };
 
 export default async function AdminAgreementDetailPage({ params }: { params: { id: string } }) {
@@ -39,31 +39,31 @@ export default async function AdminAgreementDetailPage({ params }: { params: { i
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-12">
-      <p className="text-sm text-slate-500">{agreement.agreement_number}</p>
+      <p className="text-sm text-slate-400">{agreement.agreement_number}</p>
       <h1 className="font-display text-3xl">{agreement.product?.name}</h1>
-      <p className="mt-1 text-sm text-slate-600">
+      <p className="mt-1 text-sm text-slate-300">
         {agreement.customer?.full_name} · {agreement.customer?.email}
       </p>
 
-      <div className="mt-6 grid gap-4 rounded-lg border border-slate-200 bg-white p-6 md:grid-cols-3 text-sm">
+      <div className="mt-6 grid gap-4 rounded-lg border border-white/10 bg-surface p-6 md:grid-cols-3 text-sm">
         <div>
-          <p className="text-slate-500">Agreement status</p>
+          <p className="text-slate-400">Agreement status</p>
           <p className="mt-1 font-medium">{agreement.status}</p>
         </div>
         <div>
-          <p className="text-slate-500">Ownership</p>
+          <p className="text-slate-400">Ownership</p>
           <p className="mt-1 font-medium">{agreement.ownership_status}</p>
         </div>
         <div>
-          <p className="text-slate-500">Device control</p>
+          <p className="text-slate-400">Device control</p>
           <p className="mt-1 font-medium">{control?.status ?? "NOT_REGISTERED"}</p>
         </div>
       </div>
 
       <h2 className="mt-10 font-display text-xl">Payment schedule</h2>
-      <div className="mt-4 overflow-hidden rounded-lg border border-slate-200 bg-white">
+      <div className="mt-4 overflow-hidden rounded-lg border border-white/10 bg-surface">
         <table className="w-full text-sm">
-          <thead className="bg-slate-50 text-left text-slate-500">
+          <thead className="bg-white/5 text-left text-slate-400">
             <tr>
               <th className="px-4 py-2">#</th>
               <th className="px-4 py-2">Due</th>
@@ -72,7 +72,7 @@ export default async function AdminAgreementDetailPage({ params }: { params: { i
               <th className="px-4 py-2">Action</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-white/10">
             {schedule?.map((payment) => (
               <tr key={payment.id}>
                 <td className="px-4 py-2">{payment.payment_number}</td>
@@ -97,7 +97,7 @@ export default async function AdminAgreementDetailPage({ params }: { params: { i
           </tbody>
         </table>
       </div>
-      <p className="mt-4 text-xs text-slate-400">
+      <p className="mt-4 text-xs text-slate-500">
         Marking a payment paid restores a restricted device automatically, and grants ownership once every
         required payment has been recorded.
       </p>

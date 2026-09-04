@@ -3,19 +3,20 @@
 @tailwind utilities;
 
 :root {
-  --font-display: "Fraunces", serif;
+  --font-display: "Archivo Black", sans-serif;
   --font-body: "Inter", sans-serif;
 }
 
 body {
-  background-color: #F7F7F5;
-  color: #12151B;
+  background-color: #0A0A0B;
+  color: #F5F5F4;
+  font-weight: 500;
 }
 
 .meter-track {
   height: 8px;
   border-radius: 999px;
-  background: #E7E9EC;
+  background: #2A2A2E;
   overflow: hidden;
 }
 
@@ -27,13 +28,18 @@ body {
 }
 
 .focus-ring:focus-visible {
-  outline: 2px solid #1D71B6;
+  outline: 2px solid #3B8FD1;
   outline-offset: 2px;
 }
 
 .input {
-  @apply w-full rounded-md border border-slate-300 px-3 py-2 text-ink;
+  @apply w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 text-ink placeholder:text-slate-500;
 }
 .input:focus-visible {
   @apply outline outline-2 outline-accent;
+}
+
+select.input option {
+  background-color: #151516;
+  color: #F5F5F4;
 }

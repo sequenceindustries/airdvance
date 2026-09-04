@@ -66,7 +66,7 @@ export default async function AdminDashboardPage() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h1 className="font-display text-3xl">Admin dashboard</h1>
         <form action={async () => { "use server"; await runOverdueSweep(); }}>
-          <button className="rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100">
+          <button className="rounded-md border border-white/20 px-4 py-2 text-sm font-medium text-slate-200 hover:bg-white/10">
             Run overdue payment sweep
           </button>
         </form>
@@ -75,8 +75,8 @@ export default async function AdminDashboardPage() {
       <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3">
         {cards.map((card) => {
           const content = (
-            <div className="rounded-lg border border-slate-200 bg-white p-5">
-              <p className="text-sm text-slate-500">{card.label}</p>
+            <div className="rounded-lg border border-white/10 bg-surface p-5">
+              <p className="text-sm text-slate-400">{card.label}</p>
               <p className="mt-2 font-display text-3xl">{card.value}</p>
             </div>
           );

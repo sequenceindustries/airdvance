@@ -26,7 +26,7 @@ export default async function ApplyPage({
     return (
       <div className="mx-auto max-w-xl px-6 py-20 text-center">
         <h1 className="font-display text-3xl">Start your application</h1>
-        <p className="mt-3 text-slate-600">
+        <p className="mt-3 text-slate-300">
           Pick a device and a rental plan first, then come back here to apply.
         </p>
         <a href="/shop" className="mt-6 inline-block rounded-md bg-ink px-6 py-3 font-medium text-paper">

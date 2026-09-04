@@ -74,7 +74,7 @@ export function ApplyWizard({
     <div>
       <h1 className="font-display text-3xl">Apply for your device</h1>
 
-      <ol className="mt-6 flex flex-wrap gap-x-4 gap-y-2 text-xs text-slate-500">
+      <ol className="mt-6 flex flex-wrap gap-x-4 gap-y-2 text-xs text-slate-400">
         {steps.map((label, i) => (
           <li key={label} className={i === step ? "font-medium text-ink" : ""}>
             {i + 1}. {label}
@@ -82,7 +82,7 @@ export function ApplyWizard({
         ))}
       </ol>
 
-      <div className="mt-8 rounded-lg border border-slate-200 bg-white p-6">
+      <div className="mt-8 rounded-lg border border-white/10 bg-surface p-6">
         {step === 0 && (
           <div className="flex flex-col gap-4">
             <Field label="Full name">
@@ -139,18 +139,18 @@ export function ApplyWizard({
 
         {step === 3 && (
           <div>
-            <p className="text-sm text-slate-500">Selected device</p>
+            <p className="text-sm text-slate-400">Selected device</p>
             <p className="mt-1 font-display text-xl">{product.name}</p>
-            <div className="mt-4 flex justify-between border-t border-slate-100 pt-4 text-sm">
-              <span className="text-slate-500">Rental term</span>
+            <div className="mt-4 flex justify-between border-t border-white/10 pt-4 text-sm">
+              <span className="text-slate-400">Rental term</span>
               <span>{plan.term_months} months</span>
             </div>
             <div className="mt-2 flex justify-between text-sm">
-              <span className="text-slate-500">Monthly payment</span>
+              <span className="text-slate-400">Monthly payment</span>
               <span className="font-medium">{formatCurrency(plan.monthly_payment)}</span>
             </div>
             <div className="mt-2 flex justify-between text-sm">
-              <span className="text-slate-500">Total payable</span>
+              <span className="text-slate-400">Total payable</span>
               <span>{formatCurrency(plan.total_payable)}</span>
             </div>
           </div>
@@ -158,7 +158,7 @@ export function ApplyWizard({
 
         {step === 4 && (
           <div>
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-slate-300">
               Upload proof of identity and proof of income. (In this MVP, file names are recorded — actual
               document storage connects to Supabase Storage.)
             </p>
@@ -169,7 +169,7 @@ export function ApplyWizard({
               onChange={(e) => setDocumentNames(Array.from(e.target.files ?? []).map((f) => f.name))}
             />
             {documentNames.length > 0 && (
-              <ul className="mt-3 list-inside list-disc text-sm text-slate-600">
+              <ul className="mt-3 list-inside list-disc text-sm text-slate-300">
                 {documentNames.map((n) => (
                   <li key={n}>{n}</li>
                 ))}
@@ -180,7 +180,7 @@ export function ApplyWizard({
 
         {step === 5 && (
           <div>
-            <div className="max-h-48 overflow-y-auto rounded-md border border-slate-200 bg-slate-50 p-4 text-xs text-slate-600">
+            <div className="max-h-48 overflow-y-auto rounded-md border border-white/10 bg-white/5 p-4 text-xs text-slate-300">
               By submitting this application, you confirm that the information you've provided is accurate
               and consent to Airdvance verifying it for the purpose of assessing this rent-to-own
               application. You acknowledge that the device remains the property of Airdvance until all
@@ -206,7 +206,7 @@ export function ApplyWizard({
         <button
           onClick={() => setStep((s) => Math.max(0, s - 1))}
           disabled={step === 0}
-          className="rounded-md border border-slate-300 px-5 py-2 text-sm font-medium text-slate-600 disabled:opacity-40"
+          className="rounded-md border border-white/20 px-5 py-2 text-sm font-medium text-slate-300 disabled:opacity-40"
         >
           Back
         </button>
@@ -234,7 +234,7 @@ export function ApplyWizard({
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="text-sm">
-      <span className="block text-slate-600">{label}</span>
+      <span className="block text-slate-300">{label}</span>
       <div className="mt-1">{children}</div>
     </label>
   );

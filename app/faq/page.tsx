@@ -11,16 +11,16 @@ export default function FaqPage() {
   return (
     <div className="mx-auto max-w-2xl px-6 py-16">
       <h1 className="font-display text-3xl">Frequently asked questions</h1>
-      <div className="mt-10 divide-y divide-slate-200">
+      <div className="mt-10 divide-y divide-white/10">
         {faqs.map((item) => (
           <details key={item.q} className="group py-5">
             <summary className="cursor-pointer list-none font-medium text-ink marker:content-none">
               <span className="flex items-center justify-between">
                 {item.q}
-                <span className="ml-4 text-slate-400 group-open:rotate-45 transition">+</span>
+                <span className="ml-4 text-slate-500 group-open:rotate-45 transition">+</span>
               </span>
             </summary>
-            <p className="mt-3 text-slate-600">{item.a}</p>
+            <p className="mt-3 text-slate-300">{item.a}</p>
           </details>
         ))}
       </div>

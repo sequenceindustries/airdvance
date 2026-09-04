@@ -6,12 +6,12 @@ import { createClient } from "@/lib/supabase/server";
 import { formatCurrency } from "@/lib/pricing";
 
 const statusStyles: Record<string, string> = {
-  PENDING: "bg-slate-100 text-slate-600",
+  PENDING: "bg-white/10 text-slate-300",
   ACTIVE: "bg-signal-light text-signal-dark",
   PAUSED: "bg-amber-100 text-amber-800",
   DEFAULTED: "bg-alert-light text-alert-dark",
-  COMPLETED: "bg-slate-100 text-slate-500",
-  CANCELLED: "bg-slate-100 text-slate-400",
+  COMPLETED: "bg-white/10 text-slate-400",
+  CANCELLED: "bg-white/10 text-slate-500",
 };
 
 export default async function AdminAgreementsPage() {
@@ -29,9 +29,9 @@ export default async function AdminAgreementsPage() {
     <div className="mx-auto max-w-6xl px-6 py-12">
       <h1 className="font-display text-3xl">Agreements</h1>
 
-      <div className="mt-6 overflow-hidden rounded-lg border border-slate-200 bg-white">
+      <div className="mt-6 overflow-hidden rounded-lg border border-white/10 bg-surface">
         <table className="w-full text-sm">
-          <thead className="bg-slate-50 text-left text-slate-500">
+          <thead className="bg-white/5 text-left text-slate-400">
             <tr>
               <th className="px-4 py-2">Agreement</th>
               <th className="px-4 py-2">Customer</th>
@@ -40,9 +40,9 @@ export default async function AdminAgreementsPage() {
               <th className="px-4 py-2">Status</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-white/10">
             {agreements?.map((agreement: any) => (
-              <tr key={agreement.id} className="hover:bg-slate-50">
+              <tr key={agreement.id} className="hover:bg-white/5">
                 <td className="px-4 py-3">
                   <Link href={`/admin/agreements/${agreement.id}`} className="font-medium text-ink hover:text-signal">
                     {agreement.agreement_number}

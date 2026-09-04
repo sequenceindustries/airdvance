@@ -6,14 +6,14 @@ import { adminRestrictDevice, adminRestoreDevice, adminReleaseDevice } from "@/l
 import { recordPayment } from "@/lib/actions/payments";
 
 const controlStyles: Record<string, string> = {
-  NOT_REGISTERED: "bg-slate-100 text-slate-500",
-  REGISTERED: "bg-slate-100 text-slate-600",
+  NOT_REGISTERED: "bg-white/10 text-slate-400",
+  REGISTERED: "bg-white/10 text-slate-300",
   ACTIVE: "bg-signal-light text-signal-dark",
   RESTRICTION_PENDING: "bg-amber-100 text-amber-800",
   RESTRICTED: "bg-alert-light text-alert-dark",
   RESTORE_PENDING: "bg-amber-100 text-amber-800",
   ERROR: "bg-alert-light text-alert-dark",
-  RELEASED: "bg-slate-100 text-slate-500",
+  RELEASED: "bg-white/10 text-slate-400",
 };
 
 export default async function AdminDevicesPage() {
@@ -30,11 +30,11 @@ export default async function AdminDevicesPage() {
   return (
     <div className="mx-auto max-w-6xl px-6 py-12">
       <h1 className="font-display text-3xl">Devices</h1>
-      <p className="mt-2 text-slate-600">Every physical device, its assignment, and its device-control status.</p>
+      <p className="mt-2 text-slate-300">Every physical device, its assignment, and its device-control status.</p>
 
-      <div className="mt-6 overflow-x-auto rounded-lg border border-slate-200 bg-white">
+      <div className="mt-6 overflow-x-auto rounded-lg border border-white/10 bg-surface">
         <table className="w-full text-sm">
-          <thead className="bg-slate-50 text-left text-slate-500">
+          <thead className="bg-white/5 text-left text-slate-400">
             <tr>
               <th className="px-4 py-2">Asset</th>
               <th className="px-4 py-2">Product</th>
@@ -44,21 +44,21 @@ export default async function AdminDevicesPage() {
               <th className="px-4 py-2">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-white/10">
             {devices?.map((device: any) => {
               const control = Array.isArray(device.device_control) ? device.device_control[0] : device.device_control;
               return (
                 <tr key={device.id} className="align-top">
                   <td className="px-4 py-3">
                     <p className="font-medium">{device.asset_number}</p>
-                    <p className="text-xs text-slate-400">{device.status}</p>
+                    <p className="text-xs text-slate-500">{device.status}</p>
                   </td>
                   <td className="px-4 py-3">{device.product?.name}</td>
                   <td className="px-4 py-3">{device.customer?.full_name ?? "—"}</td>
                   <td className="px-4 py-3">
                     {device.agreement?.agreement_number ?? "—"}
                     {device.agreement?.status && (
-                      <p className="text-xs text-slate-400">{device.agreement.status}</p>
+                      <p className="text-xs text-slate-500">{device.agreement.status}</p>
                     )}
                   </td>
                   <td className="px-4 py-3">
@@ -66,7 +66,7 @@ export default async function AdminDevicesPage() {
                       {control?.status ?? "NOT_REGISTERED"}
                     </span>
                     {control?.restriction_reason && (
-                      <p className="mt-1 text-xs text-slate-400">{control.restriction_reason}</p>
+                      <p className="mt-1 text-xs text-slate-500">{control.restriction_reason}</p>
                     )}
                   </td>
                   <td className="px-4 py-3">
@@ -88,7 +88,7 @@ export default async function AdminDevicesPage() {
                       )}
                       {device.status !== "OWNED" && control?.status !== "RELEASED" && device.agreement_id && (
                         <form action={async () => { "use server"; await adminReleaseDevice(device.id); }}>
-                          <button className="rounded-md border border-slate-300 px-3 py-1 text-xs font-medium text-slate-600 hover:bg-slate-100">
+                          <button className="rounded-md border border-white/20 px-3 py-1 text-xs font-medium text-slate-300 hover:bg-white/10">
                             Release
                           </button>
                         </form>
@@ -102,7 +102,7 @@ export default async function AdminDevicesPage() {
         </table>
       </div>
 
-      <p className="mt-4 text-xs text-slate-400">
+      <p className="mt-4 text-xs text-slate-500">
         Restrict / Restore / Release call the DeviceControlService abstraction — routed to the mock
         provider in development. Every action is written to device_control and audit_logs.
       </p>

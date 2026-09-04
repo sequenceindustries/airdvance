@@ -7,11 +7,11 @@ import clsx from "clsx";
 
 const statusStyles: Record<string, string> = {
   PAID: "bg-signal-light text-signal-dark",
-  SCHEDULED: "bg-slate-100 text-slate-600",
+  SCHEDULED: "bg-white/10 text-slate-300",
   OVERDUE: "bg-alert-light text-alert-dark",
   PROCESSING: "bg-amber-100 text-amber-800",
   FAILED: "bg-alert-light text-alert-dark",
-  CANCELLED: "bg-slate-100 text-slate-400",
+  CANCELLED: "bg-white/10 text-slate-500",
 };
 
 export default async function AgreementDetailPage({ params }: { params: { id: string } }) {
@@ -28,7 +28,7 @@ export default async function AgreementDetailPage({ params }: { params: { id: st
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-12">
-      <p className="text-sm text-slate-500">{agreement.agreement_number}</p>
+      <p className="text-sm text-slate-400">{agreement.agreement_number}</p>
       <h1 className="font-display text-3xl">{agreement.product.name}</h1>
 
       {restricted && (
@@ -37,22 +37,22 @@ export default async function AgreementDetailPage({ params }: { params: { id: st
         </div>
       )}
 
-      <div className="mt-6 grid gap-6 rounded-lg border border-slate-200 bg-white p-6 md:grid-cols-2">
+      <div className="mt-6 grid gap-6 rounded-lg border border-white/10 bg-surface p-6 md:grid-cols-2">
         <div>
-          <p className="text-sm text-slate-500">Next payment</p>
+          <p className="text-sm text-slate-400">Next payment</p>
           <p className="mt-1 font-medium">
             {nextPayment ? `${formatCurrency(nextPayment.amount)} due ${nextPayment.due_date}` : "None due"}
           </p>
         </div>
         <div>
-          <p className="text-sm text-slate-500">Device status</p>
+          <p className="text-sm text-slate-400">Device status</p>
           <p className="mt-1 font-medium">
             {agreement.ownership_status === "OWNED" ? "Owned" : agreement.device.status}
           </p>
         </div>
       </div>
 
-      <div className="mt-6 rounded-lg border border-slate-200 bg-white p-6">
+      <div className="mt-6 rounded-lg border border-white/10 bg-surface p-6">
         <OwnershipMeter
           paymentsCompleted={agreement.payments_completed}
           paymentsRequired={agreement.payments_required}
@@ -61,9 +61,9 @@ export default async function AgreementDetailPage({ params }: { params: { id: st
       </div>
 
       <h2 className="mt-10 font-display text-xl">Payment schedule</h2>
-      <div className="mt-4 overflow-hidden rounded-lg border border-slate-200 bg-white">
+      <div className="mt-4 overflow-hidden rounded-lg border border-white/10 bg-surface">
         <table className="w-full text-sm">
-          <thead className="bg-slate-50 text-left text-slate-500">
+          <thead className="bg-white/5 text-left text-slate-400">
             <tr>
               <th className="px-4 py-2">#</th>
               <th className="px-4 py-2">Due date</th>
@@ -71,7 +71,7 @@ export default async function AgreementDetailPage({ params }: { params: { id: st
               <th className="px-4 py-2">Status</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-white/10">
             {schedule.map((payment) => (
               <tr key={payment.id}>
                 <td className="px-4 py-2">{payment.payment_number}</td>

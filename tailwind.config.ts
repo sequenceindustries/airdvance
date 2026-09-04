@@ -5,8 +5,12 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#12151B",
-        paper: "#F7F7F5",
+        ink: "#F5F5F4",
+        paper: "#0A0A0B",
+        surface: {
+          DEFAULT: "#151516",
+          2: "#1C1C1F",
+        },
         slate: {
           50: "#F5F6F7",
           100: "#E7E9EC",
@@ -17,27 +21,27 @@ const config: Config = {
         },
         brand: {
           DEFAULT: "#E74E1B",
-          dark: "#C23F16",
-          light: "#FDE7DE",
+          dark: "#FF8A5B",
+          light: "#2A160D",
         },
         accent: {
-          DEFAULT: "#1D71B6",
-          dark: "#14507F",
-          light: "#E1EEF8",
+          DEFAULT: "#3B8FD1",
+          dark: "#7FC0F0",
+          light: "#12222E",
         },
         signal: {
-          DEFAULT: "#2F6F5E",
-          dark: "#1F4E42",
-          light: "#DCEAE5",
+          DEFAULT: "#35A583",
+          dark: "#6FE3BE",
+          light: "#0E2620",
         },
         alert: {
-          DEFAULT: "#C23B24",
-          dark: "#8C2A19",
-          light: "#F7E1DC",
+          DEFAULT: "#E5503A",
+          dark: "#FF9280",
+          light: "#301410",
         },
       },
       fontFamily: {
-        display: ["var(--font-display)", "serif"],
+        display: ["var(--font-display)", "sans-serif"],
         body: ["var(--font-body)", "sans-serif"],
       },
       borderRadius: {

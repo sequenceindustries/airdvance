@@ -5,7 +5,7 @@ export default function LoginPage({ searchParams }: { searchParams: { error?: st
   return (
     <div className="mx-auto flex max-w-sm flex-col px-6 py-20">
       <h1 className="font-display text-3xl">Log in</h1>
-      <p className="mt-2 text-sm text-slate-600">
+      <p className="mt-2 text-sm text-slate-300">
         Demo accounts: <code className="text-xs">admin@airdvance.demo</code> /{" "}
         <code className="text-xs">john.doe@airdvance.demo</code>, password{" "}
         <code className="text-xs">Airdvance!Demo123</code>
@@ -21,7 +21,7 @@ export default function LoginPage({ searchParams }: { searchParams: { error?: st
             name="email"
             type="email"
             required
-            className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 focus-ring"
+            className="mt-1 w-full rounded-md border border-white/20 px-3 py-2 focus-ring"
           />
         </label>
         <label className="text-sm">
@@ -30,7 +30,7 @@ export default function LoginPage({ searchParams }: { searchParams: { error?: st
             name="password"
             type="password"
             required
-            className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 focus-ring"
+            className="mt-1 w-full rounded-md border border-white/20 px-3 py-2 focus-ring"
           />
         </label>
         <button
@@ -41,7 +41,7 @@ export default function LoginPage({ searchParams }: { searchParams: { error?: st
         </button>
       </form>
 
-      <p className="mt-6 text-sm text-slate-600">
+      <p className="mt-6 text-sm text-slate-300">
         New to Airdvance?{" "}
         <Link href="/register" className="font-medium text-accent hover:text-accent-dark">
           Create an account

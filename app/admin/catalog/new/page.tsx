@@ -16,9 +16,9 @@ export default async function NewProductPage() {
   return (
     <div className="mx-auto max-w-2xl px-6 py-12">
       <h1 className="font-display text-3xl">Add a device</h1>
-      <p className="mt-2 text-slate-600">You can add rental plans once the device is created.</p>
+      <p className="mt-2 text-slate-300">You can add rental plans once the device is created.</p>
 
-      <form action={handleCreate} className="mt-8 flex flex-col gap-4 rounded-lg border border-slate-200 bg-white p-6">
+      <form action={handleCreate} className="mt-8 flex flex-col gap-4 rounded-lg border border-white/10 bg-surface p-6">
         <div className="grid gap-4 md:grid-cols-2">
           <label className="text-sm">
             Name

@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import { Archivo_Black, Inter } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { getCurrentProfile } from "@/lib/data/customer";
 
-const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-display", weight: ["400", "500", "600"] });
-const inter = Inter({ subsets: ["latin"], variable: "--font-body" });
+const archivoBlack = Archivo_Black({ subsets: ["latin"], variable: "--font-display", weight: "400" });
+const inter = Inter({ subsets: ["latin"], variable: "--font-body", weight: ["400", "500", "600", "700"] });
 
 export const metadata: Metadata = {
   title: "Airdvance — Get the device you need now. Pay over time. Own it.",
@@ -18,7 +18,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const profile = await getCurrentProfile();
 
   return (
-    <html lang="en" className={`${fraunces.variable} ${inter.variable}`}>
+    <html lang="en" className={`${archivoBlack.variable} ${inter.variable}`}>
       <body className="font-body flex min-h-screen flex-col bg-paper text-ink antialiased">
         <SiteHeader profile={profile} />
         <main className="flex-1">{children}</main>

@@ -22,20 +22,20 @@ export default async function AdminApplicationDetailPage({ params }: { params: {
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-12">
-      <p className="text-sm text-slate-500">Application</p>
+      <p className="text-sm text-slate-400">Application</p>
       <h1 className="font-display text-3xl">{application.personal_info?.full_name}</h1>
-      <p className="mt-1 text-sm text-slate-500">{application.status.replace(/_/g, " ")}</p>
+      <p className="mt-1 text-sm text-slate-400">{application.status.replace(/_/g, " ")}</p>
 
-      <section className="mt-8 rounded-lg border border-slate-200 bg-white p-6">
+      <section className="mt-8 rounded-lg border border-white/10 bg-surface p-6">
         <h2 className="font-medium text-ink">Requested device</h2>
-        <p className="mt-2 text-slate-700">{application.product?.name}</p>
-        <p className="text-sm text-slate-500">
+        <p className="mt-2 text-slate-200">{application.product?.name}</p>
+        <p className="text-sm text-slate-400">
           {application.plan?.term_months} months · {formatCurrency(application.plan?.monthly_payment ?? 0)}/month · Total{" "}
           {formatCurrency(application.plan?.total_payable ?? 0)}
         </p>
       </section>
 
-      <section className="mt-6 grid gap-6 rounded-lg border border-slate-200 bg-white p-6 md:grid-cols-2">
+      <section className="mt-6 grid gap-6 rounded-lg border border-white/10 bg-surface p-6 md:grid-cols-2">
         <div>
           <h2 className="font-medium text-ink">Personal information</h2>
           <dl className="mt-2 space-y-1 text-sm">
@@ -62,20 +62,20 @@ export default async function AdminApplicationDetailPage({ params }: { params: {
         </div>
         <div>
           <h2 className="font-medium text-ink">Documents</h2>
-          <p className="mt-2 text-sm text-slate-500">
+          <p className="mt-2 text-sm text-slate-400">
             {application.documents?.length ? `${application.documents.length} file(s) uploaded` : "No documents uploaded"}
           </p>
         </div>
       </section>
 
       {application.internal_notes?.length > 0 && (
-        <section className="mt-6 rounded-lg border border-slate-200 bg-white p-6">
+        <section className="mt-6 rounded-lg border border-white/10 bg-surface p-6">
           <h2 className="font-medium text-ink">Internal notes</h2>
-          <ul className="mt-2 space-y-2 text-sm text-slate-600">
+          <ul className="mt-2 space-y-2 text-sm text-slate-300">
             {application.internal_notes.map((note: any, i: number) => (
-              <li key={i} className="border-l-2 border-slate-200 pl-3">
+              <li key={i} className="border-l-2 border-white/10 pl-3">
                 {note.note}
-                <span className="ml-2 text-xs text-slate-400">{new Date(note.created_at).toLocaleString()}</span>
+                <span className="ml-2 text-xs text-slate-500">{new Date(note.created_at).toLocaleString()}</span>
               </li>
             ))}
           </ul>
@@ -98,7 +98,7 @@ export default async function AdminApplicationDetailPage({ params }: { params: {
             className="flex gap-2"
           >
             <input name="note" placeholder="What's needed?" className="input" />
-            <button className="rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100">
+            <button className="rounded-md border border-white/20 px-4 py-2 text-sm font-medium text-slate-200 hover:bg-white/10">
               Request info
             </button>
           </form>
@@ -124,8 +124,8 @@ export default async function AdminApplicationDetailPage({ params }: { params: {
 function Row({ label, value }: { label: string; value?: string | null }) {
   return (
     <div className="flex justify-between gap-4">
-      <dt className="text-slate-500">{label}</dt>
-      <dd className="text-right text-slate-800">{value || "—"}</dd>
+      <dt className="text-slate-400">{label}</dt>
+      <dd className="text-right text-slate-100">{value || "—"}</dd>
     </div>
   );
 }

@@ -13,7 +13,7 @@ export default function HowItWorksPage() {
   return (
     <div className="mx-auto max-w-3xl px-6 py-16">
       <h1 className="font-display text-3xl">How Airdvance works</h1>
-      <p className="mt-3 text-slate-600">
+      <p className="mt-3 text-slate-300">
         A straightforward path from choosing a device to owning it outright.
       </p>
 
@@ -25,15 +25,15 @@ export default function HowItWorksPage() {
             </div>
             <div>
               <p className="font-display text-lg">{step.title}</p>
-              <p className="mt-1 text-slate-600">{step.copy}</p>
+              <p className="mt-1 text-slate-300">{step.copy}</p>
             </div>
           </li>
         ))}
       </ol>
 
-      <div className="mt-16 rounded-lg border border-slate-200 bg-white p-6">
+      <div className="mt-16 rounded-lg border border-white/10 bg-surface p-6">
         <p className="font-medium text-ink">What happens if I miss a payment?</p>
-        <p className="mt-2 text-sm text-slate-600">
+        <p className="mt-2 text-sm text-slate-300">
           We'll always let you know before anything happens. If a payment stays overdue past the grace
           period on your agreement, the device may be temporarily restricted until the outstanding
           payment is made. As soon as we receive it, access is restored.
