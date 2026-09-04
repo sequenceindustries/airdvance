@@ -16,7 +16,7 @@ export default function RegisterPage({ searchParams }: { searchParams: { error?:
           <input
             name="full_name"
             required
-            className="mt-1 w-full rounded-md border border-white/20 px-3 py-2 focus-ring"
+            className="input mt-1"
           />
         </label>
         <label className="text-sm">
@@ -24,7 +24,7 @@ export default function RegisterPage({ searchParams }: { searchParams: { error?:
           <input
             name="mobile"
             required
-            className="mt-1 w-full rounded-md border border-white/20 px-3 py-2 focus-ring"
+            className="input mt-1"
           />
         </label>
         <label className="text-sm">
@@ -33,7 +33,7 @@ export default function RegisterPage({ searchParams }: { searchParams: { error?:
             name="email"
             type="email"
             required
-            className="mt-1 w-full rounded-md border border-white/20 px-3 py-2 focus-ring"
+            className="input mt-1"
           />
         </label>
         <label className="text-sm">
@@ -43,7 +43,7 @@ export default function RegisterPage({ searchParams }: { searchParams: { error?:
             type="password"
             required
             minLength={8}
-            className="mt-1 w-full rounded-md border border-white/20 px-3 py-2 focus-ring"
+            className="input mt-1"
           />
         </label>
         <button
