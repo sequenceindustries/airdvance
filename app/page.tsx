@@ -28,11 +28,12 @@ export default async function HomePage() {
       <section className="mx-auto max-w-6xl px-6 pb-16 pt-16 md:pt-24">
         <div className="max-w-2xl">
           <h1 className="font-display text-4xl leading-[1.1] text-ink md:text-6xl">
-            Get the device you need now. Pay over time. Own it.
+            Get the device you need now. Pay over time. Buy it.
           </h1>
           <p className="mt-6 max-w-lg text-lg text-slate-300">
-            Choose a smartphone or tablet and spread the cost over an agreed rental
-            term. When you've made every payment, own it for as little as R10.
+            Choose a smartphone or tablet and spread the cost over an agreed rental term. This is
+            rent-to-buy, not credit — no credit score required, just employment and affordability.
+            Buy it outright at the end for as little as R1.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
@@ -88,13 +89,13 @@ export default async function HomePage() {
       {/* How it works */}
       <section className="border-t border-white/10 bg-surface py-20">
         <div className="mx-auto max-w-6xl px-6">
-          <h2 className="font-display text-2xl">How Airdvance works</h2>
+          <h2 className="font-display text-2xl">How airdvance works</h2>
           <div className="mt-8 grid gap-8 md:grid-cols-4">
             {[
               { title: "Choose a device", copy: "Browse smartphones and tablets and pick a rental term that suits your budget." },
               { title: "Set up your debit order", copy: "We collect your first payment instantly — approval is automatic, no waiting for review." },
               { title: "We ship your device", copy: "As soon as your first payment clears, your device is on its way." },
-              { title: "Buy it out for R10", copy: "Once your term is up, pay a small buyout fee from your dashboard and it's yours." },
+              { title: "Buy it out for as little as R1", copy: "Once your term is up, pay a small buyout fee from your dashboard and it's yours." },
             ].map((step) => (
               <div key={step.title}>
                 <p className="font-display text-lg">{step.title}</p>
@@ -115,7 +116,7 @@ export default async function HomePage() {
             </p>
           </div>
           <div>
-            <p className="font-display text-lg">A real path to ownership</p>
+            <p className="font-display text-lg">A real path to buying it outright</p>
             <p className="mt-2 text-sm text-slate-300">
               Every payment moves you closer to owning your device outright.
             </p>

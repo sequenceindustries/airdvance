@@ -7,7 +7,7 @@ export function SiteHeader({ profile }: { profile: { role: string; full_name: st
     <header className="sticky top-0 z-40 border-b border-white/10 bg-paper/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <Link href="/" className="flex items-center">
-          <Image src="/airdvance-logo.png" alt="Airdvance" width={152} height={42} priority className="h-9 w-auto" />
+          <Image src="/airdvance-logo.png" alt="airdvance" width={152} height={42} priority className="h-9 w-auto" />
         </Link>
 
         <nav className="hidden items-center gap-7 text-sm text-slate-300 md:flex">
@@ -15,6 +15,7 @@ export function SiteHeader({ profile }: { profile: { role: string; full_name: st
           <Link href="/shop/tablets" className="hover:text-accent">Tablets</Link>
           <Link href="/how-it-works" className="hover:text-accent">How it works</Link>
           <Link href="/faq" className="hover:text-accent">FAQ</Link>
+          <Link href="/contact" className="hover:text-accent">Contact</Link>
         </nav>
 
         <div className="flex items-center gap-3 text-sm">

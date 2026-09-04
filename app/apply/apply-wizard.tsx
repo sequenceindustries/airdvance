@@ -37,6 +37,7 @@ export function ApplyWizard({
     account_number: "",
     branch_code: "",
     account_type: "Cheque/Current",
+    next_payday: "",
     consent: false,
   });
 
@@ -45,6 +46,7 @@ export function ApplyWizard({
   }
 
   const initialCharge = plan.monthly_payment + plan.admin_fee;
+  const minPayday = new Date().toISOString().slice(0, 10);
 
   async function handleSubmit() {
     setSubmitting(true);
@@ -73,6 +75,7 @@ export function ApplyWizard({
         branch_code: form.branch_code,
         account_type: form.account_type,
       },
+      next_payday: form.next_payday,
       consent_accepted: form.consent,
     };
     const result = await submitApplication(draft);
@@ -86,6 +89,10 @@ export function ApplyWizard({
   return (
     <div>
       <h1 className="font-display text-3xl">Apply for your device</h1>
+      <p className="mt-2 text-sm text-slate-400">
+        This is rent-to-buy, not credit — there's no credit check. We just need to confirm your
+        employment and that the monthly payment is affordable for you.
+      </p>
 
       <ol className="mt-6 flex flex-wrap gap-x-4 gap-y-2 text-xs text-slate-400">
         {steps.map((label, i) => (
@@ -129,6 +136,10 @@ export function ApplyWizard({
 
         {step === 2 && (
           <div className="flex flex-col gap-4">
+            <p className="text-xs text-slate-400">
+              No credit score is required for rent-to-buy — we just check that this is affordable
+              alongside your other commitments.
+            </p>
             <Field label="Employment status">
               <select value={form.employment_status} onChange={(e) => update("employment_status", e.target.value)} className="input">
                 <option>Employed</option>
@@ -167,7 +178,7 @@ export function ApplyWizard({
               <span className="font-medium">{formatCurrency(plan.admin_fee)}</span>
             </div>
             <div className="mt-2 flex justify-between text-sm">
-              <span className="text-slate-400">Own it at the end for</span>
+              <span className="text-slate-400">Buy it at the end for</span>
               <span className="font-medium text-brand">{formatCurrency(plan.buyout_amount)}</span>
             </div>
             <div className="mt-2 flex justify-between border-t border-white/10 pt-2 text-sm">
@@ -180,10 +191,11 @@ export function ApplyWizard({
         {step === 4 && (
           <div className="flex flex-col gap-4">
             <p className="text-sm text-slate-300">
-              We'll set up a debit order for your monthly payments. Today we'll collect your first
-              installment ({formatCurrency(plan.monthly_payment)}) plus a once-off admin fee
-              ({formatCurrency(plan.admin_fee)}) — <span className="font-medium text-ink">{formatCurrency(initialCharge)} total</span>.
-              We'll ship your device as soon as that payment succeeds.
+              This is rent-to-buy, not credit — we won't charge you today. We'll authorize a debit
+              order now, then collect your first payment ({formatCurrency(plan.monthly_payment)} +{" "}
+              {formatCurrency(plan.admin_fee)} admin fee ={" "}
+              <span className="font-medium text-ink">{formatCurrency(initialCharge)}</span>) on your
+              next payday. As soon as that payment clears, we'll deliver your device within 7 days.
             </p>
             <Field label="Bank">
               <input value={form.bank_name} onChange={(e) => update("bank_name", e.target.value)} className="input" placeholder="e.g. FNB, Standard Bank, Capitec" required />
@@ -205,24 +217,28 @@ export function ApplyWizard({
                 </select>
               </Field>
             </div>
+            <Field label="Your next payday">
+              <input type="date" min={minPayday} value={form.next_payday} onChange={(e) => update("next_payday", e.target.value)} className="input" required />
+            </Field>
           </div>
         )}
 
         {step === 5 && (
           <div>
             <div className="max-h-56 overflow-y-auto rounded-md border border-white/10 bg-white/5 p-4 text-xs text-slate-300">
-              By submitting this application, you confirm that the information you've provided is accurate
-              and authorize Airdvance to debit the bank account provided for the first payment shown above,
-              and thereafter for each monthly installment on your agreement, until the rental term is
+              This is a rent-to-buy agreement, not a credit agreement — by submitting this application
+              you confirm that the information you've provided is accurate, and authorize airdvance to
+              debit the bank account provided on the payday given above for your first payment, and
+              thereafter monthly for each installment on your agreement, until the rental term is
               complete or the agreement is otherwise ended. You acknowledge that the device remains the
-              property of Airdvance until you complete the final buyout payment.
+              property of airdvance until you complete the final buyout payment.
               <br /><br />
               <span className="font-medium text-alert">
-                If a debit order fails, your device will be locked (restricted) until the payment is
-                resolved.
+                If a debit order fails, your device will be locked until the payment is resolved.
               </span>{" "}
               Failed debit orders are not automatically retried — you will need to make a manual payment
-              to restore access. (Full legal terms to be inserted.)
+              to unlock your device. See our legal terms at{" "}
+              <a href="https://ownit.co.za" target="_blank" rel="noreferrer" className="text-accent underline">ownit.co.za</a>.
             </div>
             <label className="mt-4 flex items-start gap-2 text-sm">
               <input
@@ -259,7 +275,7 @@ export function ApplyWizard({
             disabled={!form.consent || submitting}
             className="rounded-md bg-brand px-5 py-2 text-sm font-medium text-white hover:bg-brand-dark disabled:opacity-40"
           >
-            {submitting ? `Charging ${formatCurrency(initialCharge)}…` : `Authorize & pay ${formatCurrency(initialCharge)}`}
+            {submitting ? "Submitting…" : "Authorize debit order"}
           </button>
         )}
       </div>

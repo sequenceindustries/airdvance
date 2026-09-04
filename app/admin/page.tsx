@@ -3,12 +3,14 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentProfile } from "@/lib/data/customer";
 import { runOverdueSweep } from "@/lib/actions/payments";
+import { collectDueFirstPayments } from "@/lib/actions/collections";
 
 async function getCounts() {
   const supabase = createClient();
 
   const [
-    applications,
+    awaitingCollection,
+    failedDebits,
     activeCustomers,
     activeAgreements,
     devicesOnRent,
@@ -18,6 +20,7 @@ async function getCounts() {
     completedAgreements,
     devicesOwned,
   ] = await Promise.all([
+    supabase.from("applications").select("id", { count: "exact", head: true }).eq("status", "UNDER_REVIEW"),
     supabase.from("applications").select("id", { count: "exact", head: true }).eq("status", "DECLINED"),
     supabase.from("agreements").select("customer_id", { count: "exact", head: true }).eq("status", "ACTIVE"),
     supabase.from("agreements").select("id", { count: "exact", head: true }).eq("status", "ACTIVE"),
@@ -30,7 +33,8 @@ async function getCounts() {
   ]);
 
   return {
-    applications: applications.count ?? 0,
+    awaitingCollection: awaitingCollection.count ?? 0,
+    failedDebits: failedDebits.count ?? 0,
     activeCustomers: activeCustomers.count ?? 0,
     activeAgreements: activeAgreements.count ?? 0,
     devicesOnRent: devicesOnRent.count ?? 0,
@@ -50,7 +54,8 @@ export default async function AdminDashboardPage() {
   const counts = await getCounts();
 
   const cards = [
-    { label: "Failed first debits", value: counts.applications, href: "/admin/applications" },
+    { label: "Awaiting payday collection", value: counts.awaitingCollection, href: "/admin/applications" },
+    { label: "Failed first debits", value: counts.failedDebits, href: "/admin/applications" },
     { label: "Active customers", value: counts.activeCustomers },
     { label: "Active agreements", value: counts.activeAgreements },
     { label: "Devices on rent", value: counts.devicesOnRent, href: "/admin/devices" },
@@ -65,12 +70,24 @@ export default async function AdminDashboardPage() {
     <div className="mx-auto max-w-6xl px-6 py-12">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h1 className="font-display text-3xl">Admin dashboard</h1>
-        <form action={async () => { "use server"; await runOverdueSweep(); }}>
-          <button className="rounded-md border border-white/20 px-4 py-2 text-sm font-medium text-slate-200 hover:bg-white/10">
-            Run overdue payment sweep
-          </button>
-        </form>
+        <div className="flex flex-wrap gap-3">
+          <form action={async () => { "use server"; await collectDueFirstPayments(); }}>
+            <button className="rounded-md bg-brand px-4 py-2 text-sm font-medium text-white hover:bg-brand-dark">
+              Run payday collection
+            </button>
+          </form>
+          <form action={async () => { "use server"; await runOverdueSweep(); }}>
+            <button className="rounded-md border border-white/20 px-4 py-2 text-sm font-medium text-slate-200 hover:bg-white/10">
+              Run overdue payment sweep
+            </button>
+          </form>
+        </div>
       </div>
+      <p className="mt-2 text-sm text-slate-400">
+        "Run payday collection" simulates the daily job that charges applications whose scheduled
+        first-payment date has arrived — agreements and device allocation are only created once that
+        charge succeeds.
+      </p>
 
       <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3">
         {cards.map((card) => {

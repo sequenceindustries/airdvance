@@ -1,5 +1,5 @@
 /**
- * PaymentGatewayProvider is the single seam between Airdvance's business logic
+ * PaymentGatewayProvider is the single seam between airdvance's business logic
  * and whatever real debit-order/payment gateway eventually processes charges.
  * Nothing outside lib/payment-gateway should import a vendor SDK directly.
  */

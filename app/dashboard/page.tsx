@@ -75,7 +75,7 @@ export default async function DashboardPage() {
                 <div className="mt-4 rounded-md border border-brand/30 bg-brand-light px-4 py-3 text-sm">
                   <p className="font-medium text-brand">You've made every rental payment!</p>
                   <p className="mt-1 text-slate-300">
-                    Own your device now for just {formatCurrency(agreement.buyout_amount)}.
+                    Buy your device now for just {formatCurrency(agreement.buyout_amount)}.
                   </p>
                   <form action={async () => { "use server"; await payBuyout(agreement.id); }}>
                     <button className="mt-3 rounded-md bg-brand px-4 py-2 text-sm font-medium text-white hover:bg-brand-dark">

@@ -42,7 +42,7 @@ export default function LoginPage({ searchParams }: { searchParams: { error?: st
       </form>
 
       <p className="mt-6 text-sm text-slate-300">
-        New to Airdvance?{" "}
+        New to airdvance?{" "}
         <Link href="/register" className="font-medium text-accent hover:text-accent-dark">
           Create an account
         </Link>

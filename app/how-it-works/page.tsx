@@ -6,13 +6,13 @@ const steps = [
   { title: "We collect your first payment", copy: "We immediately debit your first installment plus a once-off admin fee. There's no waiting for manual review — approval is automatic the moment the debit succeeds." },
   { title: "We ship your device", copy: "As soon as your first payment clears, we prepare and ship your device to you." },
   { title: "We debit you monthly", copy: "Your dashboard always shows your next debit date, your progress toward the end of your term, and your device status." },
-  { title: "Buy it out for as little as R10", copy: "Once you've made every monthly payment, pay a small final buyout fee from your dashboard and the device is officially yours." },
+  { title: "Buy it out for as little as R1", copy: "Once you've made every monthly payment, pay a small final buyout fee from your dashboard and the device is officially yours." },
 ];
 
 export default function HowItWorksPage() {
   return (
     <div className="mx-auto max-w-3xl px-6 py-16">
-      <h1 className="font-display text-3xl">How Airdvance works</h1>
+      <h1 className="font-display text-3xl">How airdvance works</h1>
       <p className="mt-3 text-slate-300">
         A straightforward path from choosing a device to owning it outright.
       </p>

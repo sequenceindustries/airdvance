@@ -67,6 +67,7 @@ export interface Application {
   consent_accepted: boolean;
   debit_order_mandate_id?: string | null;
   first_debit_status?: string | null;
+  next_collection_date?: string | null;
   internal_notes: { author: string; note: string; created_at: string }[];
   created_at: string;
   updated_at: string;

@@ -8,9 +8,9 @@ import { getCurrentProfile } from "@/lib/data/customer";
 const inter = Inter({ subsets: ["latin"], variable: "--font-body", weight: ["400", "500", "600", "700", "800", "900"] });
 
 export const metadata: Metadata = {
-  title: "Airdvance — Get the device you need now. Pay over time. Own it.",
+  title: "airdvance — Get the device you need now. Pay over time. Buy it.",
   description:
-    "Rent-to-own smartphones, tablets and laptops. Choose a device, spread the cost over an agreed term, and own it at the end.",
+    "Rent-to-buy smartphones and tablets — not credit, just affordability. Choose a device, spread the cost over an agreed term, and buy it at the end for as little as R1.",
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

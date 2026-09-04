@@ -155,7 +155,7 @@ export default async function AdminCatalogEditPage({ params }: { params: { id: s
           </label>
           <label className="text-sm">
             Buyout (R)
-            <input name="buyout_amount" type="number" defaultValue={10} className="input mt-1 w-28" />
+            <input name="buyout_amount" type="number" defaultValue={1} className="input mt-1 w-28" />
           </label>
           <button className="rounded-md bg-ink px-4 py-2 text-sm font-medium text-paper hover:bg-slate-800">
             Add plan

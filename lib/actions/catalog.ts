@@ -55,7 +55,7 @@ export async function addRentalPlan(productId: string, formData: FormData) {
   const monthly_payment = Number(formData.get("monthly_payment"));
   const deposit = Number(formData.get("deposit") ?? 0);
   const admin_fee = Number(formData.get("admin_fee") ?? 150);
-  const buyout_amount = Number(formData.get("buyout_amount") ?? 10);
+  const buyout_amount = Number(formData.get("buyout_amount") ?? 1);
 
   const { error } = await service.from("rental_plans").insert({
     product_id: productId,
@@ -83,7 +83,7 @@ export async function updateRentalPlan(planId: string, formData: FormData) {
   const monthly_payment = Number(formData.get("monthly_payment"));
   const deposit = Number(formData.get("deposit") ?? 0);
   const admin_fee = Number(formData.get("admin_fee") ?? 150);
-  const buyout_amount = Number(formData.get("buyout_amount") ?? 10);
+  const buyout_amount = Number(formData.get("buyout_amount") ?? 1);
   const status = String(formData.get("status"));
 
   const { error } = await service

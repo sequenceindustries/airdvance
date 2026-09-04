@@ -56,7 +56,7 @@ export function PlanSelector({ product, plans }: { product: Product; plans: Rent
             <dd>{formatCurrency(selected.total_payable)}</dd>
           </div>
           <div className="flex justify-between">
-            <dt>Own it at the end for</dt>
+            <dt>Buy it at the end for</dt>
             <dd className="font-medium text-brand">{formatCurrency(selected.buyout_amount)}</dd>
           </div>
           <div className="flex justify-between">
@@ -66,7 +66,7 @@ export function PlanSelector({ product, plans }: { product: Product; plans: Rent
         </dl>
 
         <p className="mt-4 text-xs text-slate-400">
-          Paid by debit order. Own it outright at the end of your term for as little as{" "}
+          Paid by debit order — this is rent-to-buy, not credit. Buy it outright at the end of your term for as little as{" "}
           {formatCurrency(selected.buyout_amount)}.
         </p>
 

@@ -1,7 +1,7 @@
 import type { DeviceControlStatus, InventoryDevice } from "@/types/domain";
 
 /**
- * DeviceControlProvider is the single seam between Airdvance's business logic
+ * DeviceControlProvider is the single seam between airdvance's business logic
  * and whatever external device-management/MDM vendor eventually locks or
  * unlocks a physical handset, tablet, or laptop.
  *
