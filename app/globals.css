@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --font-display: "Archivo Black", sans-serif;
+  --font-display: var(--font-body), sans-serif;
   --font-body: "Inter", sans-serif;
 }
 
@@ -25,6 +25,11 @@ body {
   border-radius: 999px;
   background: #E74E1B;
   transition: width 400ms ease;
+}
+
+.font-display {
+  font-weight: 900;
+  letter-spacing: -0.02em;
 }
 
 .focus-ring:focus-visible {
