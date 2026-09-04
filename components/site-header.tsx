@@ -1,20 +1,21 @@
 import Link from "next/link";
+import Image from "next/image";
 import { signOut } from "@/lib/actions/auth";
 
 export function SiteHeader({ profile }: { profile: { role: string; full_name: string } | null }) {
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200 bg-paper/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <Link href="/" className="font-display text-2xl tracking-tight text-ink">
-          Airdvance
+        <Link href="/" className="flex items-center">
+          <Image src="/airdvance-logo.png" alt="Airdvance" width={152} height={42} priority className="h-9 w-auto" />
         </Link>
 
         <nav className="hidden items-center gap-7 text-sm text-slate-600 md:flex">
-          <Link href="/shop/smartphones" className="hover:text-ink">Smartphones</Link>
-          <Link href="/shop/tablets" className="hover:text-ink">Tablets</Link>
-          <Link href="/shop/laptops" className="hover:text-ink">Laptops</Link>
-          <Link href="/how-it-works" className="hover:text-ink">How it works</Link>
-          <Link href="/faq" className="hover:text-ink">FAQ</Link>
+          <Link href="/shop/smartphones" className="hover:text-accent">Smartphones</Link>
+          <Link href="/shop/tablets" className="hover:text-accent">Tablets</Link>
+          <Link href="/shop/laptops" className="hover:text-accent">Laptops</Link>
+          <Link href="/how-it-works" className="hover:text-accent">How it works</Link>
+          <Link href="/faq" className="hover:text-accent">FAQ</Link>
         </nav>
 
         <div className="flex items-center gap-3 text-sm">
@@ -39,7 +40,7 @@ export function SiteHeader({ profile }: { profile: { role: string; full_name: st
               </Link>
               <Link
                 href="/shop"
-                className="rounded-md bg-ink px-4 py-2 font-medium text-paper hover:bg-slate-800 focus-ring"
+                className="rounded-md bg-brand px-4 py-2 font-medium text-white hover:bg-brand-dark focus-ring"
               >
                 Shop devices
               </Link>

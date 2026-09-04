@@ -35,7 +35,7 @@ export default function LoginPage({ searchParams }: { searchParams: { error?: st
         </label>
         <button
           type="submit"
-          className="mt-2 rounded-md bg-ink py-3 font-medium text-paper hover:bg-slate-800 focus-ring"
+          className="mt-2 rounded-md bg-brand py-3 font-medium text-white hover:bg-brand-dark focus-ring"
         >
           Log in
         </button>
@@ -43,7 +43,7 @@ export default function LoginPage({ searchParams }: { searchParams: { error?: st
 
       <p className="mt-6 text-sm text-slate-600">
         New to Airdvance?{" "}
-        <Link href="/register" className="font-medium text-signal hover:text-signal-dark">
+        <Link href="/register" className="font-medium text-accent hover:text-accent-dark">
           Create an account
         </Link>
       </p>

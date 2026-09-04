@@ -49,7 +49,7 @@ export default async function AdminCatalogPage() {
                 <td className="px-4 py-3 text-slate-500">{product.rental_plans?.length ?? 0}</td>
                 <td className="px-4 py-3 text-slate-500">{product.status}</td>
                 <td className="px-4 py-3">
-                  <Link href={`/admin/catalog/${product.id}`} className="font-medium text-signal hover:text-signal-dark">
+                  <Link href={`/admin/catalog/${product.id}`} className="font-medium text-accent hover:text-accent-dark">
                     Edit →
                   </Link>
                 </td>

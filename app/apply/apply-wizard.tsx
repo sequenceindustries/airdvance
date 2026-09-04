@@ -213,7 +213,7 @@ export function ApplyWizard({
         {step < steps.length - 1 ? (
           <button
             onClick={() => setStep((s) => Math.min(steps.length - 1, s + 1))}
-            className="rounded-md bg-ink px-5 py-2 text-sm font-medium text-paper hover:bg-slate-800"
+            className="rounded-md bg-brand px-5 py-2 text-sm font-medium text-white hover:bg-brand-dark"
           >
             Continue
           </button>
@@ -221,7 +221,7 @@ export function ApplyWizard({
           <button
             onClick={handleSubmit}
             disabled={!form.consent || submitting}
-            className="rounded-md bg-ink px-5 py-2 text-sm font-medium text-paper hover:bg-slate-800 disabled:opacity-40"
+            className="rounded-md bg-brand px-5 py-2 text-sm font-medium text-white hover:bg-brand-dark disabled:opacity-40"
           >
             {submitting ? "Submitting…" : "Submit application"}
           </button>

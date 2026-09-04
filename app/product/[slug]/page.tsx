@@ -42,7 +42,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
       </div>
 
       <div className="mt-16 border-t border-slate-200 pt-8">
-        <Link href="/how-it-works" className="text-sm font-medium text-signal hover:text-signal-dark">
+        <Link href="/how-it-works" className="text-sm font-medium text-accent hover:text-accent-dark">
           How ownership works →
         </Link>
       </div>

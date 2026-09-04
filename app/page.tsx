@@ -37,7 +37,7 @@ export default async function HomePage() {
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               href="/shop"
-              className="rounded-md bg-ink px-6 py-3 font-medium text-paper hover:bg-slate-800 focus-ring"
+              className="rounded-md bg-brand px-6 py-3 font-medium text-white hover:bg-brand-dark focus-ring"
             >
               Shop devices
             </Link>
@@ -75,7 +75,7 @@ export default async function HomePage() {
       <section className="mx-auto max-w-6xl px-6 pb-20">
         <div className="mb-6 flex items-end justify-between">
           <h2 className="font-display text-2xl">Featured devices</h2>
-          <Link href="/shop" className="text-sm font-medium text-signal hover:text-signal-dark">
+          <Link href="/shop" className="text-sm font-medium text-accent hover:text-accent-dark">
             View all
           </Link>
         </div>
@@ -132,7 +132,7 @@ export default async function HomePage() {
           <p className="font-display text-2xl">Ready to get your next device?</p>
           <Link
             href="/shop"
-            className="mt-4 inline-block rounded-md bg-paper px-6 py-3 font-medium text-ink hover:bg-slate-100 focus-ring"
+            className="mt-4 inline-block rounded-md bg-brand px-6 py-3 font-medium text-white hover:bg-brand-dark focus-ring"
           >
             Shop devices
           </Link>

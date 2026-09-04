@@ -91,10 +91,10 @@ export default async function AdminDashboardPage() {
       </div>
 
       <div className="mt-10 flex gap-4 text-sm">
-        <Link href="/admin/applications" className="font-medium text-signal hover:text-signal-dark">
+        <Link href="/admin/applications" className="font-medium text-accent hover:text-accent-dark">
           Review applications →
         </Link>
-        <Link href="/admin/devices" className="font-medium text-signal hover:text-signal-dark">
+        <Link href="/admin/devices" className="font-medium text-accent hover:text-accent-dark">
           Manage devices →
         </Link>
       </div>

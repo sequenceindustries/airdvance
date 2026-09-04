@@ -33,7 +33,7 @@ export default async function ApplicationStatusPage({ params }: { params: { id: 
       {application.product?.name && (
         <p className="mt-6 text-sm text-slate-500">Device: {application.product.name}</p>
       )}
-      <Link href="/dashboard" className="mt-8 inline-block rounded-md bg-ink px-6 py-3 font-medium text-paper">
+      <Link href="/dashboard" className="mt-8 inline-block rounded-md bg-brand px-6 py-3 font-medium text-white hover:bg-brand-dark">
         Go to my account
       </Link>
     </div>

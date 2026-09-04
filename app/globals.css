@@ -22,12 +22,12 @@ body {
 .meter-fill {
   height: 100%;
   border-radius: 999px;
-  background: #2F6F5E;
+  background: #E74E1B;
   transition: width 400ms ease;
 }
 
 .focus-ring:focus-visible {
-  outline: 2px solid #2F6F5E;
+  outline: 2px solid #1D71B6;
   outline-offset: 2px;
 }
 
@@ -35,5 +35,5 @@ body {
   @apply w-full rounded-md border border-slate-300 px-3 py-2 text-ink;
 }
 .input:focus-visible {
-  @apply outline outline-2 outline-signal;
+  @apply outline outline-2 outline-accent;
 }

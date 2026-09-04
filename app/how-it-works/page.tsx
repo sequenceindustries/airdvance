@@ -42,7 +42,7 @@ export default function HowItWorksPage() {
 
       <Link
         href="/shop"
-        className="mt-10 inline-block rounded-md bg-ink px-6 py-3 font-medium text-paper hover:bg-slate-800 focus-ring"
+        className="mt-10 inline-block rounded-md bg-brand px-6 py-3 font-medium text-white hover:bg-brand-dark focus-ring"
       >
         Shop devices
       </Link>

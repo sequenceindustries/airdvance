@@ -15,15 +15,25 @@ const config: Config = {
           600: "#4B525C",
           800: "#262B33",
         },
+        brand: {
+          DEFAULT: "#E74E1B",
+          dark: "#C23F16",
+          light: "#FDE7DE",
+        },
+        accent: {
+          DEFAULT: "#1D71B6",
+          dark: "#14507F",
+          light: "#E1EEF8",
+        },
         signal: {
           DEFAULT: "#2F6F5E",
           dark: "#1F4E42",
           light: "#DCEAE5",
         },
         alert: {
-          DEFAULT: "#B4472A",
-          dark: "#7C301C",
-          light: "#F3E0D8",
+          DEFAULT: "#C23B24",
+          dark: "#8C2A19",
+          light: "#F7E1DC",
         },
       },
       fontFamily: {

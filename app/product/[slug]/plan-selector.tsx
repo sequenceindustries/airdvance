@@ -31,7 +31,7 @@ export function PlanSelector({ product, plans }: { product: Product; plans: Rent
               className={clsx(
                 "rounded-md border px-4 py-2 text-sm font-medium transition focus-ring",
                 plan.id === selected.id
-                  ? "border-signal bg-signal-light text-signal-dark"
+                  ? "border-accent bg-accent-light text-accent-dark"
                   : "border-slate-200 text-slate-600 hover:border-slate-300",
               )}
             >
@@ -63,7 +63,7 @@ export function PlanSelector({ product, plans }: { product: Product; plans: Rent
 
         <Link
           href={`/apply?product=${product.slug}&plan=${selected.id}`}
-          className="mt-5 block w-full rounded-md bg-ink py-3 text-center font-medium text-paper hover:bg-slate-800 focus-ring"
+          className="mt-5 block w-full rounded-md bg-brand py-3 text-center font-medium text-white hover:bg-brand-dark focus-ring"
         >
           Apply now
         </Link>

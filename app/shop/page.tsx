@@ -51,7 +51,7 @@ export default async function ShopPage() {
         <section key={section.key} className="mt-12">
           <div className="mb-4 flex items-end justify-between">
             <h2 className="font-display text-xl">{section.label}</h2>
-            <Link href={section.href} className="text-sm font-medium text-signal hover:text-signal-dark">
+            <Link href={section.href} className="text-sm font-medium text-accent hover:text-accent-dark">
               View all
             </Link>
           </div>

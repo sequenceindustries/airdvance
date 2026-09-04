@@ -17,7 +17,7 @@ export default async function DashboardPage() {
       <div className="mx-auto max-w-xl px-6 py-20 text-center">
         <h1 className="font-display text-3xl">Welcome, {profile.full_name.split(" ")[0]}</h1>
         <p className="mt-3 text-slate-600">You don't have an active agreement yet.</p>
-        <Link href="/shop" className="mt-6 inline-block rounded-md bg-ink px-6 py-3 font-medium text-paper">
+        <Link href="/shop" className="mt-6 inline-block rounded-md bg-brand px-6 py-3 font-medium text-white hover:bg-brand-dark">
           Shop devices
         </Link>
       </div>
@@ -76,7 +76,7 @@ export default async function DashboardPage() {
 
               <Link
                 href={`/dashboard/agreements/${agreement.id}`}
-                className="mt-5 inline-block text-sm font-medium text-signal hover:text-signal-dark"
+                className="mt-5 inline-block text-sm font-medium text-accent hover:text-accent-dark"
               >
                 View agreement & payment history →
               </Link>

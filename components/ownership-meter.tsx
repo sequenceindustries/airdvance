@@ -17,7 +17,7 @@ export function OwnershipMeter({
         <p className="text-sm text-slate-600">
           {paymentsCompleted} / {paymentsRequired} payments completed
         </p>
-        <p className="text-sm font-medium text-signal">{percent}%</p>
+        <p className="text-sm font-medium text-brand">{percent}%</p>
       </div>
       <div className="meter-track mt-2">
         <div className="meter-fill" style={{ width: `${percent}%` }} />
