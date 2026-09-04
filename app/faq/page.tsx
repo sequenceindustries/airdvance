@@ -1,10 +1,10 @@
 const faqs = [
-  { q: "Do I need a deposit?", a: "Some plans require a small deposit, shown clearly before you apply. Many plans have no deposit at all." },
-  { q: "What happens when I finish paying?", a: "Once you've made every required payment on your agreement, the device becomes yours outright. We'll confirm this in your dashboard." },
-  { q: "What if my payment is late?", a: "You'll get a reminder before your payment is due. If a payment goes unpaid past the grace period on your agreement, your device may be temporarily restricted until it's settled — access is restored as soon as we receive payment." },
-  { q: "Can I pay off my plan early?", a: "Yes. Paying ahead simply moves you closer to ownership sooner." },
-  { q: "What documents do I need to apply?", a: "We'll ask for proof of identity and proof of income as part of the application. You can upload these securely from your phone or computer." },
-  { q: "Is my personal information secure?", a: "Yes. Your data is protected with row-level access controls, and only you and authorised Airdvance staff can see your information." },
+  { q: "How do I pay?", a: "By debit order. We collect your first installment plus a once-off admin fee when you apply, then debit your account automatically every month for the rest of the term." },
+  { q: "What happens when my rental term ends?", a: "Once you've made every monthly payment, you can buy your device outright for a small buyout fee — as little as R10 on some plans. You'll see the exact amount on your dashboard and can pay it in one tap." },
+  { q: "What happens if my debit order fails?", a: "Your device will be locked until the payment is resolved. We do not automatically retry a failed debit order — you'll need to make a manual payment from your dashboard to unlock your device again." },
+  { q: "Can I pay off my plan early?", a: "Yes. Paying ahead simply moves you closer to your buyout sooner." },
+  { q: "What do I need to apply?", a: "Your ID, address, employment details, and your bank account details for the debit order. The whole process, including your first payment, takes a few minutes." },
+  { q: "Is my banking information secure?", a: "Yes. We only ever store the last 4 digits of your account number, and your data is protected with row-level access controls — only you and authorised Airdvance staff can see your information." },
 ];
 
 export default function FaqPage() {

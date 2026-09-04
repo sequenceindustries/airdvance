@@ -48,8 +48,16 @@ export function PlanSelector({ product, plans }: { product: Product; plans: Rent
             </div>
           ) : null}
           <div className="flex justify-between">
-            <dt>Total payable</dt>
+            <dt>Admin fee (once-off, with first payment)</dt>
+            <dd>{formatCurrency(selected.admin_fee)}</dd>
+          </div>
+          <div className="flex justify-between">
+            <dt>Total payable over the term</dt>
             <dd>{formatCurrency(selected.total_payable)}</dd>
+          </div>
+          <div className="flex justify-between">
+            <dt>Own it at the end for</dt>
+            <dd className="font-medium text-brand">{formatCurrency(selected.buyout_amount)}</dd>
           </div>
           <div className="flex justify-between">
             <dt>Cash price</dt>
@@ -58,7 +66,8 @@ export function PlanSelector({ product, plans }: { product: Product; plans: Rent
         </dl>
 
         <p className="mt-4 text-xs text-slate-400">
-          After completing the required payments, the device becomes yours.
+          Paid by debit order. Own it outright at the end of your term for as little as{" "}
+          {formatCurrency(selected.buyout_amount)}.
         </p>
 
         <Link

@@ -13,7 +13,6 @@ export function SiteHeader({ profile }: { profile: { role: string; full_name: st
         <nav className="hidden items-center gap-7 text-sm text-slate-300 md:flex">
           <Link href="/shop/smartphones" className="hover:text-accent">Smartphones</Link>
           <Link href="/shop/tablets" className="hover:text-accent">Tablets</Link>
-          <Link href="/shop/laptops" className="hover:text-accent">Laptops</Link>
           <Link href="/how-it-works" className="hover:text-accent">How it works</Link>
           <Link href="/faq" className="hover:text-accent">FAQ</Link>
         </nav>

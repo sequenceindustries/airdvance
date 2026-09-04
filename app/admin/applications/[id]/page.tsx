@@ -2,7 +2,11 @@ import { notFound, redirect } from "next/navigation";
 import { getCurrentProfile } from "@/lib/data/customer";
 import { createClient } from "@/lib/supabase/server";
 import { formatCurrency } from "@/lib/pricing";
-import { approveApplication, declineApplication, requestMoreInformation } from "@/lib/actions/admin";
+
+const outcomeCopy: Record<string, { label: string; classes: string }> = {
+  APPROVED: { label: "Debit succeeded — agreement created", classes: "bg-signal-light text-signal-dark" },
+  DECLINED: { label: "Debit failed — no agreement created", classes: "bg-alert-light text-alert-dark" },
+};
 
 export default async function AdminApplicationDetailPage({ params }: { params: { id: string } }) {
   const profile = await getCurrentProfile();
@@ -12,25 +16,34 @@ export default async function AdminApplicationDetailPage({ params }: { params: {
   const supabase = createClient();
   const { data: application } = await supabase
     .from("applications")
-    .select("*, product:products(*), plan:rental_plans(*), customer:profiles(*)")
+    .select("*, product:products(*), plan:rental_plans(*), customer:profiles(*), mandate:debit_order_mandates(*)")
     .eq("id", params.id)
     .maybeSingle();
 
   if (!application) notFound();
 
-  const canDecide = ["SUBMITTED", "UNDER_REVIEW", "MORE_INFORMATION_REQUIRED"].includes(application.status);
+  const outcome = outcomeCopy[application.status];
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-12">
       <p className="text-sm text-slate-400">Application</p>
       <h1 className="font-display text-3xl">{application.personal_info?.full_name}</h1>
-      <p className="mt-1 text-sm text-slate-400">{application.status.replace(/_/g, " ")}</p>
+      <p className="mt-2 text-sm text-slate-400">
+        Applications are now processed automatically — the first debit order determines the outcome,
+        there's no manual approval step. This page is a read-only record of what happened.
+      </p>
+      {outcome && (
+        <span className={`mt-3 inline-block rounded-full px-3 py-1 text-xs font-medium ${outcome.classes}`}>
+          {outcome.label}
+        </span>
+      )}
 
-      <section className="mt-8 rounded-lg border border-white/10 bg-surface p-6">
+      <section className="mt-6 rounded-lg border border-white/10 bg-surface p-6">
         <h2 className="font-medium text-ink">Requested device</h2>
         <p className="mt-2 text-slate-200">{application.product?.name}</p>
         <p className="text-sm text-slate-400">
-          {application.plan?.term_months} months · {formatCurrency(application.plan?.monthly_payment ?? 0)}/month · Total{" "}
+          {application.plan?.term_months} months · {formatCurrency(application.plan?.monthly_payment ?? 0)}/month
+          {application.plan?.admin_fee ? ` + ${formatCurrency(application.plan.admin_fee)} admin fee` : ""} · Total{" "}
           {formatCurrency(application.plan?.total_payable ?? 0)}
         </p>
       </section>
@@ -61,10 +74,13 @@ export default async function AdminApplicationDetailPage({ params }: { params: {
           </dl>
         </div>
         <div>
-          <h2 className="font-medium text-ink">Documents</h2>
-          <p className="mt-2 text-sm text-slate-400">
-            {application.documents?.length ? `${application.documents.length} file(s) uploaded` : "No documents uploaded"}
-          </p>
+          <h2 className="font-medium text-ink">Debit order</h2>
+          <dl className="mt-2 space-y-1 text-sm">
+            <Row label="Bank" value={application.mandate?.bank_name} />
+            <Row label="Account holder" value={application.mandate?.account_holder} />
+            <Row label="Account number" value={application.mandate ? `••••${application.mandate.account_number_last4}` : undefined} />
+            <Row label="First debit result" value={application.first_debit_status} />
+          </dl>
         </div>
       </section>
 
@@ -79,42 +95,6 @@ export default async function AdminApplicationDetailPage({ params }: { params: {
               </li>
             ))}
           </ul>
-        </section>
-      )}
-
-      {canDecide && (
-        <section className="mt-8 flex flex-wrap gap-3">
-          <form action={async () => { "use server"; await approveApplication(application.id); }}>
-            <button className="rounded-md bg-signal px-5 py-2 text-sm font-medium text-white hover:bg-signal-dark">
-              Approve
-            </button>
-          </form>
-
-          <form
-            action={async (formData: FormData) => {
-              "use server";
-              await requestMoreInformation(application.id, String(formData.get("note") ?? ""));
-            }}
-            className="flex gap-2"
-          >
-            <input name="note" placeholder="What's needed?" className="input" />
-            <button className="rounded-md border border-white/20 px-4 py-2 text-sm font-medium text-slate-200 hover:bg-white/10">
-              Request info
-            </button>
-          </form>
-
-          <form
-            action={async (formData: FormData) => {
-              "use server";
-              await declineApplication(application.id, String(formData.get("reason") ?? "Not specified"));
-            }}
-            className="flex gap-2"
-          >
-            <input name="reason" placeholder="Reason for declining" className="input" />
-            <button className="rounded-md border border-alert/40 px-4 py-2 text-sm font-medium text-alert hover:bg-alert-light">
-              Decline
-            </button>
-          </form>
         </section>
       )}
     </div>

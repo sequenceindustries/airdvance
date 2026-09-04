@@ -1,12 +1,12 @@
 import Link from "next/link";
 
 const steps = [
-  { title: "Choose a device and a plan", copy: "Browse smartphones, tablets and laptops. Pick the rental term that fits your monthly budget — you'll always see the monthly payment and total payable upfront." },
-  { title: "Apply", copy: "Create an account and complete a short application: your details, address, and employment information. Upload the documents we ask for." },
-  { title: "We review your application", copy: "Most applications are reviewed quickly. You can check your status at any time from your account." },
-  { title: "Your agreement is created", copy: "Once approved, we generate your rental agreement and payment schedule automatically, and assign your device." },
-  { title: "Make your monthly payments", copy: "Your dashboard shows your next payment, your ownership progress, and your device status at all times." },
-  { title: "Own it", copy: "Once you've made every required payment, the device is officially yours — no further payments, no catches." },
+  { title: "Choose a device and a plan", copy: "Browse smartphones and tablets. Pick the rental term that fits your monthly budget — you'll always see the monthly payment, admin fee and buyout amount upfront." },
+  { title: "Apply and set up your debit order", copy: "Create an account and complete a short application: your details, address, employment, and your bank account for the debit order." },
+  { title: "We collect your first payment", copy: "We immediately debit your first installment plus a once-off admin fee. There's no waiting for manual review — approval is automatic the moment the debit succeeds." },
+  { title: "We ship your device", copy: "As soon as your first payment clears, we prepare and ship your device to you." },
+  { title: "We debit you monthly", copy: "Your dashboard always shows your next debit date, your progress toward the end of your term, and your device status." },
+  { title: "Buy it out for as little as R10", copy: "Once you've made every monthly payment, pay a small final buyout fee from your dashboard and the device is officially yours." },
 ];
 
 export default function HowItWorksPage() {
@@ -32,11 +32,11 @@ export default function HowItWorksPage() {
       </ol>
 
       <div className="mt-16 rounded-lg border border-white/10 bg-surface p-6">
-        <p className="font-medium text-ink">What happens if I miss a payment?</p>
+        <p className="font-medium text-ink">What happens if my debit order fails?</p>
         <p className="mt-2 text-sm text-slate-300">
-          We'll always let you know before anything happens. If a payment stays overdue past the grace
-          period on your agreement, the device may be temporarily restricted until the outstanding
-          payment is made. As soon as we receive it, access is restored.
+          Your device will be locked until the payment is resolved. We do not automatically retry a
+          failed debit order — you'll need to make a manual payment from your dashboard to unlock
+          your device again.
         </p>
       </div>
 

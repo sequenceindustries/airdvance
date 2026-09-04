@@ -16,7 +16,6 @@ export function SiteFooter() {
           <ul className="space-y-2 text-slate-300">
             <li><Link href="/shop/smartphones" className="hover:text-accent">Smartphones</Link></li>
             <li><Link href="/shop/tablets" className="hover:text-accent">Tablets</Link></li>
-            <li><Link href="/shop/laptops" className="hover:text-accent">Laptops</Link></li>
           </ul>
         </div>
         <div className="text-sm">

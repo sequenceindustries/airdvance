@@ -4,6 +4,7 @@ import { getCurrentProfile, getCustomerAgreements } from "@/lib/data/customer";
 import { OwnershipMeter } from "@/components/ownership-meter";
 import { RestrictionBanner } from "@/components/restriction-banner";
 import { formatCurrency } from "@/lib/pricing";
+import { payBuyout } from "@/lib/actions/payments";
 
 export default async function DashboardPage() {
   const profile = await getCurrentProfile();
@@ -49,20 +50,38 @@ export default async function DashboardPage() {
                       ? "bg-alert-light text-alert-dark"
                       : agreement.ownership_status === "OWNED"
                         ? "bg-signal-light text-signal-dark"
-                        : "bg-white/10 text-slate-300")
+                        : agreement.ownership_status === "OWNERSHIP_PENDING"
+                          ? "bg-brand-light text-brand"
+                          : "bg-white/10 text-slate-300")
                   }
                 >
                   {agreement.ownership_status === "OWNED"
                     ? "Owned"
                     : restricted
                       ? "Device restricted"
-                      : agreement.device.status}
+                      : agreement.ownership_status === "OWNERSHIP_PENDING"
+                        ? "Ready to buy out"
+                        : agreement.device.status}
                 </span>
               </div>
 
               {restricted && (
                 <div className="mt-4">
                   <RestrictionBanner />
+                </div>
+              )}
+
+              {agreement.ownership_status === "OWNERSHIP_PENDING" && (
+                <div className="mt-4 rounded-md border border-brand/30 bg-brand-light px-4 py-3 text-sm">
+                  <p className="font-medium text-brand">You've made every rental payment!</p>
+                  <p className="mt-1 text-slate-300">
+                    Own your device now for just {formatCurrency(agreement.buyout_amount)}.
+                  </p>
+                  <form action={async () => { "use server"; await payBuyout(agreement.id); }}>
+                    <button className="mt-3 rounded-md bg-brand px-4 py-2 text-sm font-medium text-white hover:bg-brand-dark">
+                      Buy it now for {formatCurrency(agreement.buyout_amount)}
+                    </button>
+                  </form>
                 </div>
               )}
 

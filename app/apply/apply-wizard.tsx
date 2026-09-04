@@ -5,7 +5,7 @@ import { formatCurrency } from "@/lib/pricing";
 import { submitApplication, type ApplicationDraft } from "@/lib/actions/applications";
 import type { Product, RentalPlan, Profile } from "@/types/domain";
 
-const steps = ["Personal information", "Address", "Income & employment", "Device", "Documents", "Consent"];
+const steps = ["Personal information", "Address", "Income & employment", "Device", "Debit order", "Consent"];
 
 export function ApplyWizard({
   product,
@@ -19,7 +19,6 @@ export function ApplyWizard({
   const [step, setStep] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [documentNames, setDocumentNames] = useState<string[]>([]);
 
   const [form, setForm] = useState({
     full_name: profile?.full_name ?? "",
@@ -33,12 +32,19 @@ export function ApplyWizard({
     employer: "",
     monthly_income: "",
     notes: "",
+    bank_name: "",
+    account_holder: profile?.full_name ?? "",
+    account_number: "",
+    branch_code: "",
+    account_type: "Cheque/Current",
     consent: false,
   });
 
   function update<K extends keyof typeof form>(key: K, value: (typeof form)[K]) {
     setForm((f) => ({ ...f, [key]: value }));
   }
+
+  const initialCharge = plan.monthly_payment + plan.admin_fee;
 
   async function handleSubmit() {
     setSubmitting(true);
@@ -59,6 +65,13 @@ export function ApplyWizard({
         employer: form.employer || undefined,
         monthly_income: Number(form.monthly_income) || 0,
         notes: form.notes || undefined,
+      },
+      debit_order: {
+        bank_name: form.bank_name,
+        account_holder: form.account_holder,
+        account_number: form.account_number,
+        branch_code: form.branch_code,
+        account_type: form.account_type,
       },
       consent_accepted: form.consent,
     };
@@ -150,43 +163,66 @@ export function ApplyWizard({
               <span className="font-medium">{formatCurrency(plan.monthly_payment)}</span>
             </div>
             <div className="mt-2 flex justify-between text-sm">
-              <span className="text-slate-400">Total payable</span>
+              <span className="text-slate-400">Admin fee (charged once, with your first payment)</span>
+              <span className="font-medium">{formatCurrency(plan.admin_fee)}</span>
+            </div>
+            <div className="mt-2 flex justify-between text-sm">
+              <span className="text-slate-400">Own it at the end for</span>
+              <span className="font-medium text-brand">{formatCurrency(plan.buyout_amount)}</span>
+            </div>
+            <div className="mt-2 flex justify-between border-t border-white/10 pt-2 text-sm">
+              <span className="text-slate-400">Total payable over the term</span>
               <span>{formatCurrency(plan.total_payable)}</span>
             </div>
           </div>
         )}
 
         {step === 4 && (
-          <div>
+          <div className="flex flex-col gap-4">
             <p className="text-sm text-slate-300">
-              Upload proof of identity and proof of income. (In this MVP, file names are recorded — actual
-              document storage connects to Supabase Storage.)
+              We'll set up a debit order for your monthly payments. Today we'll collect your first
+              installment ({formatCurrency(plan.monthly_payment)}) plus a once-off admin fee
+              ({formatCurrency(plan.admin_fee)}) — <span className="font-medium text-ink">{formatCurrency(initialCharge)} total</span>.
+              We'll ship your device as soon as that payment succeeds.
             </p>
-            <input
-              type="file"
-              multiple
-              className="mt-4 text-sm"
-              onChange={(e) => setDocumentNames(Array.from(e.target.files ?? []).map((f) => f.name))}
-            />
-            {documentNames.length > 0 && (
-              <ul className="mt-3 list-inside list-disc text-sm text-slate-300">
-                {documentNames.map((n) => (
-                  <li key={n}>{n}</li>
-                ))}
-              </ul>
-            )}
+            <Field label="Bank">
+              <input value={form.bank_name} onChange={(e) => update("bank_name", e.target.value)} className="input" placeholder="e.g. FNB, Standard Bank, Capitec" required />
+            </Field>
+            <Field label="Account holder name">
+              <input value={form.account_holder} onChange={(e) => update("account_holder", e.target.value)} className="input" required />
+            </Field>
+            <Field label="Account number">
+              <input value={form.account_number} onChange={(e) => update("account_number", e.target.value)} className="input" inputMode="numeric" required />
+            </Field>
+            <div className="grid grid-cols-2 gap-4">
+              <Field label="Branch code">
+                <input value={form.branch_code} onChange={(e) => update("branch_code", e.target.value)} className="input" inputMode="numeric" required />
+              </Field>
+              <Field label="Account type">
+                <select value={form.account_type} onChange={(e) => update("account_type", e.target.value)} className="input">
+                  <option>Cheque/Current</option>
+                  <option>Savings</option>
+                </select>
+              </Field>
+            </div>
           </div>
         )}
 
         {step === 5 && (
           <div>
-            <div className="max-h-48 overflow-y-auto rounded-md border border-white/10 bg-white/5 p-4 text-xs text-slate-300">
+            <div className="max-h-56 overflow-y-auto rounded-md border border-white/10 bg-white/5 p-4 text-xs text-slate-300">
               By submitting this application, you confirm that the information you've provided is accurate
-              and consent to Airdvance verifying it for the purpose of assessing this rent-to-own
-              application. You acknowledge that the device remains the property of Airdvance until all
-              qualifying payments under your agreement have been completed, and that Airdvance may restrict
-              access to the device if a payment becomes overdue, subject to the terms of your agreement.
-              (Full legal terms to be inserted.)
+              and authorize Airdvance to debit the bank account provided for the first payment shown above,
+              and thereafter for each monthly installment on your agreement, until the rental term is
+              complete or the agreement is otherwise ended. You acknowledge that the device remains the
+              property of Airdvance until you complete the final buyout payment.
+              <br /><br />
+              <span className="font-medium text-alert">
+                If a debit order fails, your device will be locked (restricted) until the payment is
+                resolved.
+              </span>{" "}
+              Failed debit orders are not automatically retried — you will need to make a manual payment
+              to restore access. (Full legal terms to be inserted.)
             </div>
             <label className="mt-4 flex items-start gap-2 text-sm">
               <input
@@ -195,7 +231,7 @@ export function ApplyWizard({
                 onChange={(e) => update("consent", e.target.checked)}
                 className="mt-1"
               />
-              I have read and accept the declaration above.
+              I have read and accept the declaration and debit order authorization above.
             </label>
             {error && <p className="mt-3 text-sm text-alert">{error}</p>}
           </div>
@@ -223,7 +259,7 @@ export function ApplyWizard({
             disabled={!form.consent || submitting}
             className="rounded-md bg-brand px-5 py-2 text-sm font-medium text-white hover:bg-brand-dark disabled:opacity-40"
           >
-            {submitting ? "Submitting…" : "Submit application"}
+            {submitting ? `Charging ${formatCurrency(initialCharge)}…` : `Authorize & pay ${formatCurrency(initialCharge)}`}
           </button>
         )}
       </div>

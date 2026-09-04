@@ -18,7 +18,7 @@ async function getCounts() {
     completedAgreements,
     devicesOwned,
   ] = await Promise.all([
-    supabase.from("applications").select("id", { count: "exact", head: true }).eq("status", "UNDER_REVIEW"),
+    supabase.from("applications").select("id", { count: "exact", head: true }).eq("status", "DECLINED"),
     supabase.from("agreements").select("customer_id", { count: "exact", head: true }).eq("status", "ACTIVE"),
     supabase.from("agreements").select("id", { count: "exact", head: true }).eq("status", "ACTIVE"),
     supabase.from("inventory").select("id", { count: "exact", head: true }).eq("status", "ACTIVE"),
@@ -50,7 +50,7 @@ export default async function AdminDashboardPage() {
   const counts = await getCounts();
 
   const cards = [
-    { label: "Applications awaiting review", value: counts.applications, href: "/admin/applications" },
+    { label: "Failed first debits", value: counts.applications, href: "/admin/applications" },
     { label: "Active customers", value: counts.activeCustomers },
     { label: "Active agreements", value: counts.activeAgreements },
     { label: "Devices on rent", value: counts.devicesOnRent, href: "/admin/devices" },

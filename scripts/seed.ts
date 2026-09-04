@@ -332,7 +332,7 @@ async function createAgreement(opts: {
   status: "PENDING" | "ACTIVE" | "DEFAULTED" | "COMPLETED";
   ownershipStatus: "NOT_OWNED" | "OWNERSHIP_PENDING" | "OWNED";
 }) {
-  const total = totalPayable({ monthly_payment: opts.monthlyPayment, term_months: opts.termMonths, deposit: opts.deposit });
+  const total = totalPayable({ monthly_payment: opts.monthlyPayment, term_months: opts.termMonths, deposit: opts.deposit, admin_fee: 150 });
   const startDate = new Date();
   startDate.setMonth(startDate.getMonth() - opts.paymentsCompleted);
   const endDate = new Date(startDate);

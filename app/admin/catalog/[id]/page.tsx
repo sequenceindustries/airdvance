@@ -79,7 +79,8 @@ export default async function AdminCatalogEditPage({ params }: { params: { id: s
               <tr>
                 <th className="px-3 py-2">Term</th>
                 <th className="px-3 py-2">Monthly</th>
-                <th className="px-3 py-2">Deposit</th>
+                <th className="px-3 py-2">Admin fee</th>
+                <th className="px-3 py-2">Buyout</th>
                 <th className="px-3 py-2">Total payable</th>
                 <th className="px-3 py-2">Status</th>
                 <th className="px-3 py-2"></th>
@@ -95,7 +96,10 @@ export default async function AdminCatalogEditPage({ params }: { params: { id: s
                     <input form={`plan-${plan.id}`} name="monthly_payment" type="number" defaultValue={plan.monthly_payment} className="input" />
                   </td>
                   <td className="px-3 py-2">
-                    <input form={`plan-${plan.id}`} name="deposit" type="number" defaultValue={plan.deposit} className="input" />
+                    <input form={`plan-${plan.id}`} name="admin_fee" type="number" defaultValue={plan.admin_fee} className="input" />
+                  </td>
+                  <td className="px-3 py-2">
+                    <input form={`plan-${plan.id}`} name="buyout_amount" type="number" defaultValue={plan.buyout_amount} className="input" />
                   </td>
                   <td className="px-3 py-2 text-slate-400">{formatCurrency(plan.total_payable)}</td>
                   <td className="px-3 py-2">
@@ -144,6 +148,14 @@ export default async function AdminCatalogEditPage({ params }: { params: { id: s
           <label className="text-sm">
             Deposit (R)
             <input name="deposit" type="number" defaultValue={0} className="input mt-1 w-28" />
+          </label>
+          <label className="text-sm">
+            Admin fee (R)
+            <input name="admin_fee" type="number" defaultValue={150} className="input mt-1 w-28" />
+          </label>
+          <label className="text-sm">
+            Buyout (R)
+            <input name="buyout_amount" type="number" defaultValue={10} className="input mt-1 w-28" />
           </label>
           <button className="rounded-md bg-ink px-4 py-2 text-sm font-medium text-paper hover:bg-slate-800">
             Add plan

@@ -31,8 +31,8 @@ export default async function HomePage() {
             Get the device you need now. Pay over time. Own it.
           </h1>
           <p className="mt-6 max-w-lg text-lg text-slate-300">
-            Choose a smartphone, tablet or laptop and spread the cost over an agreed rental
-            term. When you've made every payment, it's yours — no strings attached.
+            Choose a smartphone or tablet and spread the cost over an agreed rental
+            term. When you've made every payment, own it for as little as R10.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
@@ -53,11 +53,10 @@ export default async function HomePage() {
 
       {/* Categories */}
       <section className="mx-auto max-w-6xl px-6 pb-16">
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2">
           {[
             { href: "/shop/smartphones", label: "Smartphones", copy: "The latest and most dependable phones." },
             { href: "/shop/tablets", label: "Tablets", copy: "For study, streaming and creative work." },
-            { href: "/shop/laptops", label: "Laptops", copy: "Get set up for work or school today." },
           ].map((c) => (
             <Link
               key={c.href}
@@ -92,10 +91,10 @@ export default async function HomePage() {
           <h2 className="font-display text-2xl">How Airdvance works</h2>
           <div className="mt-8 grid gap-8 md:grid-cols-4">
             {[
-              { title: "Choose a device", copy: "Browse smartphones, tablets and laptops and pick a rental term that suits your budget." },
-              { title: "Apply in minutes", copy: "Tell us a little about yourself. Most applications are reviewed quickly." },
-              { title: "Get your device", copy: "Once approved, we set up your agreement and get your device to you." },
-              { title: "Pay and own it", copy: "Keep up your monthly payments. Once you've paid it off, the device is yours." },
+              { title: "Choose a device", copy: "Browse smartphones and tablets and pick a rental term that suits your budget." },
+              { title: "Set up your debit order", copy: "We collect your first payment instantly — approval is automatic, no waiting for review." },
+              { title: "We ship your device", copy: "As soon as your first payment clears, your device is on its way." },
+              { title: "Buy it out for R10", copy: "Once your term is up, pay a small buyout fee from your dashboard and it's yours." },
             ].map((step) => (
               <div key={step.title}>
                 <p className="font-display text-lg">{step.title}</p>

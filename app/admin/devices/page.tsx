@@ -2,8 +2,7 @@ import { redirect } from "next/navigation";
 import clsx from "clsx";
 import { getCurrentProfile } from "@/lib/data/customer";
 import { createClient } from "@/lib/supabase/server";
-import { adminRestrictDevice, adminRestoreDevice, adminReleaseDevice } from "@/lib/actions/admin";
-import { recordPayment } from "@/lib/actions/payments";
+import { adminRestrictDevice, adminRestoreDevice, adminReleaseDevice, markDeviceShipped } from "@/lib/actions/admin";
 
 const controlStyles: Record<string, string> = {
   NOT_REGISTERED: "bg-white/10 text-slate-400",
@@ -51,7 +50,9 @@ export default async function AdminDevicesPage() {
                 <tr key={device.id} className="align-top">
                   <td className="px-4 py-3">
                     <p className="font-medium">{device.asset_number}</p>
-                    <p className="text-xs text-slate-500">{device.status}</p>
+                    <p className="text-xs text-slate-500">
+                      {device.status === "ALLOCATED" ? "Awaiting shipment" : device.status}
+                    </p>
                   </td>
                   <td className="px-4 py-3">{device.product?.name}</td>
                   <td className="px-4 py-3">{device.customer?.full_name ?? "—"}</td>
@@ -71,6 +72,13 @@ export default async function AdminDevicesPage() {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap gap-2">
+                      {device.status === "ALLOCATED" && (
+                        <form action={async () => { "use server"; await markDeviceShipped(device.id); }}>
+                          <button className="rounded-md bg-brand px-3 py-1 text-xs font-medium text-white hover:bg-brand-dark">
+                            Mark shipped
+                          </button>
+                        </form>
+                      )}
                       {control?.status !== "RESTRICTED" && device.agreement_id && (
                         <form action={async (fd: FormData) => { "use server"; await adminRestrictDevice(device.id, String(fd.get("reason") ?? "Manual restriction")); }}>
                           <input type="hidden" name="reason" value="Restricted by admin" />

@@ -13,8 +13,8 @@ export function formatCurrency(amount: number): string {
   }).format(amount);
 }
 
-export function totalPayable(plan: Pick<RentalPlan, "monthly_payment" | "term_months" | "deposit">): number {
-  return plan.deposit + plan.monthly_payment * plan.term_months;
+export function totalPayable(plan: Pick<RentalPlan, "monthly_payment" | "term_months" | "deposit" | "admin_fee">): number {
+  return plan.deposit + plan.admin_fee + plan.monthly_payment * plan.term_months;
 }
 
 export function cheapestPlan(plans: RentalPlan[]): RentalPlan | undefined {

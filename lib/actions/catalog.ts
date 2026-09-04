@@ -54,13 +54,17 @@ export async function addRentalPlan(productId: string, formData: FormData) {
   const term_months = Number(formData.get("term_months"));
   const monthly_payment = Number(formData.get("monthly_payment"));
   const deposit = Number(formData.get("deposit") ?? 0);
+  const admin_fee = Number(formData.get("admin_fee") ?? 150);
+  const buyout_amount = Number(formData.get("buyout_amount") ?? 10);
 
   const { error } = await service.from("rental_plans").insert({
     product_id: productId,
     term_months,
     monthly_payment,
     deposit,
-    total_payable: totalPayable({ term_months, monthly_payment, deposit }),
+    admin_fee,
+    buyout_amount,
+    total_payable: totalPayable({ term_months, monthly_payment, deposit, admin_fee }),
     status: "ACTIVE",
   });
 
@@ -78,6 +82,8 @@ export async function updateRentalPlan(planId: string, formData: FormData) {
   const term_months = Number(formData.get("term_months"));
   const monthly_payment = Number(formData.get("monthly_payment"));
   const deposit = Number(formData.get("deposit") ?? 0);
+  const admin_fee = Number(formData.get("admin_fee") ?? 150);
+  const buyout_amount = Number(formData.get("buyout_amount") ?? 10);
   const status = String(formData.get("status"));
 
   const { error } = await service
@@ -86,7 +92,9 @@ export async function updateRentalPlan(planId: string, formData: FormData) {
       term_months,
       monthly_payment,
       deposit,
-      total_payable: totalPayable({ term_months, monthly_payment, deposit }),
+      admin_fee,
+      buyout_amount,
+      total_payable: totalPayable({ term_months, monthly_payment, deposit, admin_fee }),
       status,
     })
     .eq("id", planId);

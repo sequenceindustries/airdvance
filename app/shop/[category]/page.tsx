@@ -7,7 +7,6 @@ import type { DeviceCategory } from "@/types/domain";
 const categoryMap: Record<string, { key: DeviceCategory; label: string }> = {
   smartphones: { key: "SMARTPHONE", label: "Smartphones" },
   tablets: { key: "TABLET", label: "Tablets" },
-  laptops: { key: "LAPTOP", label: "Laptops" },
 };
 
 async function fromPriceFor(productId: string) {

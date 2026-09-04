@@ -7,7 +7,6 @@ import type { DeviceCategory, Product } from "@/types/domain";
 const categories: { key: DeviceCategory; label: string; href: string }[] = [
   { key: "SMARTPHONE", label: "Smartphones", href: "/shop/smartphones" },
   { key: "TABLET", label: "Tablets", href: "/shop/tablets" },
-  { key: "LAPTOP", label: "Laptops", href: "/shop/laptops" },
 ];
 
 async function fromPriceFor(productId: string) {

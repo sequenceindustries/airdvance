@@ -26,6 +26,8 @@ export interface RentalPlan {
   monthly_payment: number;
   deposit: number;
   total_payable: number;
+  admin_fee: number;
+  buyout_amount: number;
   status: "ACTIVE" | "INACTIVE";
 }
 
@@ -63,6 +65,8 @@ export interface Application {
   };
   documents: { name: string; path: string; uploaded_at: string }[];
   consent_accepted: boolean;
+  debit_order_mandate_id?: string | null;
+  first_debit_status?: string | null;
   internal_notes: { author: string; note: string; created_at: string }[];
   created_at: string;
   updated_at: string;
@@ -92,6 +96,8 @@ export interface Agreement {
   term_months: number;
   monthly_payment: number;
   deposit: number;
+  admin_fee: number;
+  buyout_amount: number;
   total_payable: number;
   payments_required: number;
   payments_completed: number;
@@ -111,17 +117,33 @@ export type PaymentStatus =
   | "OVERDUE"
   | "CANCELLED";
 
+export type PaymentType = "ADMIN_FEE" | "MONTHLY" | "BUYOUT";
+
 export interface ScheduledPayment {
   id: string;
   agreement_id: string;
   customer_id: string;
   payment_number: number;
   amount: number;
+  payment_type: PaymentType;
   due_date: string;
   status: PaymentStatus;
   paid_date?: string;
   payment_reference?: string;
   provider?: string;
+}
+
+export interface DebitOrderMandate {
+  id: string;
+  customer_id: string;
+  application_id: string | null;
+  bank_name: string;
+  account_holder: string;
+  account_number_last4: string;
+  branch_code: string;
+  account_type: string;
+  authorized_at: string;
+  created_at: string;
 }
 
 export type InventoryStatus =
