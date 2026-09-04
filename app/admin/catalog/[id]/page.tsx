@@ -88,29 +88,33 @@ export default async function AdminCatalogEditPage({ params }: { params: { id: s
             <tbody className="divide-y divide-white/10">
               {plans?.map((plan) => (
                 <tr key={plan.id}>
-                  <form action={async (fd: FormData) => { "use server"; await updateRentalPlan(plan.id, fd); }} className="contents">
-                    <td className="px-3 py-2">
-                      <input name="term_months" type="number" defaultValue={plan.term_months} className="input" />
-                    </td>
-                    <td className="px-3 py-2">
-                      <input name="monthly_payment" type="number" defaultValue={plan.monthly_payment} className="input" />
-                    </td>
-                    <td className="px-3 py-2">
-                      <input name="deposit" type="number" defaultValue={plan.deposit} className="input" />
-                    </td>
-                    <td className="px-3 py-2 text-slate-400">{formatCurrency(plan.total_payable)}</td>
-                    <td className="px-3 py-2">
-                      <select name="status" defaultValue={plan.status} className="input">
-                        <option value="ACTIVE">Active</option>
-                        <option value="INACTIVE">Inactive</option>
-                      </select>
-                    </td>
-                    <td className="px-3 py-2">
-                      <button className="rounded-md border border-white/20 px-3 py-1 text-xs font-medium text-slate-300 hover:bg-white/10">
-                        Save
-                      </button>
-                    </td>
-                  </form>
+                  <td className="px-3 py-2">
+                    <input form={`plan-${plan.id}`} name="term_months" type="number" defaultValue={plan.term_months} className="input" />
+                  </td>
+                  <td className="px-3 py-2">
+                    <input form={`plan-${plan.id}`} name="monthly_payment" type="number" defaultValue={plan.monthly_payment} className="input" />
+                  </td>
+                  <td className="px-3 py-2">
+                    <input form={`plan-${plan.id}`} name="deposit" type="number" defaultValue={plan.deposit} className="input" />
+                  </td>
+                  <td className="px-3 py-2 text-slate-400">{formatCurrency(plan.total_payable)}</td>
+                  <td className="px-3 py-2">
+                    <select form={`plan-${plan.id}`} name="status" defaultValue={plan.status} className="input">
+                      <option value="ACTIVE">Active</option>
+                      <option value="INACTIVE">Inactive</option>
+                    </select>
+                  </td>
+                  <td className="px-3 py-2">
+                    <button form={`plan-${plan.id}`} className="rounded-md border border-white/20 px-3 py-1 text-xs font-medium text-slate-300 hover:bg-white/10">
+                      Save
+                    </button>
+                    {/* This empty form carries the id + server action every input/select/button
+                        above references via the form="plan-<id>" attribute. It has to live
+                        outside the <tr> because a <form> is not a valid direct child of <tr>/<table> —
+                        browsers silently relocate ("foster-parent") it out during HTML parsing,
+                        which orphans any cells it would otherwise wrap. */}
+                    <form id={`plan-${plan.id}`} action={async (fd: FormData) => { "use server"; await updateRentalPlan(plan.id, fd); }} />
+                  </td>
                   <td className="px-1">
                     <form action={async () => { "use server"; await deleteRentalPlan(plan.id); }}>
                       <button className="rounded-md border border-alert/40 px-3 py-1 text-xs font-medium text-alert hover:bg-alert-light">
