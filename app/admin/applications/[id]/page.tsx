@@ -62,7 +62,7 @@ export default async function AdminApplicationDetailPage({ params }: { params: {
           <h2 className="font-medium text-ink">Address</h2>
           <dl className="mt-2 space-y-1 text-sm">
             <Row label="Residential" value={application.address?.residential} />
-            <Row label="Postal" value={application.address?.postal} />
+            <Row label="Delivery address" value={application.address?.postal} />
           </dl>
         </div>
         <div>

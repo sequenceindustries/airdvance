@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { formatCurrency } from "@/lib/pricing";
 import { submitApplication, type ApplicationDraft } from "@/lib/actions/applications";
+import { SOUTH_AFRICAN_BANKS } from "@/lib/data/banks";
 import type { Product, RentalPlan, Profile } from "@/types/domain";
 
 const steps = ["Personal information", "Address", "Income & employment", "Device", "Debit order", "Consent"];
@@ -32,7 +33,6 @@ export function ApplyWizard({
     employment_status: "Employed",
     employer: "",
     monthly_income: "",
-    notes: "",
     bank_name: "",
     account_holder: profile?.full_name ?? "",
     account_number: "",
@@ -44,6 +44,11 @@ export function ApplyWizard({
 
   function update<K extends keyof typeof form>(key: K, value: (typeof form)[K]) {
     setForm((f) => ({ ...f, [key]: value }));
+  }
+
+  function selectBank(bankName: string) {
+    const bank = SOUTH_AFRICAN_BANKS.find((b) => b.name === bankName);
+    setForm((f) => ({ ...f, bank_name: bankName, branch_code: bank?.branchCode ?? f.branch_code }));
   }
 
   const initialCharge = plan.monthly_payment + plan.admin_fee;
@@ -67,7 +72,6 @@ export function ApplyWizard({
         status: form.employment_status,
         employer: form.employer || undefined,
         monthly_income: Number(form.monthly_income) || 0,
-        notes: form.notes || undefined,
       },
       debit_order: {
         bank_name: form.bank_name,
@@ -129,7 +133,7 @@ export function ApplyWizard({
             <Field label="Residential address">
               <textarea value={form.residential} onChange={(e) => update("residential", e.target.value)} className="input" rows={3} required />
             </Field>
-            <Field label="Postal address (if different)">
+            <Field label="Delivery address (if different)">
               <textarea value={form.postal} onChange={(e) => update("postal", e.target.value)} className="input" rows={3} />
             </Field>
           </div>
@@ -156,16 +160,20 @@ export function ApplyWizard({
             <Field label="Monthly income (before deductions)">
               <input type="number" value={form.monthly_income} onChange={(e) => update("monthly_income", e.target.value)} className="input" required />
             </Field>
-            <Field label="Anything else we should know?">
-              <textarea value={form.notes} onChange={(e) => update("notes", e.target.value)} className="input" rows={2} />
-            </Field>
           </div>
         )}
 
         {step === 3 && (
           <div>
-            <p className="text-sm text-slate-400">Selected device</p>
-            <p className="mt-1 font-display text-xl">{product.name}</p>
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-sm text-slate-400">Selected device</p>
+                <p className="mt-1 font-display text-xl">{product.name}</p>
+              </div>
+              <Link href="/shop" className="whitespace-nowrap text-sm font-medium text-accent hover:text-accent-dark">
+                Change device
+              </Link>
+            </div>
             <div className="mt-4 flex justify-between border-t border-white/10 pt-4 text-sm">
               <span className="text-slate-400">Rental term</span>
               <span>{plan.term_months} months</span>
@@ -199,7 +207,12 @@ export function ApplyWizard({
               next payday. As soon as that payment clears, we'll deliver your device within 7 days.
             </p>
             <Field label="Bank">
-              <input value={form.bank_name} onChange={(e) => update("bank_name", e.target.value)} className="input" placeholder="e.g. FNB, Standard Bank, Capitec" required />
+              <select value={form.bank_name} onChange={(e) => selectBank(e.target.value)} className="input" required>
+                <option value="" disabled>Select your bank</option>
+                {SOUTH_AFRICAN_BANKS.map((bank) => (
+                  <option key={bank.name} value={bank.name}>{bank.name}</option>
+                ))}
+              </select>
             </Field>
             <Field label="Account holder name">
               <input value={form.account_holder} onChange={(e) => update("account_holder", e.target.value)} className="input" required />
@@ -276,7 +289,7 @@ export function ApplyWizard({
             disabled={!form.consent || submitting}
             className="rounded-md bg-brand px-5 py-2 text-sm font-medium text-white hover:bg-brand-dark disabled:opacity-40"
           >
-            {submitting ? "Submitting…" : "Authorize debit order"}
+            {submitting ? "Applying…" : "Apply"}
           </button>
         )}
       </div>
