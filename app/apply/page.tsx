@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { getProductBySlug, getRentalPlans } from "@/lib/data/products";
+import { getProductBySlug, getRentalPlans, getAllActiveProducts } from "@/lib/data/products";
 import { ApplyWizard } from "./apply-wizard";
 
 export default async function ApplyPage({
@@ -40,12 +40,12 @@ export default async function ApplyPage({
   if (!product) {
     return <div className="mx-auto max-w-xl px-6 py-20">We couldn't find that device.</div>;
   }
-  const plans = await getRentalPlans(product.id);
+  const [plans, allProducts] = await Promise.all([getRentalPlans(product.id), getAllActiveProducts()]);
   const plan = plans.find((p) => p.id === searchParams.plan) ?? plans[0];
 
   return (
     <div className="mx-auto max-w-2xl px-6 py-12">
-      <ApplyWizard product={product} plan={plan} profile={profile} />
+      <ApplyWizard product={product} plan={plan} plans={plans} allProducts={allProducts} profile={profile} />
     </div>
   );
 }

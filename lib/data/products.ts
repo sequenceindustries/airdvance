@@ -43,3 +43,16 @@ export async function getRentalPlans(productId: string): Promise<RentalPlan[]> {
   if (error) throw error;
   return data as RentalPlan[];
 }
+
+/** Minimal list of every active product, for pickers like the apply wizard's device dropdown. */
+export async function getAllActiveProducts(): Promise<Pick<Product, "id" | "name" | "brand" | "category" | "slug">[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("products")
+    .select("id, name, brand, category, slug")
+    .eq("status", "ACTIVE")
+    .order("category", { ascending: true })
+    .order("name", { ascending: true });
+  if (error) throw error;
+  return data as Pick<Product, "id" | "name" | "brand" | "category" | "slug">[];
+}

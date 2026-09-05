@@ -4,23 +4,47 @@ import { useState } from "react";
 import Link from "next/link";
 import { formatCurrency } from "@/lib/pricing";
 import { submitApplication, type ApplicationDraft } from "@/lib/actions/applications";
+import { fetchProductWithPlans } from "@/lib/actions/apply-lookup";
 import { SOUTH_AFRICAN_BANKS } from "@/lib/data/banks";
-import type { Product, RentalPlan, Profile } from "@/types/domain";
+import { deriveDateOfBirthFromSaId } from "@/lib/id-number";
+import { AddressAutocomplete } from "@/components/address-autocomplete";
+import type { Product, RentalPlan, Profile, DeviceCategory } from "@/types/domain";
 
 const steps = ["Personal information", "Address", "Income & employment", "Device", "Debit order", "Consent"];
+
+type ProductOption = Pick<Product, "id" | "name" | "brand" | "category" | "slug">;
+
+const categoryLabels: Record<DeviceCategory, string> = {
+  SMARTPHONE: "Smartphones",
+  TABLET: "Tablets",
+  LAPTOP: "Laptops",
+};
 
 export function ApplyWizard({
   product,
   plan,
+  plans,
+  allProducts,
   profile,
 }: {
   product: Product;
   plan: RentalPlan;
+  plans: RentalPlan[];
+  allProducts: ProductOption[];
   profile: Profile | null;
 }) {
   const [step, setStep] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // The device and plan the customer is actually applying for -- kept as
+  // client state so switching either one is instant and never loses any of
+  // the personal/address/employment/debit-order details already filled in.
+  const [currentProduct, setCurrentProduct] = useState(product);
+  const [availablePlans, setAvailablePlans] = useState(plans.length ? plans : [plan]);
+  const [currentPlanId, setCurrentPlanId] = useState(plan?.id);
+  const [switchingDevice, setSwitchingDevice] = useState(false);
+  const currentPlan = availablePlans.find((p) => p.id === currentPlanId) ?? availablePlans[0];
 
   const [form, setForm] = useState({
     full_name: profile?.full_name ?? "",
@@ -46,20 +70,41 @@ export function ApplyWizard({
     setForm((f) => ({ ...f, [key]: value }));
   }
 
+  function updateIdNumber(value: string) {
+    const derivedDob = deriveDateOfBirthFromSaId(value);
+    setForm((f) => ({ ...f, id_number: value, date_of_birth: derivedDob ?? f.date_of_birth }));
+  }
+
   function selectBank(bankName: string) {
     const bank = SOUTH_AFRICAN_BANKS.find((b) => b.name === bankName);
     setForm((f) => ({ ...f, bank_name: bankName, branch_code: bank?.branchCode ?? f.branch_code }));
   }
 
-  const initialCharge = plan.monthly_payment + plan.admin_fee;
+  async function selectDevice(productId: string) {
+    if (productId === currentProduct.id) return;
+    setSwitchingDevice(true);
+    const result = await fetchProductWithPlans(productId);
+    setSwitchingDevice(false);
+    if (!result) return;
+    setCurrentProduct(result.product);
+    setAvailablePlans(result.plans);
+    setCurrentPlanId(result.plans[0]?.id);
+  }
+
+  const initialCharge = currentPlan.monthly_payment + currentPlan.admin_fee;
   const minPayday = new Date().toISOString().slice(0, 10);
+
+  const productsByCategory = allProducts.reduce<Record<string, ProductOption[]>>((acc, p) => {
+    (acc[p.category] ??= []).push(p);
+    return acc;
+  }, {});
 
   async function handleSubmit() {
     setSubmitting(true);
     setError(null);
     const draft: ApplicationDraft = {
-      product_id: product.id,
-      rental_plan_id: plan.id,
+      product_id: currentProduct.id,
+      rental_plan_id: currentPlan.id,
       personal_info: {
         full_name: form.full_name,
         id_number: form.id_number,
@@ -114,10 +159,11 @@ export function ApplyWizard({
               <input value={form.full_name} onChange={(e) => update("full_name", e.target.value)} className="input" required />
             </Field>
             <Field label="ID or passport number">
-              <input value={form.id_number} onChange={(e) => update("id_number", e.target.value)} className="input" required />
+              <input value={form.id_number} onChange={(e) => updateIdNumber(e.target.value)} className="input" required />
             </Field>
             <Field label="Date of birth">
               <input type="date" value={form.date_of_birth} onChange={(e) => update("date_of_birth", e.target.value)} className="input" required />
+              <span className="mt-1 block text-xs text-slate-500">Auto-filled from your ID number — you can adjust it if needed.</span>
             </Field>
             <Field label="Mobile number">
               <input value={form.mobile} onChange={(e) => update("mobile", e.target.value)} className="input" required />
@@ -131,10 +177,10 @@ export function ApplyWizard({
         {step === 1 && (
           <div className="flex flex-col gap-4">
             <Field label="Residential address">
-              <textarea value={form.residential} onChange={(e) => update("residential", e.target.value)} className="input" rows={3} required />
+              <AddressAutocomplete value={form.residential} onChange={(v) => update("residential", v)} required />
             </Field>
             <Field label="Delivery address (if different)">
-              <textarea value={form.postal} onChange={(e) => update("postal", e.target.value)} className="input" rows={3} />
+              <AddressAutocomplete value={form.postal} onChange={(v) => update("postal", v)} />
             </Field>
           </div>
         )}
@@ -164,45 +210,67 @@ export function ApplyWizard({
         )}
 
         {step === 3 && (
-          <div>
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="text-sm text-slate-400">Selected device</p>
-                <p className="mt-1 font-display text-xl">{product.name}</p>
+          <div className="flex flex-col gap-4">
+            <Field label="Device">
+              <select
+                value={currentProduct.id}
+                onChange={(e) => selectDevice(e.target.value)}
+                className="input"
+                disabled={switchingDevice}
+              >
+                {Object.entries(productsByCategory).map(([category, items]) => (
+                  <optgroup key={category} label={categoryLabels[category as DeviceCategory] ?? category}>
+                    {items.map((p) => (
+                      <option key={p.id} value={p.id}>{p.brand} {p.name}</option>
+                    ))}
+                  </optgroup>
+                ))}
+              </select>
+              {switchingDevice && <span className="mt-1 block text-xs text-slate-500">Loading plans…</span>}
+            </Field>
+
+            <Field label="Rental term">
+              <select
+                value={currentPlan?.id}
+                onChange={(e) => setCurrentPlanId(e.target.value)}
+                className="input"
+                disabled={switchingDevice || availablePlans.length === 0}
+              >
+                {availablePlans.map((p) => (
+                  <option key={p.id} value={p.id}>{p.term_months} months — {formatCurrency(p.monthly_payment)}/month</option>
+                ))}
+              </select>
+            </Field>
+
+            {currentPlan && (
+              <div className="rounded-md border border-white/10 bg-white/5 p-4 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-slate-400">Monthly payment</span>
+                  <span className="font-medium">{formatCurrency(currentPlan.monthly_payment)}</span>
+                </div>
+                <div className="mt-2 flex justify-between">
+                  <span className="text-slate-400">Admin fee (charged once, with your first payment)</span>
+                  <span className="font-medium">{formatCurrency(currentPlan.admin_fee)}</span>
+                </div>
+                <div className="mt-2 flex justify-between">
+                  <span className="text-slate-400">Buy it at the end for</span>
+                  <span className="font-medium text-brand">{formatCurrency(currentPlan.buyout_amount)}</span>
+                </div>
+                <div className="mt-2 flex justify-between border-t border-white/10 pt-2">
+                  <span className="text-slate-400">Total payable over the term</span>
+                  <span>{formatCurrency(currentPlan.total_payable)}</span>
+                </div>
               </div>
-              <Link href="/shop" className="whitespace-nowrap text-sm font-medium text-accent hover:text-accent-dark">
-                Change device
-              </Link>
-            </div>
-            <div className="mt-4 flex justify-between border-t border-white/10 pt-4 text-sm">
-              <span className="text-slate-400">Rental term</span>
-              <span>{plan.term_months} months</span>
-            </div>
-            <div className="mt-2 flex justify-between text-sm">
-              <span className="text-slate-400">Monthly payment</span>
-              <span className="font-medium">{formatCurrency(plan.monthly_payment)}</span>
-            </div>
-            <div className="mt-2 flex justify-between text-sm">
-              <span className="text-slate-400">Admin fee (charged once, with your first payment)</span>
-              <span className="font-medium">{formatCurrency(plan.admin_fee)}</span>
-            </div>
-            <div className="mt-2 flex justify-between text-sm">
-              <span className="text-slate-400">Buy it at the end for</span>
-              <span className="font-medium text-brand">{formatCurrency(plan.buyout_amount)}</span>
-            </div>
-            <div className="mt-2 flex justify-between border-t border-white/10 pt-2 text-sm">
-              <span className="text-slate-400">Total payable over the term</span>
-              <span>{formatCurrency(plan.total_payable)}</span>
-            </div>
+            )}
           </div>
         )}
 
-        {step === 4 && (
+        {step === 4 && currentPlan && (
           <div className="flex flex-col gap-4">
             <p className="text-sm text-slate-300">
               This is rent-to-buy, not credit — we won't charge you today. We'll authorize a debit
-              order now, then collect your first payment ({formatCurrency(plan.monthly_payment)} +{" "}
-              {formatCurrency(plan.admin_fee)} admin fee ={" "}
+              order now, then collect your first payment ({formatCurrency(currentPlan.monthly_payment)} +{" "}
+              {formatCurrency(currentPlan.admin_fee)} admin fee ={" "}
               <span className="font-medium text-ink">{formatCurrency(initialCharge)}</span>) on your
               next payday. As soon as that payment clears, we'll deliver your device within 7 days.
             </p>
