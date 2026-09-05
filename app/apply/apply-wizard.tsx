@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { formatCurrency } from "@/lib/pricing";
 import { submitApplication, type ApplicationDraft } from "@/lib/actions/applications";
 import type { Product, RentalPlan, Profile } from "@/types/domain";
@@ -237,8 +238,8 @@ export function ApplyWizard({
                 If a debit order fails, your device will be locked until the payment is resolved.
               </span>{" "}
               Failed debit orders are not automatically retried — you will need to make a manual payment
-              to unlock your device. See our legal terms at{" "}
-              <a href="https://ownit.co.za" target="_blank" rel="noreferrer" className="text-accent underline">ownit.co.za</a>.
+              to unlock your device. See our{" "}
+              <Link href="/terms" target="_blank" className="text-accent underline">Terms & Conditions</Link>.
             </div>
             <label className="mt-4 flex items-start gap-2 text-sm">
               <input

@@ -29,9 +29,8 @@ export function SiteFooter() {
         <div className="text-sm">
           <p className="mb-3 font-medium text-slate-100">Legal</p>
           <ul className="space-y-2 text-slate-300">
-            <li><a href="https://ownit.co.za/terms" target="_blank" rel="noreferrer" className="hover:text-accent">Terms & conditions</a></li>
-            <li><a href="https://ownit.co.za/privacy" target="_blank" rel="noreferrer" className="hover:text-accent">Privacy policy</a></li>
-            <li><a href="https://ownit.co.za" target="_blank" rel="noreferrer" className="hover:text-accent">ownit.co.za</a></li>
+            <li><Link href="/terms" className="hover:text-accent">Terms & conditions</Link></li>
+            <li><Link href="/privacy" className="hover:text-accent">Privacy policy</Link></li>
           </ul>
         </div>
         <div className="text-sm">
@@ -45,8 +44,8 @@ export function SiteFooter() {
       </div>
       <div className="border-t border-white/10 py-6 text-center text-xs text-slate-500">
         © {new Date().getFullYear()} airdvance. This is a rent-to-buy agreement, not a credit agreement.
-        Devices remain the property of airdvance until the buyout payment is completed. Full legal terms
-        at <a href="https://ownit.co.za" target="_blank" rel="noreferrer" className="underline hover:text-accent">ownit.co.za</a>.
+        Devices remain the property of airdvance until the buyout payment is completed. Read our{" "}
+        <Link href="/terms" className="underline hover:text-accent">Terms & Conditions</Link>.
       </div>
     </footer>
   );
