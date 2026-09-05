@@ -29,15 +29,20 @@ export async function getCustomerAgreements(customerId: string): Promise<Agreeme
   const supabase = createClient();
   const { data, error } = await supabase
     .from("agreements")
-    .select("*, product:products(*), device:inventory!agreements_device_id_fkey(*), device_control:device_control(*)")
+    .select("*, product:products(*), device:inventory!agreements_device_id_fkey(*, device_control(*))")
     .eq("customer_id", customerId)
     .order("created_at", { ascending: false });
   if (error) throw error;
 
-  return (data ?? []).map((row: any) => ({
-    ...row,
-    device_control: Array.isArray(row.device_control) ? row.device_control[0] ?? null : row.device_control,
-  }));
+  return (data ?? []).map((row: any) => {
+    const rawControl = row.device?.device_control;
+    const device_control = Array.isArray(rawControl) ? rawControl[0] ?? null : rawControl ?? null;
+    return {
+      ...row,
+      device: row.device ? { ...row.device, device_control: undefined } : row.device,
+      device_control,
+    };
+  });
 }
 
 export async function getAgreementSchedule(agreementId: string): Promise<ScheduledPayment[]> {
