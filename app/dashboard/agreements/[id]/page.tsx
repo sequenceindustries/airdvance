@@ -29,7 +29,7 @@ export default async function AgreementDetailPage({ params }: { params: { id: st
   return (
     <div className="mx-auto max-w-3xl px-6 py-12">
       <p className="text-sm text-slate-400">{agreement.agreement_number}</p>
-      <h1 className="font-display text-3xl">{agreement.product.name}</h1>
+      <h1 className="font-display text-3xl">{agreement.product?.name ?? "Device"}</h1>
 
       {restricted && (
         <div className="mt-4">
@@ -47,7 +47,7 @@ export default async function AgreementDetailPage({ params }: { params: { id: st
         <div>
           <p className="text-sm text-slate-400">Device status</p>
           <p className="mt-1 font-medium">
-            {agreement.ownership_status === "OWNED" ? "Owned" : agreement.device.status}
+            {agreement.ownership_status === "OWNED" ? "Owned" : agreement.device?.status ?? "—"}
           </p>
         </div>
       </div>

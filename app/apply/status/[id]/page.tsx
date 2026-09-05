@@ -36,7 +36,7 @@ export default async function ApplicationStatusPage({ params }: { params: { id: 
         <p className="mt-2 text-sm text-slate-400">Next payment date: {application.next_collection_date}</p>
       )}
       {application.product?.name && (
-        <p className="mt-6 text-sm text-slate-400">Device: {application.product.name}</p>
+        <p className="mt-6 text-sm text-slate-400">Device: {application.product?.name}</p>
       )}
       {declined ? (
         <Link href={`/product/${application.product?.slug ?? ""}`} className="mt-8 inline-block rounded-md bg-brand px-6 py-3 font-medium text-white hover:bg-brand-dark">

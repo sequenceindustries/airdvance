@@ -38,7 +38,7 @@ export default async function DashboardPage() {
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
                   <p className="text-sm text-slate-400">{agreement.agreement_number}</p>
-                  <p className="font-display text-xl">{agreement.product.name}</p>
+                  <p className="font-display text-xl">{agreement.product?.name ?? "Device"}</p>
                   <p className="mt-1 text-sm text-slate-300">
                     {formatCurrency(agreement.monthly_payment)} / month
                   </p>
@@ -61,7 +61,7 @@ export default async function DashboardPage() {
                       ? "Device restricted"
                       : agreement.ownership_status === "OWNERSHIP_PENDING"
                         ? "Ready to buy out"
-                        : agreement.device.status}
+                        : agreement.device?.status ?? "—"}
                 </span>
               </div>
 
