@@ -30,6 +30,7 @@ export async function signUp(formData: FormData) {
 export async function signIn(formData: FormData) {
   const email = String(formData.get("email"));
   const password = String(formData.get("password"));
+  const next = formData.get("next");
 
   const supabase = createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -41,6 +42,13 @@ export async function signIn(formData: FormData) {
   const { data: profile } = await supabase.from("profiles").select("role").eq("id", user!.id).maybeSingle();
 
   revalidatePath("/", "layout");
+
+  // Only ever redirect to a same-site relative path -- never follow an
+  // absolute/external URL from this field, to avoid an open redirect.
+  if (profile?.role !== "ADMIN" && typeof next === "string" && next.startsWith("/") && !next.startsWith("//")) {
+    redirect(next);
+  }
+
   redirect(profile?.role === "ADMIN" ? "/admin" : "/dashboard");
 }
 

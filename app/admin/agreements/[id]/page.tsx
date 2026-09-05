@@ -22,7 +22,7 @@ export default async function AdminAgreementDetailPage({ params }: { params: { i
   const supabase = createClient();
   const { data: agreement } = await supabase
     .from("agreements")
-    .select("*, product:products(name), customer:profiles(full_name, email), device:inventory(*, device_control(*))")
+    .select("*, product:products(name), customer:profiles(full_name, email), device:inventory!agreements_device_id_fkey(*, device_control(*))")
     .eq("id", params.id)
     .maybeSingle();
   if (!agreement) notFound();

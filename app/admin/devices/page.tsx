@@ -23,7 +23,7 @@ export default async function AdminDevicesPage() {
   const supabase = createClient();
   const { data: devices } = await supabase
     .from("inventory")
-    .select("*, product:products(name), customer:profiles(full_name), device_control(*), agreement:agreements(agreement_number, status)")
+    .select("*, product:products(name), customer:profiles(full_name), device_control(*), agreement:agreements!inventory_agreement_fk(agreement_number, status)")
     .order("created_at", { ascending: false });
 
   return (

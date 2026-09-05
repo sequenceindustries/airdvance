@@ -29,7 +29,7 @@ export async function getCustomerAgreements(customerId: string): Promise<Agreeme
   const supabase = createClient();
   const { data, error } = await supabase
     .from("agreements")
-    .select("*, product:products(*), device:inventory(*), device_control:device_control(*)")
+    .select("*, product:products(*), device:inventory!agreements_device_id_fkey(*), device_control:device_control(*)")
     .eq("customer_id", customerId)
     .order("created_at", { ascending: false });
   if (error) throw error;

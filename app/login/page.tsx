@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { signIn } from "@/lib/actions/auth";
 
-export default function LoginPage({ searchParams }: { searchParams: { error?: string } }) {
+export default function LoginPage({ searchParams }: { searchParams: { error?: string; next?: string } }) {
   return (
     <div className="mx-auto flex max-w-sm flex-col px-6 py-20">
       <h1 className="font-display text-3xl">Log in</h1>
@@ -15,6 +15,7 @@ export default function LoginPage({ searchParams }: { searchParams: { error?: st
       )}
 
       <form action={signIn} className="mt-8 flex flex-col gap-4">
+        {searchParams.next && <input type="hidden" name="next" value={searchParams.next} />}
         <label className="text-sm">
           Email
           <input
