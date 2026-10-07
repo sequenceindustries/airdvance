@@ -37,7 +37,24 @@ try {
        values ($1, $2, $3, $4, now(), 'ADMIN') on conflict do nothing returning email`,
       [bEmail, bHash, process.env.ADMIN_BOOTSTRAP_NAME || "Airdvance Admin", process.env.ADMIN_BOOTSTRAP_MOBILE || "+27600000000"],
     );
-    console.log(res.rowCount ? `[admin] created ${res.rows[0].email}` : "[admin] bootstrap skipped (account already exists)");
+    if (res.rowCount) {
+      console.log(`[admin] created ${res.rows[0].email}`);
+    } else {
+      // Account already exists (e.g. registered as a customer): promote it and set the
+      // bootstrap password, ending any existing sessions. Runs once — skipped when the
+      // stored hash already matches.
+      const up = await db.query(
+        `update users set role = 'ADMIN', password_hash = $2, mobile_verified_at = coalesce(mobile_verified_at, now()), updated_at = now()
+          where email = $1 and password_hash <> $2 returning id`,
+        [bEmail, bHash],
+      );
+      if (up.rowCount) {
+        await db.query("delete from sessions where user_id = $1", [up.rows[0].id]);
+        console.log(`[admin] promoted existing account ${bEmail} and reset its password`);
+      } else {
+        console.log("[admin] bootstrap already applied");
+      }
+    }
   }
 } finally {
   await db.query("select pg_advisory_unlock(424242)").catch(() => {});
