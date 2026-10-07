@@ -36,11 +36,11 @@ export function AgreementTerms({
     ["Term", `${quote.days} days`],
   ];
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/10">
+    <div className="overflow-hidden rounded-2xl border border-ink/10">
       <table className="w-full text-sm">
         <tbody>
           {rows.map(([k, v]) => (
-            <tr key={k} className="border-b border-white/[0.06] last:border-0">
+            <tr key={k} className="border-b border-ink/[0.06] last:border-0">
               <th scope="row" className="w-[42%] px-4 py-2.5 text-left align-top font-normal text-ink-muted">{k}</th>
               <td className={`px-4 py-2.5 ${k.startsWith("Total amount") ? "font-semibold text-ink" : ""}`}>{v}</td>
             </tr>

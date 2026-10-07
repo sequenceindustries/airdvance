@@ -48,7 +48,7 @@ export default async function ApplicationPage({ params, searchParams }: { params
           <ol className="mt-6 grid grid-cols-5 gap-1.5">
             {STAGES.map((s, i) => (
               <li key={s}>
-                <div className={`h-1.5 rounded-full ${i <= stage ? "bg-gradient-to-r from-ember to-amber" : "bg-white/10"}`} />
+                <div className={`h-1.5 rounded-full ${i <= stage ? "bg-ember" : "bg-ink/10"}`} />
                 <p className={`mt-2 text-[11px] sm:text-xs ${i <= stage ? "text-ink" : "text-ink-faint"}`}>{s}</p>
               </li>
             ))}
@@ -79,7 +79,7 @@ export default async function ApplicationPage({ params, searchParams }: { params
 
       <div className="glass p-6">
         <h2 className="text-lg font-semibold">Documents</h2>
-        <ul className="mt-3 divide-y divide-white/[0.06] text-sm">
+        <ul className="mt-3 divide-y divide-ink/[0.06] text-sm">
           {docs.map((d) => (
             <li key={d.id} className="flex justify-between gap-3 py-2.5">
               <a href={`/api/documents/${d.id}`} target="_blank" className="truncate hover:underline">{d.filename}</a>

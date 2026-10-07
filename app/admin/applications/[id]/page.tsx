@@ -123,7 +123,7 @@ export default async function AdminApplication({ params, searchParams }: { param
 
           <section className="glass p-5">
             <h2 className="font-semibold">Documents</h2>
-            <ul className="mt-3 divide-y divide-white/[0.06] text-sm">
+            <ul className="mt-3 divide-y divide-ink/[0.06] text-sm">
               {docs.map((d) => (
                 <li key={d.id} className="flex items-center justify-between gap-3 py-2.5">
                   <a href={`/api/documents/${d.id}`} target="_blank" className="truncate text-ember-300 hover:underline">{d.filename}</a>
@@ -225,7 +225,7 @@ export default async function AdminApplication({ params, searchParams }: { param
             {history.length === 0 ? (
               <p className="mt-2 text-sm text-ink-muted">First-time customer.</p>
             ) : (
-              <ul className="mt-3 divide-y divide-white/[0.06] text-sm">
+              <ul className="mt-3 divide-y divide-ink/[0.06] text-sm">
                 {history.map((h) => (
                   <li key={h.id} className="flex justify-between py-2">
                     <Link href={`/admin/loans/${h.id}`} className="hover:underline">{h.reference}</Link>
@@ -243,7 +243,7 @@ export default async function AdminApplication({ params, searchParams }: { param
 
 function KV({ k, v, strong, mono }: { k: string; v: string; strong?: boolean; mono?: boolean }) {
   return (
-    <div className="flex justify-between gap-4 border-b border-white/[0.04] py-1">
+    <div className="flex justify-between gap-4 border-b border-ink/[0.04] py-1">
       <dt className="text-ink-muted">{k}</dt>
       <dd className={`text-right ${strong ? "font-semibold" : ""} ${mono ? "font-mono" : ""}`}>{v}</dd>
     </div>

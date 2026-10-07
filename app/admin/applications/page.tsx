@@ -25,7 +25,7 @@ export default async function AdminApplications({ searchParams }: { searchParams
           <Link
             key={f}
             href={`/admin/applications?status=${f}`}
-            className={`rounded-full border px-3 py-1.5 text-xs ${f === status ? "border-ember bg-ember/15" : "border-white/10 text-ink-muted hover:border-white/25"}`}
+            className={`rounded-full border px-3 py-1.5 text-xs ${f === status ? "border-ember bg-ember/15" : "border-ink/10 text-ink-muted hover:border-ink/25"}`}
           >
             {f === "ALL" ? "All" : f.replaceAll("_", " ").toLowerCase()}
           </Link>
@@ -45,7 +45,7 @@ export default async function AdminApplications({ searchParams }: { searchParams
               <tr><td colSpan={6} className="py-8 text-center text-ink-muted">No applications.</td></tr>
             )}
             {rows.map((r) => (
-              <tr key={r.id} className="hover:bg-white/[0.02]">
+              <tr key={r.id} className="hover:bg-ink/[0.02]">
                 <td><Link href={`/admin/applications/${r.id}`} className="font-medium text-ember-300 hover:underline">{r.reference}</Link></td>
                 <td>{r.full_name}</td>
                 <td className="tabular-nums">{formatRand(Number(r.requested_amount), { cents: false })}</td>

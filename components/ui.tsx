@@ -2,12 +2,10 @@ import Link from "next/link";
 import clsx from "clsx";
 
 export function Glow({ className }: { className?: string }) {
+  // Quiet backdrop: a faint dot grid fading out, no colour wash.
   return (
     <div aria-hidden className={clsx("pointer-events-none absolute inset-0 overflow-hidden", className)}>
-      <div className="animate-drift absolute -left-40 -top-40 h-[34rem] w-[34rem] rounded-full bg-ember/20 blur-[120px]" />
-      <div className="animate-drift absolute -right-32 top-24 h-[28rem] w-[28rem] rounded-full bg-volt/20 blur-[120px] [animation-delay:-6s]" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,transparent_0%,#07070B_70%)]" />
-      <div className="absolute inset-0 opacity-[0.07] [background-image:linear-gradient(rgba(255,255,255,.4)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.4)_1px,transparent_1px)] [background-size:56px_56px] [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]" />
+      <div className="absolute inset-0 opacity-60 [background-image:radial-gradient(rgba(18,22,27,.12)_1px,transparent_1px)] [background-size:22px_22px] [mask-image:linear-gradient(to_bottom,black,transparent_75%)]" />
     </div>
   );
 }
@@ -56,12 +54,12 @@ export function Check({ className }: { className?: string }) {
 
 export function FaqList({ items }: { items: { q: string; a: string }[] }) {
   return (
-    <div className="divide-y divide-white/[0.07] rounded-2xl border border-white/[0.08] bg-white/[0.02]">
+    <div className="divide-y divide-ink/[0.07] rounded-2xl border border-ink/[0.08] bg-night-800">
       {items.map((f) => (
         <details key={f.q} className="group px-5 py-1 sm:px-6">
           <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 text-left font-medium">
             {f.q}
-            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/10 text-ink-muted transition group-open:rotate-45">
+            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-ink/10 text-ink-muted transition group-open:rotate-45">
               +
             </span>
           </summary>
@@ -75,18 +73,17 @@ export function FaqList({ items }: { items: { q: string; a: string }[] }) {
 export function CtaBand() {
   return (
     <section className="container-x mt-24">
-      <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-night-800 px-6 py-12 text-center sm:px-12 sm:py-16">
-        <div aria-hidden className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(255,90,31,.35),transparent_60%)]" />
+      <div className="relative overflow-hidden rounded-3xl bg-ink px-6 py-12 text-center text-white sm:px-12 sm:py-16">
         <div className="relative">
           <h2 className="mx-auto max-w-xl text-3xl font-semibold sm:text-4xl">Know your total before you borrow.</h2>
-          <p className="mx-auto mt-4 max-w-lg text-ink-muted">
+          <p className="mx-auto mt-4 max-w-lg text-white/70">
             Applying takes about 10 minutes. Have your ID, latest payslip and 3 months of bank statements ready.
           </p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
             <Link href="/apply" className="btn-primary px-7">
               Start your application
             </Link>
-            <Link href="/costs" className="btn-ghost px-7">
+            <Link href="/costs" className="btn border border-white/25 px-7 text-white hover:bg-white/10">
               See the full costs
             </Link>
           </div>
@@ -101,14 +98,14 @@ const STATUS_STYLES: Record<string, string> = {
   MORE_INFO_REQUIRED: "border-amber/40 bg-amber/10 text-amber",
   APPROVED: "border-mint/40 bg-mint/10 text-mint-300",
   DECLINED: "border-rose/40 bg-rose/10 text-rose-300",
-  WITHDRAWN: "border-white/15 bg-white/5 text-ink-muted",
+  WITHDRAWN: "border-ink/15 bg-ink/5 text-ink-muted",
   OFFERED: "border-amber/40 bg-amber/10 text-amber",
   ACCEPTED: "border-volt/40 bg-volt/10 text-volt-300",
   ACTIVE: "border-mint/40 bg-mint/10 text-mint-300",
   ARREARS: "border-rose/40 bg-rose/10 text-rose-300",
-  SETTLED: "border-white/15 bg-white/5 text-ink-muted",
-  EXPIRED: "border-white/15 bg-white/5 text-ink-muted",
-  CANCELLED: "border-white/15 bg-white/5 text-ink-muted",
+  SETTLED: "border-ink/15 bg-ink/5 text-ink-muted",
+  EXPIRED: "border-ink/15 bg-ink/5 text-ink-muted",
+  CANCELLED: "border-ink/15 bg-ink/5 text-ink-muted",
   WRITTEN_OFF: "border-rose/40 bg-rose/10 text-rose-300",
 };
 

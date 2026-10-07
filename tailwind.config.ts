@@ -1,56 +1,51 @@
 import type { Config } from "tailwindcss";
 
+/**
+ * Airdvance light theme. Token names are kept stable across the codebase:
+ *  night = surfaces (page, cards, inputs) · ink = text and hairlines
+ *  ember = brand accent (emerald) · amber/volt/mint/rose = status colours
+ */
 const config: Config = {
   content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
   theme: {
     extend: {
       colors: {
         night: {
-          DEFAULT: "#07070B",
-          900: "#0B0B12",
-          800: "#11111B",
-          700: "#181826",
-          600: "#232336",
+          DEFAULT: "#F6F5F1", // page
+          900: "#EEECE6", // footer, admin bar
+          800: "#FFFFFF", // cards, inputs
+          700: "#E6E3DB",
+          600: "#D6D2C8",
         },
         ink: {
-          DEFAULT: "#F4F2EE",
-          muted: "#B4B1C2",
-          faint: "#7D7A8E",
+          DEFAULT: "#12161B",
+          muted: "#4A515B",
+          faint: "#7B818B",
         },
         ember: {
-          DEFAULT: "#FF5A1F",
-          400: "#FF7A45",
-          300: "#FFA06F",
-          glow: "#FF5A1F",
+          DEFAULT: "#0B7A55",
+          400: "#0E8F64",
+          300: "#086445", // accent text / links (AA on light)
+          glow: "#0B7A55",
         },
-        amber: { DEFAULT: "#FFB547" },
-        volt: {
-          DEFAULT: "#3D8BFF",
-          300: "#8DB9FF",
-        },
-        mint: { DEFAULT: "#3DDC97", 300: "#8EF0C4" },
-        rose: { DEFAULT: "#FF5C7A", 300: "#FF9DB0" },
+        amber: { DEFAULT: "#8A5A00" },
+        volt: { DEFAULT: "#2F5BD3", 300: "#2349B3" },
+        mint: { DEFAULT: "#0B7A55", 300: "#086445" },
+        rose: { DEFAULT: "#C2334D", 300: "#A82640" },
       },
       fontFamily: {
-        display: ["Poppins", "system-ui", "sans-serif"],
+        display: ["'Manrope Variable'", "Manrope", "system-ui", "sans-serif"],
         body: ["'Inter Variable'", "Inter", "system-ui", "sans-serif"],
       },
       borderRadius: {
-        xl: "14px",
-        "2xl": "20px",
-        "3xl": "28px",
+        xl: "12px",
+        "2xl": "16px",
+        "3xl": "24px",
       },
       boxShadow: {
-        glow: "0 0 0 1px rgba(255,90,31,.35), 0 10px 40px -10px rgba(255,90,31,.55)",
-        card: "0 1px 0 0 rgba(255,255,255,.05) inset, 0 20px 60px -30px rgba(0,0,0,.8)",
+        glow: "0 1px 2px rgba(11,122,85,.25), 0 6px 16px -6px rgba(11,122,85,.45)",
+        card: "0 1px 2px rgba(18,22,27,.04), 0 8px 24px -16px rgba(18,22,27,.18)",
       },
-      keyframes: {
-        drift: {
-          "0%,100%": { transform: "translate3d(0,0,0) scale(1)" },
-          "50%": { transform: "translate3d(4%, -3%, 0) scale(1.08)" },
-        },
-      },
-      animation: { drift: "drift 18s ease-in-out infinite" },
     },
   },
   plugins: [],

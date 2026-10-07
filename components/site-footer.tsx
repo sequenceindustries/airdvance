@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import { Logo } from "./logo";
 import { COMPANY } from "@/lib/config";
 
 const COLS = [
@@ -34,10 +34,10 @@ const COLS = [
 
 export function SiteFooter() {
   return (
-    <footer className="mt-24 border-t border-white/[0.06] bg-night-900">
+    <footer className="mt-24 border-t border-ink/[0.06] bg-night-900">
       <div className="container-x grid gap-10 py-14 md:grid-cols-[1.4fr_repeat(3,1fr)]">
         <div>
-          <Image src="/airdvance-logo.png" alt="Airdvance" width={1568} height={436} className="h-7 w-auto" />
+          <Logo />
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-ink-muted">
             Short-term cash advances of R300 to R1,000, repaid on your next payday. Every cost shown before you apply.
           </p>
@@ -61,7 +61,7 @@ export function SiteFooter() {
           </div>
         ))}
       </div>
-      <div className="border-t border-white/[0.06]">
+      <div className="border-t border-ink/[0.06]">
         <div className="container-x space-y-2 py-6 text-xs leading-relaxed text-ink-faint">
           <p>
             Airdvance is a trading name of {COMPANY.legalName}, a registered credit provider ({COMPANY.ncrcp})

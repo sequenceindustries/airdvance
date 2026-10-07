@@ -18,7 +18,7 @@ export default function HomePage() {
         <Glow />
         <div className="container-x relative grid gap-10 pb-16 pt-10 sm:pt-16 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:gap-14 lg:pb-24">
           <div>
-            <p className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-ink-muted">
+            <p className="inline-flex items-center gap-2 rounded-full border border-ink/10 bg-ink/[0.04] px-3 py-1 text-xs text-ink-muted">
               <span className="h-1.5 w-1.5 rounded-full bg-mint" /> Registered credit provider · {COMPANY.ncrcp}
             </p>
             <h1 className="mt-5 text-[2.6rem] font-semibold leading-[1.04] sm:text-6xl lg:text-[4.2rem]">
@@ -91,7 +91,7 @@ export default function HomePage() {
           </div>
         </div>
         <div className="glass overflow-hidden">
-          <div className="border-b border-white/10 px-5 py-4">
+          <div className="border-b border-ink/10 px-5 py-4">
             <p className="font-semibold">Representative examples</p>
             <p className="text-xs text-ink-faint">First loan of the year, repaid after 30 days</p>
           </div>

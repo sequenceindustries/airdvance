@@ -9,7 +9,7 @@ export function AuthShell({ title, intro, children, footer }: { title: string; i
           <h1 className="text-2xl font-semibold sm:text-3xl">{title}</h1>
           {intro && <p className="mt-2 text-sm leading-relaxed text-ink-muted">{intro}</p>}
           <div className="mt-6">{children}</div>
-          {footer && <div className="mt-6 border-t border-white/10 pt-5 text-sm text-ink-muted">{footer}</div>}
+          {footer && <div className="mt-6 border-t border-ink/10 pt-5 text-sm text-ink-muted">{footer}</div>}
         </div>
       </div>
     </section>

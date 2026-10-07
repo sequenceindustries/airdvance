@@ -34,7 +34,6 @@ export default async function LoanPage({ params, searchParams }: { params: { id:
       {searchParams.signed && <Alert tone="success">Signed. We'll let you know as soon as the money has been paid into your account.</Alert>}
 
       <div className="glass relative overflow-hidden p-6">
-        <div aria-hidden className="absolute -right-24 -top-24 h-56 w-56 rounded-full bg-ember/20 blur-3xl" />
         <div className="relative flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="text-sm text-ink-muted">Loan {loan.reference}</p>
@@ -134,7 +133,7 @@ export default async function LoanPage({ params, searchParams }: { params: { id:
                 on the left by EFT and email proof to {COMPANY.email}:
               </p>
               {COLLECTION_ACCOUNT.accountNumber ? (
-                <dl className="mt-3 space-y-1 rounded-xl bg-white/[0.04] p-3 font-mono text-xs text-ink">
+                <dl className="mt-3 space-y-1 rounded-xl bg-ink/[0.04] p-3 font-mono text-xs text-ink">
                   <div>Bank: {COLLECTION_ACCOUNT.bank}</div>
                   <div>Account: {COLLECTION_ACCOUNT.accountName}</div>
                   <div>Number: {COLLECTION_ACCOUNT.accountNumber}</div>
@@ -142,7 +141,7 @@ export default async function LoanPage({ params, searchParams }: { params: { id:
                   <div>Reference: {loan.reference}</div>
                 </dl>
               ) : (
-                <p className="mt-3 rounded-xl bg-white/[0.04] p-3 text-xs">Contact us for our banking details. Always use reference <strong className="text-ink">{loan.reference}</strong>.</p>
+                <p className="mt-3 rounded-xl bg-ink/[0.04] p-3 text-xs">Contact us for our banking details. Always use reference <strong className="text-ink">{loan.reference}</strong>.</p>
               )}
               <p className="mt-3 text-xs text-ink-faint">Always confirm our banking details with us directly — we'll never change them by email.</p>
             </div>
@@ -157,7 +156,7 @@ export default async function LoanPage({ params, searchParams }: { params: { id:
       {txns.length > 0 && (
         <div className="glass p-6">
           <h2 className="text-lg font-semibold">Transactions</h2>
-          <ul className="mt-3 divide-y divide-white/[0.06] text-sm">
+          <ul className="mt-3 divide-y divide-ink/[0.06] text-sm">
             {txns.map((t) => (
               <li key={t.id} className="flex justify-between gap-3 py-2.5">
                 <span>

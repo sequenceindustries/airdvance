@@ -254,8 +254,8 @@ export function ApplyWizard({
           </span>
           <span className="font-medium text-ink">{STEPS[step]}</span>
         </div>
-        <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/10">
-          <div className="h-full rounded-full bg-gradient-to-r from-ember to-amber transition-all" style={{ width: `${((step + 1) / STEPS.length) * 100}%` }} />
+        <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-ink/10">
+          <div className="h-full rounded-full bg-ember transition-all" style={{ width: `${((step + 1) / STEPS.length) * 100}%` }} />
         </div>
       </div>
 
@@ -437,7 +437,7 @@ export function ApplyWizard({
 
           {step === 7 && !isQuoteError(quote) && (
             <Section title="Check and submit" intro="Make sure everything is correct. Giving false information is an offence.">
-              <dl className="divide-y divide-white/[0.07] rounded-2xl border border-white/10 text-sm">
+              <dl className="divide-y divide-ink/[0.07] rounded-2xl border border-ink/10 text-sm">
                 {[
                   ["Amount", formatRand(quote.principal, { cents: false }), 0],
                   ["Repay on", formatDate(quote.dueDate), 0],
@@ -486,7 +486,7 @@ export function ApplyWizard({
                   </label>
                 ))}
               </div>
-              <p className="rounded-xl bg-white/[0.04] px-4 py-3 text-xs leading-relaxed text-ink-faint">
+              <p className="rounded-xl bg-ink/[0.04] px-4 py-3 text-xs leading-relaxed text-ink-faint">
                 Submitting doesn't commit you to a loan and doesn't guarantee approval. If we approve you, you'll see your
                 pre-agreement statement and decide whether to sign.
               </p>
@@ -522,7 +522,7 @@ export function ApplyWizard({
               <Line k="Initiation fee" v={formatRand(quote.initiationFee)} />
               <Line k={`Service fee (${quote.days} days)`} v={formatRand(quote.serviceFee)} />
               <Line k={`Interest (${(quote.monthlyRate * 100).toFixed(0)}% p.m.)`} v={formatRand(quote.interest)} />
-              <div className="mt-3 border-t border-white/10 pt-3">
+              <div className="mt-3 border-t border-ink/10 pt-3">
                 <Line k={`Repay on ${formatDate(quote.dueDate, { year: false })}`} v={formatRand(quote.totalRepayable)} strong />
               </div>
               {isRepeat && <p className="pt-2 text-xs text-mint-300">Returning customer rate: 3% per month.</p>}
@@ -579,7 +579,7 @@ function Money({ label, hint, value, onChange }: { label: string; hint?: string;
 
 function Upload({ label, hint, files, onChange, multiple }: { label: string; hint?: string; files: File[]; onChange: (f: File[]) => void; multiple?: boolean }) {
   return (
-    <div className="rounded-2xl border border-dashed border-white/15 p-4">
+    <div className="rounded-2xl border border-dashed border-ink/15 p-4">
       <p className="text-sm font-medium">{label}</p>
       {hint && <p className="text-xs text-ink-faint">{hint}</p>}
       <label className="btn-ghost btn-sm mt-3 cursor-pointer">

@@ -23,7 +23,7 @@ export default async function AdminLoans({ searchParams }: { searchParams: { sta
       <h1 className="text-3xl font-semibold">Loans</h1>
       <div className="flex flex-wrap gap-2">
         {FILTERS.map((f) => (
-          <Link key={f} href={`/admin/loans?status=${f}`} className={`rounded-full border px-3 py-1.5 text-xs ${f === status ? "border-ember bg-ember/15" : "border-white/10 text-ink-muted hover:border-white/25"}`}>
+          <Link key={f} href={`/admin/loans?status=${f}`} className={`rounded-full border px-3 py-1.5 text-xs ${f === status ? "border-ember bg-ember/15" : "border-ink/10 text-ink-muted hover:border-ink/25"}`}>
             {f.toLowerCase()}
           </Link>
         ))}
@@ -38,7 +38,7 @@ export default async function AdminLoans({ searchParams }: { searchParams: { sta
             {rows.map((l) => {
               const bal = loanBalance(l);
               return (
-                <tr key={l.id} className="hover:bg-white/[0.02]">
+                <tr key={l.id} className="hover:bg-ink/[0.02]">
                   <td><Link href={`/admin/loans/${l.id}`} className="font-medium text-ember-300 hover:underline">{l.reference}</Link></td>
                   <td>{l.full_name}</td>
                   <td className="tabular-nums">{formatRand(Number(l.principal), { cents: false })}</td>

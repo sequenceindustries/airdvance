@@ -13,7 +13,7 @@ export default async function AdminMessages() {
           <div key={m.id} className={`glass p-5 ${m.handled_at ? "opacity-60" : ""}`}>
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <p className="font-semibold">{m.name} <span className="ml-2 badge border-white/15 text-ink-muted">{m.topic}</span></p>
+                <p className="font-semibold">{m.name} <span className="ml-2 badge border-ink/15 text-ink-muted">{m.topic}</span></p>
                 <p className="text-sm text-ink-muted">{m.email}{m.mobile ? ` · ${m.mobile}` : ""} · {formatDateTime(m.created_at)}</p>
               </div>
               {!m.handled_at && (

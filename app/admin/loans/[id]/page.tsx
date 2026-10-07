@@ -69,7 +69,7 @@ export default async function AdminLoan({ params, searchParams }: { params: { id
                   ["Paid", bal.paid],
                   ["Outstanding", bal.outstanding],
                 ].map(([k, v]) => (
-                  <div key={k as string} className="flex justify-between border-b border-white/[0.04] py-1">
+                  <div key={k as string} className="flex justify-between border-b border-ink/[0.04] py-1">
                     <dt className="text-ink-muted">{k}</dt>
                     <dd className={`tabular-nums ${k === "Outstanding" ? "font-semibold" : ""}`}>{formatRand(v as number)}</dd>
                   </div>

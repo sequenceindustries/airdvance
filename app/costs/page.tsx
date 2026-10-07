@@ -52,7 +52,7 @@ export default function CostsPage() {
           { title: "Repaid after 14 days", rows: examples14 },
         ].map((t) => (
           <div key={t.title} className="glass overflow-hidden">
-            <p className="border-b border-white/10 px-5 py-4 font-semibold">{t.title} <span className="text-xs font-normal text-ink-faint">· first loan of the year</span></p>
+            <p className="border-b border-ink/10 px-5 py-4 font-semibold">{t.title} <span className="text-xs font-normal text-ink-faint">· first loan of the year</span></p>
             <div className="overflow-x-auto">
               <table className="table-x min-w-[480px] tabular-nums">
                 <thead><tr><th>Borrow</th><th>Fees</th><th>Interest</th><th>Cost</th><th className="text-right">Repay</th></tr></thead>

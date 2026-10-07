@@ -47,7 +47,7 @@ export default async function DashboardPage() {
       {openLoan && <LoanCard loan={openLoan} />}
 
       {openApp && (
-        <Link href={`/dashboard/applications/${openApp.id}`} className="glass block p-6 transition hover:border-white/20">
+        <Link href={`/dashboard/applications/${openApp.id}`} className="glass block p-6 transition hover:border-ink/20">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="text-sm text-ink-muted">Application {openApp.reference}</p>
@@ -75,7 +75,7 @@ export default async function DashboardPage() {
           {apps.length === 0 ? (
             <p className="mt-3 text-sm text-ink-muted">Nothing yet.</p>
           ) : (
-            <ul className="mt-4 divide-y divide-white/[0.06]">
+            <ul className="mt-4 divide-y divide-ink/[0.06]">
               {apps.map((a) => {
                 const loan = loans.find((l) => (l as any).application_id === a.id);
                 const href = loan ? `/dashboard/loans/${loan.id}` : `/dashboard/applications/${a.id}`;
@@ -100,7 +100,7 @@ export default async function DashboardPage() {
 
         <section className="glass p-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold">Messages {unread > 0 && <span className="ml-1 rounded-full bg-ember px-2 py-0.5 text-xs text-night">{unread}</span>}</h2>
+            <h2 className="text-lg font-semibold">Messages {unread > 0 && <span className="ml-1 rounded-full bg-ember px-2 py-0.5 text-xs text-white">{unread}</span>}</h2>
             {unread > 0 && (
               <form action={markNotificationsRead}>
                 <button className="text-xs text-ember-300 hover:underline">Mark all read</button>
@@ -141,7 +141,6 @@ function LoanCard({ loan }: { loan: LoanRow }) {
   const quote = loan.final_quote ?? loan.offer_quote;
   return (
     <div className="glass relative overflow-hidden p-6">
-      <div aria-hidden className="absolute -right-20 -top-20 h-48 w-48 rounded-full bg-ember/20 blur-3xl" />
       <div className="relative flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="text-sm text-ink-muted">Loan {loan.reference}</p>

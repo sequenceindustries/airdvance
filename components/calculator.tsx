@@ -27,7 +27,6 @@ export function Calculator({
 
   return (
     <div className="glass relative overflow-hidden p-5 sm:p-7">
-      <div className="pointer-events-none absolute -right-24 -top-24 h-56 w-56 rounded-full bg-ember/25 blur-3xl" aria-hidden />
       <div className="relative">
         <div className="flex items-baseline justify-between">
           <label htmlFor="calc-amount" className="text-sm font-medium text-ink-muted">
@@ -56,7 +55,7 @@ export function Calculator({
               type="button"
               onClick={() => setAmount(c)}
               className={`rounded-full border px-2 py-2 text-xs font-semibold transition sm:text-sm ${
-                amount === c ? "border-ember bg-ember/15 text-ink" : "border-white/10 text-ink-muted hover:border-white/25"
+                amount === c ? "border-ember bg-ember/15 text-ink" : "border-ink/10 text-ink-muted hover:border-ink/25"
               }`}
             >
               {formatRand(c, { cents: false })}
@@ -88,7 +87,7 @@ export function Calculator({
           <p className="mt-6 rounded-xl bg-rose/10 px-4 py-3 text-sm text-rose-300">{quote.error}</p>
         ) : (
           <>
-            <dl className={`mt-6 space-y-2.5 border-t border-white/10 pt-5 text-sm ${compact ? "" : ""}`}>
+            <dl className={`mt-6 space-y-2.5 border-t border-ink/10 pt-5 text-sm ${compact ? "" : ""}`}>
               <Row label="Paid into your account" value={formatRand(quote.principal)} />
               <Row label="Initiation fee (once-off)" value={formatRand(quote.initiationFee)} />
               <Row label={`Service fee (${quote.days} days)`} value={formatRand(quote.serviceFee)} />

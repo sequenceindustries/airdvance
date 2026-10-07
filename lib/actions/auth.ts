@@ -6,6 +6,7 @@ import { one, query } from "@/lib/db";
 import { hashPassword, verifyPassword } from "@/lib/crypto";
 import { clientIp, createSession, destroySession, getCurrentUser, safeNext } from "@/lib/auth";
 import { sendOtp, verifyOtp } from "@/lib/otp";
+import { isDemoMessaging } from "@/lib/messaging";
 import { audit } from "@/lib/records";
 import { normaliseMobile } from "@/lib/sa";
 
@@ -116,13 +117,17 @@ export async function confirmVerificationPin(_prev: FormState, form: FormData): 
 export async function requestPasswordReset(_prev: FormState, form: FormData): Promise<FormState> {
   const mobile = normaliseMobile(String(form.get("mobile") ?? ""));
   if (!mobile) return { error: "Enter the South African cellphone number on your account." };
-  const user = await one<{ id: string }>("select id from users where mobile = $1", [mobile]);
+  const user = await one<{ id: string; role: string }>("select id, role from users where mobile = $1", [mobile]);
   // Same response either way, so the form can't be used to discover accounts.
+  // Without a real SMS provider, a reset PIN shown on screen would let anyone who
+  // knows a number take over that account — so in production it is never shown,
+  // and admin accounts can't be reset this way at all.
   let demoCode: string | undefined;
-  if (user) {
+  const demo = isDemoMessaging();
+  if (user && !(demo && user.role === "ADMIN")) {
     const res = await sendOtp(mobile, "RESET_PASSWORD", user.id);
     if (!res.ok) return { error: res.error, fields: { mobile: String(form.get("mobile")) } };
-    demoCode = res.demoCode;
+    if (process.env.NODE_ENV !== "production") demoCode = res.demoCode;
   }
   return {
     message: "If that number has an Airdvance account, we've sent it a 6-digit PIN.",
@@ -140,6 +145,8 @@ export async function resetPassword(_prev: FormState, form: FormData): Promise<F
   if (password.length < 10 || !/[A-Za-z]/.test(password) || !/\d/.test(password)) {
     return { error: "Use at least 10 characters, with letters and at least one number.", fields };
   }
+  const target = await one<{ role: string }>("select role from users where mobile = $1", [mobile]);
+  if (target?.role === "ADMIN" && isDemoMessaging()) return { error: "That PIN is incorrect or has expired.", fields };
   if (!(await verifyOtp(mobile, "RESET_PASSWORD", code))) {
     return { error: "That PIN is incorrect or has expired.", fields };
   }

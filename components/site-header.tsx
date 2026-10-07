@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import { Logo } from "./logo";
 import { logout } from "@/lib/actions/auth";
 import { MobileMenu } from "./mobile-menu";
 
@@ -14,10 +14,10 @@ export const NAV = [
 export function SiteHeader({ user }: { user: { name: string; role: string } | null }) {
   const accountHref = user?.role === "ADMIN" ? "/admin" : "/dashboard";
   return (
-    <header className="sticky top-0 z-40 border-b border-white/[0.06] bg-night/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-40 border-b border-ink/[0.06] bg-night/85 backdrop-blur">
       <div className="container-x flex h-16 items-center justify-between gap-4">
         <Link href="/" className="flex shrink-0 items-center" aria-label="Airdvance home">
-          <Image src="/airdvance-logo.png" alt="Airdvance" width={1568} height={436} priority className="h-7 w-auto sm:h-8" />
+          <Logo />
         </Link>
 
         <nav className="hidden items-center gap-7 text-sm text-ink-muted lg:flex" aria-label="Main">

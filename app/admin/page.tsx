@@ -63,7 +63,7 @@ export default async function AdminOverview() {
       </div>
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         {tiles.map((t) => (
-          <Link key={t.label} href={t.href} className={`glass p-4 transition hover:border-white/20 ${t.hot ? "border-ember/40" : ""}`}>
+          <Link key={t.label} href={t.href} className={`glass p-4 transition hover:border-ink/20 ${t.hot ? "border-ember/40" : ""}`}>
             <p className="text-xs text-ink-muted">{t.label}</p>
             <p className="mt-1 font-display text-2xl font-semibold tabular-nums">{t.value}</p>
           </Link>
@@ -107,7 +107,7 @@ function Panel({ title, empty, href, children }: { title: string; empty: string;
         <h2 className="font-semibold">{title}</h2>
         <Link href={href} className="text-xs text-ember-300 hover:underline">View all</Link>
       </div>
-      {children.length === 0 ? <p className="mt-3 text-sm text-ink-muted">{empty}</p> : <ul className="mt-3 divide-y divide-white/[0.06]">{children}</ul>}
+      {children.length === 0 ? <p className="mt-3 text-sm text-ink-muted">{empty}</p> : <ul className="mt-3 divide-y divide-ink/[0.06]">{children}</ul>}
     </section>
   );
 }
