@@ -1,51 +1,56 @@
 import Link from "next/link";
+import { CtaBand, PageHero } from "@/components/ui";
+import { STEPS } from "@/lib/content";
 
-const steps = [
-  { title: "Choose a device and a plan", copy: "Browse smartphones and tablets. Pick the rental term that fits your monthly budget — you'll always see the monthly payment, admin fee and buyout amount upfront." },
-  { title: "Apply and set up your debit order", copy: "Create an account and complete a short application: your details, address, employment, and your bank account for the debit order." },
-  { title: "We collect your first payment", copy: "We immediately debit your first installment plus a once-off admin fee. There's no waiting for manual review — approval is automatic the moment the debit succeeds." },
-  { title: "We ship your device", copy: "As soon as your first payment clears, we prepare and ship your device to you." },
-  { title: "We debit you monthly", copy: "Your dashboard always shows your next debit date, your progress toward the end of your term, and your device status." },
-  { title: "Buy it out for as little as R1", copy: "Once you've made every monthly payment, pay a small final buyout fee from your dashboard and the device is officially yours." },
+export const metadata = { title: "How it works" };
+
+const DETAILS = [
+  ["What we ask", "Your ID number, address, employer, net monthly income, monthly expenses and existing debt repayments, and the bank account the money should go into."],
+  ["What we check", "That you are who you say you are, that your income matches your payslip and bank statements, your credit record, and that the repayment still leaves you enough to live on."],
+  ["What you sign", "A pre-agreement statement and quotation, then a short-term credit agreement showing the amount, every charge, the total and the repayment date. You sign online by typing your name."],
+  ["How you repay", "One DebiCheck debit order on your payday. You confirm the mandate with your bank, so we can only collect the amount and date you approved."],
 ];
 
 export default function HowItWorksPage() {
   return (
-    <div className="mx-auto max-w-3xl px-6 py-16">
-      <h1 className="font-display text-3xl">How airdvance works</h1>
-      <p className="mt-3 text-slate-300">
-        A straightforward path from choosing a device to owning it outright.
-      </p>
-
-      <ol className="mt-12 space-y-10">
-        {steps.map((step, i) => (
-          <li key={step.title} className="flex gap-5">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-signal-light font-medium text-signal-dark">
-              {i + 1}
-            </div>
-            <div>
-              <p className="font-display text-lg">{step.title}</p>
-              <p className="mt-1 text-slate-300">{step.copy}</p>
-            </div>
-          </li>
+    <>
+      <PageHero
+        eyebrow="How it works"
+        title="From application to payout, step by step"
+        intro="Everything happens online, and a real person reviews every application. Here's exactly what to expect."
+      />
+      <section className="container-x">
+        <ol className="relative space-y-4 border-l border-white/10 pl-6 sm:pl-10">
+          {STEPS.map((s, i) => (
+            <li key={s.title} className="glass relative p-5 sm:p-6">
+              <span className="absolute -left-[37px] top-6 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-ember to-amber text-xs font-bold text-night sm:-left-[53px]">
+                {i + 1}
+              </span>
+              <h2 className="text-xl font-semibold">{s.title}</h2>
+              <p className="mt-2 leading-relaxed text-ink-muted">{s.body}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+      <section className="container-x mt-20 grid gap-4 md:grid-cols-2">
+        {DETAILS.map(([t, b]) => (
+          <div key={t} className="glass p-6">
+            <h3 className="text-lg font-semibold">{t}</h3>
+            <p className="mt-2 text-sm leading-relaxed text-ink-muted">{b}</p>
+          </div>
         ))}
-      </ol>
-
-      <div className="mt-16 rounded-lg border border-white/10 bg-surface p-6">
-        <p className="font-medium text-ink">What happens if my debit order fails?</p>
-        <p className="mt-2 text-sm text-slate-300">
-          Your device will be locked until the payment is resolved. We do not automatically retry a
-          failed debit order — you'll need to make a manual payment from your dashboard to unlock
-          your device again.
-        </p>
-      </div>
-
-      <Link
-        href="/shop"
-        className="mt-10 inline-block rounded-md bg-brand px-6 py-3 font-medium text-white hover:bg-brand-dark focus-ring"
-      >
-        Shop devices
-      </Link>
-    </div>
+      </section>
+      <section className="container-x mt-12">
+        <div className="glass p-6 text-sm leading-relaxed text-ink-muted">
+          <h3 className="text-lg font-semibold text-ink">If we can't approve you</h3>
+          <p className="mt-2">
+            We'll tell you the main reason and, if your credit record played a part, which credit bureau we used so you
+            can request your free report. Declined applications don't cost anything. See{" "}
+            <Link href="/responsible-lending" className="text-ember-300 underline">responsible lending</Link>.
+          </p>
+        </div>
+      </section>
+      <CtaBand />
+    </>
   );
 }

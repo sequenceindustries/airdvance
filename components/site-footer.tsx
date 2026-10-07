@@ -1,51 +1,80 @@
 import Link from "next/link";
 import Image from "next/image";
+import { COMPANY } from "@/lib/config";
+
+const COLS = [
+  {
+    title: "Borrow",
+    links: [
+      { href: "/apply", label: "Apply now" },
+      { href: "/how-it-works", label: "How it works" },
+      { href: "/costs", label: "Costs & repayment" },
+      { href: "/eligibility", label: "Who can apply" },
+    ],
+  },
+  {
+    title: "Help",
+    links: [
+      { href: "/faq", label: "FAQ" },
+      { href: "/contact", label: "Contact us" },
+      { href: "/responsible-lending", label: "Responsible lending" },
+      { href: "/login", label: "Log in" },
+    ],
+  },
+  {
+    title: "Legal",
+    links: [
+      { href: "/terms", label: "Terms & conditions" },
+      { href: "/privacy", label: "Privacy policy (POPIA)" },
+      { href: "/paia", label: "PAIA manual" },
+      { href: "/complaints", label: "Complaints" },
+    ],
+  },
+];
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-white/10 bg-surface">
-      <div className="mx-auto grid max-w-6xl gap-8 px-6 py-12 md:grid-cols-5">
-        <div className="md:col-span-1">
-          <Image src="/airdvance-logo.png" alt="airdvance" width={128} height={35} className="h-8 w-auto" />
-          <p className="mt-3 max-w-xs text-sm text-slate-300">
-            Get the device you need now. Pay over time. Buy it.
+    <footer className="mt-24 border-t border-white/[0.06] bg-night-900">
+      <div className="container-x grid gap-10 py-14 md:grid-cols-[1.4fr_repeat(3,1fr)]">
+        <div>
+          <Image src="/airdvance-logo.png" alt="Airdvance" width={1568} height={436} className="h-7 w-auto" />
+          <p className="mt-4 max-w-xs text-sm leading-relaxed text-ink-muted">
+            Short-term cash advances of R300 to R1,000, repaid on your next payday. Every cost shown before you apply.
+          </p>
+          <p className="mt-4 text-xs text-ink-faint">
+            {COMPANY.email}
+            {COMPANY.phone ? ` · ${COMPANY.phone}` : ""}
           </p>
         </div>
-        <div className="text-sm">
-          <p className="mb-3 font-medium text-slate-100">Shop</p>
-          <ul className="space-y-2 text-slate-300">
-            <li><Link href="/shop/smartphones" className="hover:text-accent">Smartphones</Link></li>
-            <li><Link href="/shop/tablets" className="hover:text-accent">Tablets</Link></li>
-          </ul>
-        </div>
-        <div className="text-sm">
-          <p className="mb-3 font-medium text-slate-100">airdvance</p>
-          <ul className="space-y-2 text-slate-300">
-            <li><Link href="/how-it-works" className="hover:text-accent">How it works</Link></li>
-            <li><Link href="/faq" className="hover:text-accent">FAQ</Link></li>
-            <li><Link href="/apply" className="hover:text-accent">Apply now</Link></li>
-          </ul>
-        </div>
-        <div className="text-sm">
-          <p className="mb-3 font-medium text-slate-100">Legal</p>
-          <ul className="space-y-2 text-slate-300">
-            <li><Link href="/terms" className="hover:text-accent">Terms & conditions</Link></li>
-            <li><Link href="/privacy" className="hover:text-accent">Privacy policy</Link></li>
-          </ul>
-        </div>
-        <div className="text-sm">
-          <p className="mb-3 font-medium text-slate-100">Account</p>
-          <ul className="space-y-2 text-slate-300">
-            <li><Link href="/login" className="hover:text-accent">Log in</Link></li>
-            <li><Link href="/register" className="hover:text-accent">Create account</Link></li>
-            <li><Link href="/contact" className="hover:text-accent">Contact us</Link></li>
-          </ul>
-        </div>
+        {COLS.map((c) => (
+          <div key={c.title}>
+            <p className="text-sm font-semibold text-ink">{c.title}</p>
+            <ul className="mt-3 space-y-2.5 text-sm text-ink-muted">
+              {c.links.map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href} className="hover:text-ink">
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
       </div>
-      <div className="border-t border-white/10 py-6 text-center text-xs text-slate-500">
-        © {new Date().getFullYear()} airdvance. This is a rent-to-buy agreement, not a credit agreement.
-        Devices remain the property of airdvance until the buyout payment is completed. Read our{" "}
-        <Link href="/terms" className="underline hover:text-accent">Terms & Conditions</Link>.
+      <div className="border-t border-white/[0.06]">
+        <div className="container-x space-y-2 py-6 text-xs leading-relaxed text-ink-faint">
+          <p>
+            Airdvance is a trading name of {COMPANY.legalName}, a registered credit provider ({COMPANY.ncrcp})
+            {COMPANY.registrationNumber ? `, company registration ${COMPANY.registrationNumber}` : ""}. All credit is
+            subject to an affordability assessment and the National Credit Act 34 of 2005. Approval is not guaranteed.
+          </p>
+          <p>
+            Representative example: borrow R1,000 for 30 days — initiation fee R165.00, service fee R60.00, interest
+            R49.32 (5% per month, 60% per year) — total repayable R1,274.32. Late or missed payments may be reported to
+            credit bureaus and can make it harder to borrow in future.
+          </p>
+          <p>© {new Date().getFullYear()} {COMPANY.legalName}. All rights reserved.</p>
+        </div>
       </div>
     </footer>
   );

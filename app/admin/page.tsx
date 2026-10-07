@@ -1,120 +1,127 @@
-import { redirect } from "next/navigation";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
-import { getCurrentProfile } from "@/lib/data/customer";
-import { runOverdueSweep } from "@/lib/actions/payments";
-import { collectDueFirstPayments } from "@/lib/actions/collections";
+import { StatusBadge } from "@/components/ui";
+import { one, query } from "@/lib/db";
+import { formatDate, formatDateTime, todaySA } from "@/lib/dates";
+import { runSweep } from "@/lib/loans";
+import { formatRand } from "@/lib/pricing";
 
-async function getCounts() {
-  const supabase = createClient();
+export default async function AdminOverview() {
+  const sweep = await runSweep();
+  const today = todaySA();
+  const stats = await one<Record<string, string>>(
+    `select
+       (select count(*) from applications where status = 'SUBMITTED') as review,
+       (select count(*) from applications where status = 'MORE_INFO_REQUIRED') as info,
+       (select count(*) from loans where status = 'OFFERED') as offered,
+       (select count(*) from loans where status = 'ACCEPTED') as payout,
+       (select count(*) from loans where status = 'ACTIVE') as active,
+       (select count(*) from loans where status = 'ARREARS') as arrears,
+       (select coalesce(sum(principal),0) from loans where status in ('ACTIVE','ARREARS')) as book,
+       (select coalesce(sum(principal),0) from loans where disbursed_on >= date_trunc('month', $1::date)) as disbursed_month,
+       (select count(*) from loans where status = 'ACTIVE' and due_date = $1::date) as due_today,
+       (select count(*) from contact_messages where handled_at is null) as messages`,
+    [today],
+  );
+  const queue = await query<{ id: string; reference: string; full_name: string; requested_amount: string; submitted_at: string; affordability: any; status: string }>(
+    `select a.id, a.reference, u.full_name, a.requested_amount, a.submitted_at, a.affordability, a.status
+       from applications a join users u on u.id = a.user_id
+      where a.status = 'SUBMITTED' order by a.submitted_at limit 8`,
+  );
+  const payouts = await query<{ id: string; reference: string; full_name: string; principal: string; signed_at: string }>(
+    `select l.id, l.reference, u.full_name, l.principal, l.signed_at from loans l join users u on u.id = l.user_id
+      where l.status = 'ACCEPTED' order by l.signed_at limit 8`,
+  );
+  const due = await query<{ id: string; reference: string; full_name: string; due_date: string; status: string }>(
+    `select l.id, l.reference, u.full_name, l.due_date, l.status from loans l join users u on u.id = l.user_id
+      where l.status in ('ACTIVE','ARREARS') order by l.due_date limit 8`,
+  );
 
-  const [
-    awaitingCollection,
-    failedDebits,
-    activeCustomers,
-    activeAgreements,
-    devicesOnRent,
-    paymentsDue,
-    overduePayments,
-    restrictedDevices,
-    completedAgreements,
-    devicesOwned,
-  ] = await Promise.all([
-    supabase.from("applications").select("id", { count: "exact", head: true }).eq("status", "UNDER_REVIEW"),
-    supabase.from("applications").select("id", { count: "exact", head: true }).eq("status", "DECLINED"),
-    supabase.from("agreements").select("customer_id", { count: "exact", head: true }).eq("status", "ACTIVE"),
-    supabase.from("agreements").select("id", { count: "exact", head: true }).eq("status", "ACTIVE"),
-    supabase.from("inventory").select("id", { count: "exact", head: true }).eq("status", "ACTIVE"),
-    supabase.from("payment_schedule").select("id", { count: "exact", head: true }).eq("status", "SCHEDULED"),
-    supabase.from("payment_schedule").select("id", { count: "exact", head: true }).eq("status", "OVERDUE"),
-    supabase.from("device_control").select("id", { count: "exact", head: true }).eq("status", "RESTRICTED"),
-    supabase.from("agreements").select("id", { count: "exact", head: true }).eq("status", "COMPLETED"),
-    supabase.from("inventory").select("id", { count: "exact", head: true }).eq("status", "OWNED"),
-  ]);
-
-  return {
-    awaitingCollection: awaitingCollection.count ?? 0,
-    failedDebits: failedDebits.count ?? 0,
-    activeCustomers: activeCustomers.count ?? 0,
-    activeAgreements: activeAgreements.count ?? 0,
-    devicesOnRent: devicesOnRent.count ?? 0,
-    paymentsDue: paymentsDue.count ?? 0,
-    overduePayments: overduePayments.count ?? 0,
-    restrictedDevices: restrictedDevices.count ?? 0,
-    completedAgreements: completedAgreements.count ?? 0,
-    devicesOwned: devicesOwned.count ?? 0,
-  };
-}
-
-export default async function AdminDashboardPage() {
-  const profile = await getCurrentProfile();
-  if (!profile) redirect("/login");
-  if (profile.role !== "ADMIN") redirect("/dashboard");
-
-  const counts = await getCounts();
-
-  const cards = [
-    { label: "Awaiting payday collection", value: counts.awaitingCollection, href: "/admin/applications" },
-    { label: "Failed first debits", value: counts.failedDebits, href: "/admin/applications" },
-    { label: "Active customers", value: counts.activeCustomers },
-    { label: "Active agreements", value: counts.activeAgreements },
-    { label: "Devices on rent", value: counts.devicesOnRent, href: "/admin/devices" },
-    { label: "Payments due", value: counts.paymentsDue },
-    { label: "Overdue payments", value: counts.overduePayments },
-    { label: "Restricted devices", value: counts.restrictedDevices, href: "/admin/devices" },
-    { label: "Completed agreements", value: counts.completedAgreements },
-    { label: "Devices owned", value: counts.devicesOwned },
+  const tiles = [
+    { label: "Awaiting review", value: stats!.review, href: "/admin/applications?status=SUBMITTED", hot: Number(stats!.review) > 0 },
+    { label: "Waiting on customer", value: stats!.info, href: "/admin/applications?status=MORE_INFO_REQUIRED" },
+    { label: "Offers unsigned", value: stats!.offered, href: "/admin/loans?status=OFFERED" },
+    { label: "Ready for payout", value: stats!.payout, href: "/admin/loans?status=ACCEPTED", hot: Number(stats!.payout) > 0 },
+    { label: "Active loans", value: stats!.active, href: "/admin/loans?status=ACTIVE" },
+    { label: "In arrears", value: stats!.arrears, href: "/admin/loans?status=ARREARS", hot: Number(stats!.arrears) > 0 },
+    { label: "Book (principal)", value: formatRand(Number(stats!.book), { cents: false }), href: "/admin/loans" },
+    { label: "Paid out this month", value: formatRand(Number(stats!.disbursed_month), { cents: false }), href: "/admin/loans" },
   ];
 
   return (
-    <div className="mx-auto max-w-6xl px-6 py-12">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="font-display text-3xl">Admin dashboard</h1>
-        <div className="flex flex-wrap gap-3">
-          <form action={async () => { "use server"; await collectDueFirstPayments(); }}>
-            <button className="rounded-md bg-brand px-4 py-2 text-sm font-medium text-white hover:bg-brand-dark">
-              Run payday collection
-            </button>
-          </form>
-          <form action={async () => { "use server"; await runOverdueSweep(); }}>
-            <button className="rounded-md border border-white/20 px-4 py-2 text-sm font-medium text-slate-200 hover:bg-white/10">
-              Run overdue payment sweep
-            </button>
-          </form>
-        </div>
+    <div className="space-y-8">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <h1 className="text-3xl font-semibold">Overview</h1>
+        <p className="text-xs text-ink-faint">
+          {formatDate(today)} · housekeeping: {sweep.expired} offers expired, {sweep.arrears} moved to arrears
+          {Number(stats!.messages) > 0 && (
+            <>
+              {" · "}
+              <Link href="/admin/messages" className="text-ember-300 underline">{stats!.messages} unread messages</Link>
+            </>
+          )}
+        </p>
       </div>
-      <p className="mt-2 text-sm text-slate-400">
-        "Run payday collection" simulates the daily job that charges applications whose scheduled
-        first-payment date has arrived — agreements and device allocation are only created once that
-        charge succeeds.
-      </p>
-
-      <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3">
-        {cards.map((card) => {
-          const content = (
-            <div className="rounded-lg border border-white/10 bg-surface p-5">
-              <p className="text-sm text-slate-400">{card.label}</p>
-              <p className="mt-2 font-display text-3xl">{card.value}</p>
-            </div>
-          );
-          return card.href ? (
-            <Link key={card.label} href={card.href}>
-              {content}
-            </Link>
-          ) : (
-            <div key={card.label}>{content}</div>
-          );
-        })}
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        {tiles.map((t) => (
+          <Link key={t.label} href={t.href} className={`glass p-4 transition hover:border-white/20 ${t.hot ? "border-ember/40" : ""}`}>
+            <p className="text-xs text-ink-muted">{t.label}</p>
+            <p className="mt-1 font-display text-2xl font-semibold tabular-nums">{t.value}</p>
+          </Link>
+        ))}
       </div>
 
-      <div className="mt-10 flex gap-4 text-sm">
-        <Link href="/admin/applications" className="font-medium text-accent hover:text-accent-dark">
-          Review applications →
-        </Link>
-        <Link href="/admin/devices" className="font-medium text-accent hover:text-accent-dark">
-          Manage devices →
-        </Link>
+      <div className="grid gap-6 lg:grid-cols-3">
+        <Panel title="Review queue" empty="No applications waiting." href="/admin/applications?status=SUBMITTED">
+          {queue.map((a) => (
+            <Row key={a.id} href={`/admin/applications/${a.id}`} left={a.full_name} sub={`${a.reference} · ${formatDateTime(a.submitted_at)}`}>
+              <span className="tabular-nums">{formatRand(Number(a.requested_amount), { cents: false })}</span>
+              <span className={`badge ${a.affordability?.passes ? "border-mint/40 text-mint-300" : "border-rose/40 text-rose-300"}`}>
+                {a.affordability?.passes ? "Affordable" : "Check"}
+              </span>
+            </Row>
+          ))}
+        </Panel>
+        <Panel title="Ready for payout" empty="Nothing to pay out." href="/admin/loans?status=ACCEPTED">
+          {payouts.map((l) => (
+            <Row key={l.id} href={`/admin/loans/${l.id}`} left={l.full_name} sub={`${l.reference} · signed ${formatDateTime(l.signed_at)}`}>
+              <span className="tabular-nums">{formatRand(Number(l.principal), { cents: false })}</span>
+            </Row>
+          ))}
+        </Panel>
+        <Panel title="Upcoming repayments" empty="No active loans." href="/admin/loans?status=ACTIVE">
+          {due.map((l) => (
+            <Row key={l.id} href={`/admin/loans/${l.id}`} left={l.full_name} sub={`${l.reference} · due ${formatDate(l.due_date, { weekday: false })}`}>
+              <StatusBadge status={l.status} />
+            </Row>
+          ))}
+        </Panel>
       </div>
     </div>
+  );
+}
+
+function Panel({ title, empty, href, children }: { title: string; empty: string; href: string; children: React.ReactNode[] }) {
+  return (
+    <section className="glass p-5">
+      <div className="flex items-center justify-between">
+        <h2 className="font-semibold">{title}</h2>
+        <Link href={href} className="text-xs text-ember-300 hover:underline">View all</Link>
+      </div>
+      {children.length === 0 ? <p className="mt-3 text-sm text-ink-muted">{empty}</p> : <ul className="mt-3 divide-y divide-white/[0.06]">{children}</ul>}
+    </section>
+  );
+}
+
+function Row({ href, left, sub, children }: { href: string; left: string; sub: string; children: React.ReactNode }) {
+  return (
+    <li>
+      <Link href={href} className="flex items-center justify-between gap-3 py-2.5 text-sm hover:text-ink">
+        <span className="min-w-0">
+          <span className="block truncate font-medium">{left}</span>
+          <span className="block truncate text-xs text-ink-faint">{sub}</span>
+        </span>
+        <span className="flex shrink-0 items-center gap-2">{children}</span>
+      </Link>
+    </li>
   );
 }

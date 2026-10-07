@@ -1,18 +1,30 @@
 import Link from "next/link";
+import { requireAdmin } from "@/lib/auth";
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+const NAV = [
+  { href: "/admin", label: "Overview" },
+  { href: "/admin/applications", label: "Applications" },
+  { href: "/admin/loans", label: "Loans" },
+  { href: "/admin/messages", label: "Messages" },
+];
+
+export const metadata = { title: "Admin", robots: { index: false } };
+
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  const admin = await requireAdmin();
   return (
     <div>
-      <div className="border-b border-white/10 bg-surface">
-        <div className="mx-auto flex max-w-6xl gap-6 px-6 py-3 text-sm">
-          <Link href="/admin" className="font-medium text-slate-200 hover:text-ink">Overview</Link>
-          <Link href="/admin/catalog" className="font-medium text-slate-200 hover:text-ink">Catalog</Link>
-          <Link href="/admin/applications" className="font-medium text-slate-200 hover:text-ink">Applications</Link>
-          <Link href="/admin/agreements" className="font-medium text-slate-200 hover:text-ink">Agreements</Link>
-          <Link href="/admin/devices" className="font-medium text-slate-200 hover:text-ink">Devices</Link>
+      <div className="border-b border-white/[0.06] bg-night-900">
+        <div className="container-x flex items-center gap-1 overflow-x-auto py-2 text-sm">
+          {NAV.map((n) => (
+            <Link key={n.href} href={n.href} className="whitespace-nowrap rounded-full px-3.5 py-2 text-ink-muted hover:bg-white/5 hover:text-ink">
+              {n.label}
+            </Link>
+          ))}
+          <span className="ml-auto hidden whitespace-nowrap text-xs text-ink-faint sm:block">Signed in as {admin.full_name}</span>
         </div>
       </div>
-      {children}
+      <div className="container-x py-8 sm:py-10">{children}</div>
     </div>
   );
 }

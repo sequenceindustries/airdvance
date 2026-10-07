@@ -1,116 +1,61 @@
-import { redirect } from "next/navigation";
 import Link from "next/link";
-import clsx from "clsx";
-import { getCurrentProfile } from "@/lib/data/customer";
-import { createClient } from "@/lib/supabase/server";
-import type { ApplicationStatus } from "@/types/domain";
+import { StatusBadge } from "@/components/ui";
+import { query } from "@/lib/db";
+import { formatDateTime } from "@/lib/dates";
+import { formatRand } from "@/lib/pricing";
 
-const statusStyles: Record<ApplicationStatus, string> = {
-  DRAFT: "bg-white/10 text-slate-400",
-  SUBMITTED: "bg-white/10 text-slate-300",
-  UNDER_REVIEW: "bg-amber-100 text-amber-800",
-  MORE_INFORMATION_REQUIRED: "bg-amber-100 text-amber-800",
-  APPROVED: "bg-signal-light text-signal-dark",
-  DECLINED: "bg-alert-light text-alert-dark",
-  CANCELLED: "bg-white/10 text-slate-500",
-};
+const FILTERS = ["SUBMITTED", "MORE_INFO_REQUIRED", "APPROVED", "DECLINED", "WITHDRAWN", "ALL"];
 
-export default async function AdminApplicationsPage({
-  searchParams,
-}: {
-  searchParams: { status?: string; q?: string };
-}) {
-  const profile = await getCurrentProfile();
-  if (!profile) redirect("/login");
-  if (profile.role !== "ADMIN") redirect("/dashboard");
-
-  const supabase = createClient();
-  let query = supabase
-    .from("applications")
-    .select("*, product:products(name), plan:rental_plans(term_months, monthly_payment)")
-    .order("created_at", { ascending: false });
-
-  if (searchParams.status) query = query.eq("status", searchParams.status);
-
-  const { data: applications } = await query;
-  const filtered = searchParams.q
-    ? applications?.filter((a: any) =>
-        (a.personal_info?.full_name ?? "").toLowerCase().includes(searchParams.q!.toLowerCase()),
-      )
-    : applications;
-
-  const statuses: ApplicationStatus[] = [
-    "SUBMITTED",
-    "UNDER_REVIEW",
-    "MORE_INFORMATION_REQUIRED",
-    "APPROVED",
-    "DECLINED",
-  ];
-
+export default async function AdminApplications({ searchParams }: { searchParams: { status?: string; q?: string } }) {
+  const status = FILTERS.includes(searchParams.status ?? "") ? searchParams.status! : "SUBMITTED";
+  const q = (searchParams.q ?? "").trim();
+  const rows = await query<any>(
+    `select a.id, a.reference, a.status, a.requested_amount, a.submitted_at, a.affordability, u.full_name, u.mobile
+       from applications a join users u on u.id = a.user_id
+      where ($1 = 'ALL' or a.status = $1)
+        and ($2 = '' or u.full_name ilike '%' || $2 || '%' or a.reference ilike '%' || $2 || '%' or u.mobile like '%' || $2 || '%' or a.id_number_last4 = $2)
+      order by a.submitted_at ${status === "SUBMITTED" ? "asc" : "desc"} limit 200`,
+    [status, q],
+  );
   return (
-    <div className="mx-auto max-w-5xl px-6 py-12">
-      <h1 className="font-display text-3xl">Applications</h1>
-
-      <form className="mt-6 flex flex-wrap items-center gap-3" method="get">
-        <input
-          name="q"
-          placeholder="Search by name"
-          defaultValue={searchParams.q}
-          className="input max-w-xs"
-        />
-        <select name="status" defaultValue={searchParams.status ?? ""} className="input max-w-xs">
-          <option value="">All statuses</option>
-          {statuses.map((s) => (
-            <option key={s} value={s}>
-              {s.replace(/_/g, " ")}
-            </option>
-          ))}
-        </select>
-        <button className="rounded-md border border-white/20 px-4 py-2 text-sm font-medium text-slate-200 hover:bg-white/10">
-          Filter
-        </button>
-      </form>
-
-      <div className="mt-6 overflow-hidden rounded-lg border border-white/10 bg-surface">
-        <table className="w-full text-sm">
-          <thead className="bg-white/5 text-left text-slate-400">
-            <tr>
-              <th className="px-4 py-2">Applicant</th>
-              <th className="px-4 py-2">Device</th>
-              <th className="px-4 py-2">Plan</th>
-              <th className="px-4 py-2">Status</th>
-              <th className="px-4 py-2">Submitted</th>
-            </tr>
+    <div className="space-y-6">
+      <h1 className="text-3xl font-semibold">Applications</h1>
+      <div className="flex flex-wrap items-center gap-2">
+        {FILTERS.map((f) => (
+          <Link
+            key={f}
+            href={`/admin/applications?status=${f}`}
+            className={`rounded-full border px-3 py-1.5 text-xs ${f === status ? "border-ember bg-ember/15" : "border-white/10 text-ink-muted hover:border-white/25"}`}
+          >
+            {f === "ALL" ? "All" : f.replaceAll("_", " ").toLowerCase()}
+          </Link>
+        ))}
+        <form className="ml-auto">
+          <input type="hidden" name="status" value={status} />
+          <input name="q" defaultValue={q} placeholder="Name, ref, mobile, ID last 4" className="input w-64 py-2" />
+        </form>
+      </div>
+      <div className="glass overflow-x-auto">
+        <table className="table-x min-w-[720px]">
+          <thead>
+            <tr><th>Reference</th><th>Customer</th><th>Amount</th><th>Affordability</th><th>Submitted</th><th>Status</th></tr>
           </thead>
-          <tbody className="divide-y divide-white/10">
-            {filtered?.map((application: any) => (
-              <tr key={application.id} className="hover:bg-white/5">
-                <td className="px-4 py-3">
-                  <Link href={`/admin/applications/${application.id}`} className="font-medium text-ink hover:text-signal">
-                    {application.personal_info?.full_name ?? "—"}
-                  </Link>
+          <tbody>
+            {rows.length === 0 && (
+              <tr><td colSpan={6} className="py-8 text-center text-ink-muted">No applications.</td></tr>
+            )}
+            {rows.map((r) => (
+              <tr key={r.id} className="hover:bg-white/[0.02]">
+                <td><Link href={`/admin/applications/${r.id}`} className="font-medium text-ember-300 hover:underline">{r.reference}</Link></td>
+                <td>{r.full_name}</td>
+                <td className="tabular-nums">{formatRand(Number(r.requested_amount), { cents: false })}</td>
+                <td className={r.affordability?.passes ? "text-mint-300" : "text-rose-300"}>
+                  {r.affordability ? formatRand(r.affordability.headroomAfterRepayment, { cents: false }) + " left" : "—"}
                 </td>
-                <td className="px-4 py-3">{application.product?.name ?? "—"}</td>
-                <td className="px-4 py-3">
-                  {application.plan ? `${application.plan.term_months}mo · R${application.plan.monthly_payment}` : "—"}
-                </td>
-                <td className="px-4 py-3">
-                  <span className={clsx("rounded-full px-2 py-1 text-xs font-medium", statusStyles[application.status as ApplicationStatus])}>
-                    {application.status.replace(/_/g, " ")}
-                  </span>
-                </td>
-                <td className="px-4 py-3 text-slate-400">
-                  {application.submitted_at ? new Date(application.submitted_at).toLocaleDateString() : "—"}
-                </td>
+                <td className="text-ink-muted">{formatDateTime(r.submitted_at)}</td>
+                <td><StatusBadge status={r.status} /></td>
               </tr>
             ))}
-            {filtered?.length === 0 && (
-              <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-slate-500">
-                  No applications match this filter.
-                </td>
-              </tr>
-            )}
           </tbody>
         </table>
       </div>

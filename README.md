@@ -1,69 +1,63 @@
-# Airdvance — Rent-to-Own Smartphones, Tablets & Laptops (MVP)
+# Airdvance — online cash advances (R300–R1,000)
 
-Get the device you need now. Pay over time. Own it.
+Short-term credit for South African salaried customers, repaid in one DebiCheck debit order on payday.
+Next.js 14 (App Router) + TypeScript + Tailwind, Postgres on Railway, no external auth provider.
 
-## Stack
+> The previous rent-to-own device version is preserved at git tag `archive/rent-to-own`.
 
-- Next.js 14 (App Router) + TypeScript + Tailwind
-- Supabase (Postgres + Auth + Row Level Security)
-- A provider-agnostic **device-control abstraction layer** (`lib/device-control`) with a mock provider for development, so the full lock/restrict/restore/release lifecycle can be demonstrated before a real MDM/device-financing vendor is integrated.
+## What's in it
 
-## 1. Set up Supabase
+**Public site** — home with live cost calculator, How it works, Costs & repayment (representative examples),
+Who can apply, FAQ, Contact, Responsible lending, Complaints, Terms, Privacy (POPIA), PAIA manual.
 
-1. Create a project at supabase.com.
-2. In the SQL editor, run `supabase/migrations/0001_init.sql`. This creates every table (products, rental_plans, inventory, applications, agreements, payment_schedule, device_control, audit_logs, notifications, device_control_rules) and all Row Level Security policies.
-3. Copy `.env.example` to `.env.local` and fill in your project URL, anon key, and service role key from **Project Settings → API**.
+**Customer journey**
+1. Register (email + password) → confirm cellphone with a 6-digit PIN
+2. 8-step application: amount & payday → SA ID (Luhn + age check) → address → employment & income →
+   expenses (live affordability estimate) → bank (auto branch codes) → documents → declarations
+3. Status page; respond to "more information" requests with extra uploads
+4. Offer: pre-agreement statement & quotation → sign by typing full name → DebiCheck mandate
+5. Active loan: settlement amount today, EFT details, transactions; printable signed agreement
 
-## 2. Install & seed
+**Admin** (`/admin`) — queue & KPIs, application review (affordability incl. NCR minimum expense norms,
+documents, logged reveal of encrypted ID/account numbers, notes), approve (optionally a lower amount),
+decline with reason & bureau, request info, pay out (re-priced from payout date — never higher than signed),
+DebiCheck collection, record EFT payments, cancel before payout, contact inbox, audit trail.
+Offers expire after 3 days; loans move to arrears after the due date (run on admin page load).
+
+## Pricing (lib/pricing.ts — unit tested)
+
+Within NCA short-term credit caps, clamped in code even if env overrides are set:
+- Initiation fee R165 (R165 + 10% above R1,000, max R1,050)
+- Service fee R60/month, pro-rated by day, never above R60 per month started
+- Interest 5% per month (first loan in calendar year) / 3% (later loans that year), simple, daily accrual
+- Early settlement: initiation fee + fees/interest for days used (min 1 day), no penalty
+- Default: same rate continues; accrual during default capped by in duplum (s103(5))
+
+R1,000 for 30 days → R1,274.32.
+
+## Run locally
 
 ```bash
 npm install
-npm run seed   # creates demo admin + customer, catalogue, and demo agreements
+cp .env.example .env.local   # set DATABASE_URL and DATA_ENCRYPTION_KEY (openssl rand -base64 32)
+export DATABASE_URL=...      # scripts don't read .env.local
+npm run migrate
+ADMIN_EMAIL=you@example.co.za ADMIN_PASSWORD='long-password-1' ADMIN_MOBILE=0821234567 ADMIN_NAME='Your Name' npm run create-admin
 npm run dev
+npm test                     # pricing, affordability, SA ID, mobile tests
 ```
 
-Demo logins (created by the seed script):
+## Deploy on Railway
 
-- Admin: `admin@airdvance.demo` / `Airdvance!Demo123`
-- Customer: `john.doe@airdvance.demo` / `Airdvance!Demo123`
+- Add a **Postgres** service; on the web service set `DATABASE_URL=${{Postgres.DATABASE_URL}}`
+- Set `DATA_ENCRYPTION_KEY` (never change it after real data exists), `APP_URL`, and the `COMPANY_*` / `COLLECTION_*` variables
+- `npm start` runs migrations then starts Next.js; health check at `/api/health` (see `railway.json`)
+- Run `npm run create-admin` once (Railway shell or `railway run`)
 
-The seeded customer has:
-- An **active** agreement (18/24 payments made) on a Samsung Galaxy A25
-- A **restricted** device on a defaulted tablet agreement — visible on the customer dashboard and in Admin → Devices
-- A **completed/owned** laptop agreement
-- A pending application awaiting admin review at Admin → Applications
+## Before taking real customers
 
-## 3. Walk through the full lifecycle
-
-1. As the customer, browse `/shop`, open a product, pick a plan, and apply at `/apply`.
-2. As admin (`/admin/applications`), open the application and **Approve** it — this creates the agreement, generates the full payment schedule, allocates an available physical device, and registers + activates it through `DeviceControlService`.
-3. In `/admin/agreements/[id]`, mark payments as paid one at a time. Once every required payment is recorded, the agreement completes, ownership flips to `OWNED`, and the device is released from device control automatically.
-4. In `/admin/devices`, you can manually **Restrict** or **Restore** any allocated device to see the customer-facing restriction banner update on `/dashboard`.
-5. `/admin` → **Run overdue payment sweep** simulates the scheduled job: it marks past-due `SCHEDULED` payments as `OVERDUE`, and restricts devices once they've been overdue past the configurable grace period in `device_control_rules`.
-
-## Swapping in a real device-control vendor
-
-Everything in the app calls `DeviceControlService` (`lib/device-control/service.ts`), which in turn calls whichever `DeviceControlProvider` is returned by `resolveProvider()`. To go live:
-
-1. Implement `DeviceControlProvider` (`lib/device-control/provider.ts`) against your chosen vendor's SDK/API in a new file, e.g. `lib/device-control/acme-provider.ts`.
-2. Point `resolveProvider()` at it (e.g. behind a `DEVICE_CONTROL_PROVIDER` env var).
-
-No other application code needs to change — agreements, payments, and admin actions only ever talk to `DeviceControlService`.
-
-## Project structure
-
-```
-app/                 Routes (public site, apply flow, dashboard, admin)
-components/          Shared UI (header, footer, product card, ownership meter, restriction banner)
-lib/actions/         Server actions (auth, applications, admin approvals, payments)
-lib/data/            Read-side data access (products, customer/agreements)
-lib/device-control/  The device-control abstraction layer + mock provider
-lib/supabase/        Browser / server / service-role Supabase clients
-supabase/migrations/ Full schema + RLS
-scripts/seed.ts      Demo data
-types/domain.ts      Shared domain types
-```
-
-## Explicitly out of scope for this MVP
-
-Native mobile apps, other device categories (TVs, consoles, appliances), AI credit scoring, advanced analytics, multi-country support, loyalty/referral programmes — see the original spec for the full list.
+Integration seams are in place but run in **demo mode** (a site-wide banner says so):
+- `lib/payments.ts` — implement a real provider for DebiCheck mandates, payouts and collections
+- `lib/messaging.ts` — set `MESSAGING_PROVIDER=twilio` + credentials (or add another SMS/WhatsApp provider)
+- Credit bureau checks and bank account verification (AVS) are manual today — admins confirm them before approving
+- Have the legal pages, agreement wording and NCR trading-name registration reviewed by your compliance adviser

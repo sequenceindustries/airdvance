@@ -1,26 +1,47 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import "@fontsource-variable/inter";
+import "@fontsource/poppins/500.css";
+import "@fontsource/poppins/600.css";
+import "@fontsource/poppins/700.css";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { getCurrentProfile } from "@/lib/data/customer";
-
-const inter = Inter({ subsets: ["latin"], variable: "--font-body", weight: ["400", "500", "600", "700", "800", "900"] });
+import { DemoBanner } from "@/components/demo-banner";
+import { getCurrentUser } from "@/lib/auth";
+import { BRAND } from "@/lib/config";
 
 export const metadata: Metadata = {
-  title: "airdvance — Get the device you need now. Pay over time. Buy it.",
+  metadataBase: new URL(process.env.APP_URL ?? `https://${BRAND.domain}`),
+  title: {
+    default: "Airdvance — Cash advances from R300 to R1,000",
+    template: "%s · Airdvance",
+  },
   description:
-    "Rent-to-buy smartphones and tablets — not credit, just affordability. Choose a device, spread the cost over an agreed term, and buy it at the end for as little as R1.",
+    "Borrow R300 to R1,000 until payday, entirely online. See every rand of the cost before you apply. Registered credit provider. Approval subject to an affordability assessment.",
+  openGraph: { siteName: "Airdvance", locale: "en_ZA", type: "website" },
 };
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const profile = await getCurrentProfile();
+export const viewport: Viewport = {
+  themeColor: "#07070B",
+  width: "device-width",
+  initialScale: 1,
+};
 
+export const dynamic = "force-dynamic";
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const user = await getCurrentUser().catch(() => null);
   return (
-    <html lang="en" className={inter.variable}>
-      <body className="font-body flex min-h-screen flex-col bg-paper text-ink antialiased">
-        <SiteHeader profile={profile} />
-        <main className="flex-1">{children}</main>
+    <html lang="en-ZA">
+      <body className="flex min-h-screen flex-col bg-night font-body text-ink antialiased">
+        <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-ink focus:px-3 focus:py-2 focus:text-night">
+          Skip to content
+        </a>
+        <DemoBanner />
+        <SiteHeader user={user ? { name: user.full_name, role: user.role } : null} />
+        <main id="main" className="flex-1">
+          {children}
+        </main>
         <SiteFooter />
       </body>
     </html>

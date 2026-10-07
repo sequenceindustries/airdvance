@@ -5,50 +5,52 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#F5F5F4",
-        paper: "#0A0A0B",
-        surface: {
-          DEFAULT: "#151516",
-          2: "#1C1C1F",
+        night: {
+          DEFAULT: "#07070B",
+          900: "#0B0B12",
+          800: "#11111B",
+          700: "#181826",
+          600: "#232336",
         },
-        slate: {
-          50: "#F5F6F7",
-          100: "#E7E9EC",
-          200: "#CBD0D6",
-          400: "#8A919C",
-          600: "#4B525C",
-          800: "#262B33",
+        ink: {
+          DEFAULT: "#F4F2EE",
+          muted: "#B4B1C2",
+          faint: "#7D7A8E",
         },
-        brand: {
-          DEFAULT: "#E74E1B",
-          dark: "#FF8A5B",
-          light: "#2A160D",
+        ember: {
+          DEFAULT: "#FF5A1F",
+          400: "#FF7A45",
+          300: "#FFA06F",
+          glow: "#FF5A1F",
         },
-        accent: {
-          DEFAULT: "#3B8FD1",
-          dark: "#7FC0F0",
-          light: "#12222E",
+        amber: { DEFAULT: "#FFB547" },
+        volt: {
+          DEFAULT: "#3D8BFF",
+          300: "#8DB9FF",
         },
-        signal: {
-          DEFAULT: "#35A583",
-          dark: "#6FE3BE",
-          light: "#0E2620",
-        },
-        alert: {
-          DEFAULT: "#E5503A",
-          dark: "#FF9280",
-          light: "#301410",
-        },
+        mint: { DEFAULT: "#3DDC97", 300: "#8EF0C4" },
+        rose: { DEFAULT: "#FF5C7A", 300: "#FF9DB0" },
       },
       fontFamily: {
-        display: ["var(--font-display)", "sans-serif"],
-        body: ["var(--font-body)", "sans-serif"],
+        display: ["Poppins", "system-ui", "sans-serif"],
+        body: ["'Inter Variable'", "Inter", "system-ui", "sans-serif"],
       },
       borderRadius: {
-        sm: "4px",
-        md: "8px",
-        lg: "14px",
+        xl: "14px",
+        "2xl": "20px",
+        "3xl": "28px",
       },
+      boxShadow: {
+        glow: "0 0 0 1px rgba(255,90,31,.35), 0 10px 40px -10px rgba(255,90,31,.55)",
+        card: "0 1px 0 0 rgba(255,255,255,.05) inset, 0 20px 60px -30px rgba(0,0,0,.8)",
+      },
+      keyframes: {
+        drift: {
+          "0%,100%": { transform: "translate3d(0,0,0) scale(1)" },
+          "50%": { transform: "translate3d(4%, -3%, 0) scale(1.08)" },
+        },
+      },
+      animation: { drift: "drift 18s ease-in-out infinite" },
     },
   },
   plugins: [],

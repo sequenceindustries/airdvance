@@ -1,51 +1,67 @@
-import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
-import { getProductBySlug, getRentalPlans, getAllActiveProducts } from "@/lib/data/products";
+import Link from "next/link";
 import { ApplyWizard } from "./apply-wizard";
+import { Glow } from "@/components/ui";
+import { requireVerifiedUser } from "@/lib/auth";
+import { PRODUCT } from "@/lib/config";
+import { daysBetween, defaultPayday, isIsoDate, todaySA } from "@/lib/dates";
+import { isRepeatThisYear, openItemsFor } from "@/lib/loans";
 
-export default async function ApplyPage({
-  searchParams,
-}: {
-  searchParams: { product?: string; plan?: string };
-}) {
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+export const metadata = { title: "Apply" };
 
-  if (!user) {
-    const query = searchParams.product
-      ? `?next=/apply?product=${searchParams.product}%26plan=${searchParams.plan ?? ""}`
-      : "";
-    redirect(`/login${query}`);
-  }
+export default async function ApplyPage({ searchParams }: { searchParams: { amount?: string; due?: string } }) {
+  const qs = new URLSearchParams(searchParams as Record<string, string>).toString();
+  const user = await requireVerifiedUser(`/apply${qs ? `?${qs}` : ""}`);
+  const today = todaySA();
 
-  const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).maybeSingle();
-
-  if (!searchParams.product) {
+  if (user.role === "ADMIN") {
     return (
-      <div className="mx-auto max-w-xl px-6 py-20 text-center">
-        <h1 className="font-display text-3xl">Start your application</h1>
-        <p className="mt-3 text-slate-300">
-          Pick a device and a rental plan first, then come back here to apply.
-        </p>
-        <a href="/shop" className="mt-6 inline-block rounded-md bg-ink px-6 py-3 font-medium text-paper">
-          Shop devices
-        </a>
-      </div>
+      <Notice title="Admin accounts can't apply">
+        Log in with a customer account to test the application flow. <Link href="/admin" className="text-ember-300 underline">Go to admin</Link>
+      </Notice>
     );
   }
 
-  const product = await getProductBySlug(searchParams.product);
-  if (!product) {
-    return <div className="mx-auto max-w-xl px-6 py-20">We couldn't find that device.</div>;
+  const { app, loan } = await openItemsFor(user.id);
+  if (app || loan) {
+    const href = loan ? `/dashboard/loans/${loan.id}` : `/dashboard/applications/${app!.id}`;
+    return (
+      <Notice title="You already have an open application or loan">
+        You can have one Airdvance application or loan at a time.{" "}
+        <Link href={href} className="text-ember-300 underline">
+          View {loan ? `loan ${loan.reference}` : `application ${app!.reference}`}
+        </Link>
+      </Notice>
+    );
   }
-  const [plans, allProducts] = await Promise.all([getRentalPlans(product.id), getAllActiveProducts()]);
-  const plan = plans.find((p) => p.id === searchParams.plan) ?? plans[0];
+
+  let amount = Number(searchParams.amount);
+  if (!Number.isFinite(amount) || amount < PRODUCT.minAmount || amount > PRODUCT.maxAmount || amount % PRODUCT.step) amount = 500;
+  let due = searchParams.due ?? "";
+  if (!isIsoDate(due) || daysBetween(today, due) < PRODUCT.minDays || daysBetween(today, due) > PRODUCT.maxDays) {
+    due = defaultPayday(today, PRODUCT.minDays, PRODUCT.maxDays);
+  }
 
   return (
-    <div className="mx-auto max-w-2xl px-6 py-12">
-      <ApplyWizard product={product} plan={plan} plans={plans} allProducts={allProducts} profile={profile} />
+    <section className="relative">
+      <Glow className="opacity-60" />
+      <div className="container-x relative py-10 sm:py-14">
+        <h1 className="text-3xl font-semibold sm:text-4xl">Apply for a cash advance</h1>
+        <p className="mt-2 max-w-xl text-ink-muted">About 10 minutes. Have your ID, latest payslip and 3 months of bank statements ready.</p>
+        <div className="mt-8">
+          <ApplyWizard today={today} initialAmount={amount} initialDue={due} fullName={user.full_name} isRepeat={await isRepeatThisYear(user.id, today)} />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Notice({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div className="container-x py-20">
+      <div className="glass mx-auto max-w-lg p-8 text-center">
+        <h1 className="text-2xl font-semibold">{title}</h1>
+        <p className="mt-3 text-ink-muted">{children}</p>
+      </div>
     </div>
   );
 }

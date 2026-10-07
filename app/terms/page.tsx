@@ -1,125 +1,50 @@
 import Link from "next/link";
+import { LegalPage } from "@/components/legal-page";
+import { COMPANY } from "@/lib/config";
 
-export const metadata = { title: "Terms & Conditions — airdvance" };
+export const metadata = { title: "Terms & conditions" };
 
 export default function TermsPage() {
   return (
-    <div className="mx-auto max-w-3xl px-6 py-16">
-      <p className="text-sm text-slate-400">Legal</p>
-      <h1 className="mt-2 font-display text-3xl">Terms & Conditions</h1>
-      <p className="mt-2 text-sm text-slate-400">Last updated: {new Date().toLocaleDateString("en-ZA", { year: "numeric", month: "long", day: "numeric" })}</p>
+    <LegalPage title="Terms & conditions" updated="7 October 2026" intro="These terms govern your use of the Airdvance website and accounts. Each loan is also governed by its own credit agreement, which you sign before any money is paid out.">
+      <h2>1. Who we are</h2>
+      <p>Airdvance is a trading name of {COMPANY.legalName} ("we", "us"), a registered credit provider ({COMPANY.ncrcp}) under the National Credit Act 34 of 2005 ("NCA"). Contact: {COMPANY.email}.</p>
 
-      <div className="mt-10 space-y-8 text-sm leading-relaxed text-slate-300">
-        <Section title="1. What this agreement is">
-          <p>
-            This is a <strong className="text-ink">rent-to-buy agreement</strong>, not a credit agreement. You
-            do not need a good credit score to qualify. We assess your application based on your
-            employment status and whether the monthly payment is affordable for you, not on a credit
-            check or credit history.
-          </p>
-          <p className="mt-3">
-            You rent a device from airdvance for an agreed term at a fixed monthly payment. If you
-            complete every payment on your agreement and pay the final buyout amount shown on your
-            agreement, ownership of the device transfers to you. Until that buyout payment is made,
-            the device remains the property of airdvance.
-          </p>
-        </Section>
+      <h2>2. The product</h2>
+      <ul>
+        <li>Short-term credit of R300 to R1,000, repaid in a single payment on a date between 5 and 31 days after the agreement date, normally your payday.</li>
+        <li>Charges are limited to an initiation fee, a monthly service fee pro-rated by day, and interest, each within the maximums prescribed under the NCA. Your pre-agreement statement and credit agreement show the exact amounts.</li>
+        <li>No credit life insurance or other optional products are sold with the loan.</li>
+        <li>You may hold only one Airdvance application or loan at a time.</li>
+      </ul>
 
-        <Section title="2. Applying and eligibility">
-          <p>
-            To apply you must be at least 18 years old, provide accurate personal, address and
-            employment information, and hold a valid South African bank account in your name (or as
-            otherwise permitted) for debit order purposes. Providing false or misleading information
-            may result in your application being declined or your agreement being cancelled.
-          </p>
-        </Section>
+      <h2>3. Applying</h2>
+      <p>You must be 18 or older, hold a valid South African ID, have a regular income paid into a South African bank account in your name, and give us complete and truthful information. Providing false information is an offence and may make the agreement void or lead to legal action.</p>
+      <p>By applying you consent to us verifying your identity, employment, income and bank account, and to obtaining your credit report from a registered credit bureau, for the purpose of assessing your application as section 81 of the NCA requires.</p>
 
-        <Section title="3. Debit orders and payment">
-          <p>
-            By submitting your application you authorize airdvance to debit your nominated bank
-            account by debit order for your first payment (your monthly installment plus a once-off
-            admin fee) on your next payday, and thereafter monthly on the anniversary of that date for
-            the remainder of your agreement term, until the agreement ends or is cancelled.
-          </p>
-          <p className="mt-3">
-            We do not charge you on the day you apply. Your first payment is scheduled for your next
-            payday as you specify it in your application. Your device is shipped to you only once
-            that first payment has successfully cleared, and is delivered within 7 days of that
-            payment clearing.
-          </p>
-        </Section>
+      <h2>4. Assessment and decisions</h2>
+      <p>Submitting an application does not mean it will be approved. We may decline, or approve a lower amount than you asked for, based on our affordability assessment. If we decline, we will tell you the dominant reason and, where relevant, the credit bureau we used.</p>
 
-        <Section title="4. What happens if a debit order fails">
-          <p>
-            <strong className="text-ink">If a debit order fails, your device will be locked</strong>{" "}
-            (restricted) until the outstanding payment is resolved. Failed debit orders are{" "}
-            <strong className="text-ink">not automatically retried</strong>. To restore access to your
-            device, you must make a manual payment for the outstanding amount through your account.
-            We may also contact you to arrange payment. Repeated non-payment may result in your
-            agreement being placed in default and, where permitted by law, the device being recovered.
-          </p>
-        </Section>
+      <h2>5. Offers and signing</h2>
+      <p>If approved, we present a pre-agreement statement and quotation, valid for the period shown. The loan is only concluded once you sign the credit agreement electronically and authorise the DebiCheck mandate. You may end the agreement at any time by settling it in full, without penalty.</p>
 
-        <Section title="5. Ownership and the buyout payment">
-          <p>
-            Ownership of the device does not transfer automatically once your rental term ends.
-            Once every monthly payment under your agreement has been made, you become eligible to pay
-            a final buyout amount (shown on your agreement and dashboard, from as little as R1
-            depending on your plan) to take full ownership of the device. Until that buyout payment
-            is made and confirmed, the device remains the property of airdvance.
-          </p>
-        </Section>
+      <h2>6. Repayment</h2>
+      <p>You authorise one DebiCheck debit order for the total shown in your agreement on the repayment date. You may settle early at any time without penalty; you then pay the initiation fee plus the service fee and interest for the days the money was outstanding.</p>
 
-        <Section title="6. Device care and condition">
-          <p>
-            You are responsible for taking reasonable care of the device for the duration of your
-            agreement, including keeping it safe from loss, theft and damage. The device must not be
-            resold, given away, pawned or used as security for any other obligation while it remains
-            the property of airdvance.
-          </p>
-        </Section>
+      <h2>7. Default</h2>
+      <p>If payment isn't received, interest continues at the agreed rate on the amount borrowed. In line with section 103(5) of the NCA, interest, fees and charges that accrue while you are in default will not exceed the unpaid balance at the time of default. Before taking legal action we will give you written notice under section 129 of the NCA, which sets out your right to approach a debt counsellor, alternative dispute resolution agent, consumer court or ombud. Default information may be reported to credit bureaus after notice.</p>
 
-        <Section title="7. Cancellation">
-          <p>
-            You may settle your agreement early at any time by paying the remaining balance plus the
-            buyout amount. airdvance may cancel your agreement if you materially breach these terms,
-            including sustained non-payment following a locked device. Cancellation does not
-            necessarily waive amounts already owing.
-          </p>
-        </Section>
+      <h2>8. Your account</h2>
+      <p>Keep your password private. We will never ask for your banking password, card PIN or bank OTP. Tell us immediately at {COMPANY.email} if you suspect someone else has accessed your account.</p>
 
-        <Section title="8. Your information">
-          <p>
-            We collect and use your personal information in accordance with our{" "}
-            <Link href="/privacy" className="text-accent underline">Privacy Policy</Link> and the
-            Protection of Personal Information Act (POPIA). We only ever store the last 4 digits of
-            your bank account number.
-          </p>
-        </Section>
+      <h2>9. Privacy</h2>
+      <p>We handle personal information as described in our <Link href="/privacy">privacy policy</Link>, in line with the Protection of Personal Information Act 4 of 2013.</p>
 
-        <Section title="9. Contact">
-          <p>
-            Questions about these terms can be sent through our{" "}
-            <Link href="/contact" className="text-accent underline">contact page</Link>.
-          </p>
-        </Section>
+      <h2>10. Complaints</h2>
+      <p>See our <Link href="/complaints">complaints process</Link>. You may also contact the National Credit Regulator or the Credit Ombud.</p>
 
-        <p className="text-xs text-slate-500">
-          This is a summary of the terms that govern your agreement with airdvance and is provided
-          for general informational purposes. It does not replace the specific terms and conditions
-          set out in your individual rental agreement, which take precedence in the event of any
-          conflict.
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <section>
-      <h2 className="font-display text-lg text-ink">{title}</h2>
-      <div className="mt-2">{children}</div>
-    </section>
+      <h2>11. General</h2>
+      <p>These terms are governed by South African law. If a provision is found invalid, the rest remain in force. Nothing in these terms limits rights you have under the NCA or the Consumer Protection Act.</p>
+    </LegalPage>
   );
 }
