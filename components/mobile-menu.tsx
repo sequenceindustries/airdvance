@@ -23,14 +23,14 @@ export function MobileMenu({
         aria-expanded={open}
         aria-label={open ? "Close menu" : "Open menu"}
         onClick={() => setOpen((o) => !o)}
-        className="flex h-10 w-10 items-center justify-center rounded-full border border-ink/10 bg-ink/[0.04]"
+        className="flex h-9 w-9 items-center justify-center rounded-full border border-ink/10 bg-ink/[0.04]"
       >
         <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
           {open ? <path d="M6 6l12 12M18 6 6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
         </svg>
       </button>
       {open && (
-        <div className="absolute inset-x-0 top-16 border-b border-ink/10 bg-night-900/95 backdrop-blur-xl">
+        <div className="absolute inset-x-0 top-12 border-b border-ink/10 bg-night-900/95 backdrop-blur-xl">
           <nav className="container-x flex flex-col py-3" aria-label="Mobile">
             {items.map((n) => (
               <Link key={n.href} href={n.href} className="rounded-xl px-3 py-3 text-base text-ink-muted hover:bg-ink/5 hover:text-ink">

@@ -1,13 +1,9 @@
 import Link from "next/link";
 import clsx from "clsx";
 
-export function Glow({ className }: { className?: string }) {
-  // Quiet backdrop: a faint dot grid fading out, no colour wash.
-  return (
-    <div aria-hidden className={clsx("pointer-events-none absolute inset-0 overflow-hidden", className)}>
-      <div className="absolute inset-0 opacity-60 [background-image:radial-gradient(rgba(18,22,27,.12)_1px,transparent_1px)] [background-size:22px_22px] [mask-image:linear-gradient(to_bottom,black,transparent_75%)]" />
-    </div>
-  );
+/** Kept for API compatibility — the design now uses plain backgrounds. */
+export function Glow(_: { className?: string }) {
+  return null;
 }
 
 export function SectionHeading({
@@ -24,8 +20,8 @@ export function SectionHeading({
   return (
     <div className={clsx("max-w-2xl", center && "mx-auto text-center")}>
       {eyebrow && <p className="eyebrow">{eyebrow}</p>}
-      <h2 className="mt-3 text-3xl font-semibold leading-tight sm:text-4xl">{title}</h2>
-      {intro && <p className="mt-4 text-base leading-relaxed text-ink-muted sm:text-lg">{intro}</p>}
+      <h2 className="mt-2 text-4xl font-semibold leading-tight tracking-[-0.03em] sm:text-5xl">{title}</h2>
+      {intro && <p className="mt-4 text-lg leading-snug text-ink-muted sm:text-xl">{intro}</p>}
     </div>
   );
 }
@@ -33,11 +29,10 @@ export function SectionHeading({
 export function PageHero({ eyebrow, title, intro }: { eyebrow?: string; title: React.ReactNode; intro?: React.ReactNode }) {
   return (
     <section className="relative">
-      <Glow />
-      <div className="container-x relative pb-10 pt-14 sm:pb-14 sm:pt-20">
-        {eyebrow && <p className="eyebrow">{eyebrow}</p>}
-        <h1 className="mt-3 max-w-3xl text-4xl font-semibold leading-[1.08] sm:text-5xl">{title}</h1>
-        {intro && <p className="mt-5 max-w-2xl text-base leading-relaxed text-ink-muted sm:text-lg">{intro}</p>}
+      <div className="container-x relative pb-12 pt-16 text-center sm:pb-16 sm:pt-24">
+        {eyebrow && <p className="text-lg font-semibold text-ink-muted sm:text-xl">{eyebrow}</p>}
+        <h1 className="mx-auto mt-2 max-w-4xl text-5xl font-semibold leading-[1.05] tracking-[-0.035em] sm:text-7xl">{title}</h1>
+        {intro && <p className="mx-auto mt-6 max-w-2xl text-lg leading-snug text-ink-muted sm:text-2xl">{intro}</p>}
       </div>
     </section>
   );
@@ -54,16 +49,16 @@ export function Check({ className }: { className?: string }) {
 
 export function FaqList({ items }: { items: { q: string; a: string }[] }) {
   return (
-    <div className="divide-y divide-ink/[0.07] rounded-2xl border border-ink/[0.08] bg-night-800">
+    <div className="divide-y divide-ink/[0.08] rounded-3xl bg-night-800">
       {items.map((f) => (
         <details key={f.q} className="group px-5 py-1 sm:px-6">
-          <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 text-left font-medium">
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-5 text-left text-[17px] font-semibold">
             {f.q}
             <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-ink/10 text-ink-muted transition group-open:rotate-45">
               +
             </span>
           </summary>
-          <p className="pb-5 pr-8 text-sm leading-relaxed text-ink-muted">{f.a}</p>
+          <p className="pb-6 pr-8 text-[15px] leading-relaxed text-ink-muted">{f.a}</p>
         </details>
       ))}
     </div>
@@ -72,10 +67,10 @@ export function FaqList({ items }: { items: { q: string; a: string }[] }) {
 
 export function CtaBand() {
   return (
-    <section className="container-x mt-24">
-      <div className="relative overflow-hidden rounded-3xl bg-ink px-6 py-12 text-center text-white sm:px-12 sm:py-16">
+    <section className="container-x mt-20 sm:mt-28">
+      <div className="relative overflow-hidden rounded-3xl bg-black px-6 py-12 text-center text-white sm:px-12 sm:py-16">
         <div className="relative">
-          <h2 className="mx-auto max-w-xl text-3xl font-semibold sm:text-4xl">Know your total before you borrow.</h2>
+          <h2 className="mx-auto max-w-2xl text-4xl font-semibold tracking-[-0.03em] sm:text-6xl">Know your total. Then borrow.</h2>
           <p className="mx-auto mt-4 max-w-lg text-white/70">
             Applying takes about 10 minutes. Have your ID, latest payslip and 3 months of bank statements ready.
           </p>

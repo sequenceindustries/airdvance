@@ -34,11 +34,11 @@ const COLS = [
 
 export function SiteFooter() {
   return (
-    <footer className="mt-24 border-t border-ink/[0.06] bg-night-900">
+    <footer className="mt-20 bg-night-900 text-[13px] sm:mt-28">
       <div className="container-x grid gap-10 py-14 md:grid-cols-[1.4fr_repeat(3,1fr)]">
         <div>
-          <Logo />
-          <p className="mt-4 max-w-xs text-sm leading-relaxed text-ink-muted">
+          <Logo size="sm" />
+          <p className="mt-4 max-w-xs leading-relaxed text-ink-muted">
             Short-term cash advances of R300 to R1,000, repaid on your next payday. Every cost shown before you apply.
           </p>
           <p className="mt-4 text-xs text-ink-faint">
@@ -48,8 +48,8 @@ export function SiteFooter() {
         </div>
         {COLS.map((c) => (
           <div key={c.title}>
-            <p className="text-sm font-semibold text-ink">{c.title}</p>
-            <ul className="mt-3 space-y-2.5 text-sm text-ink-muted">
+            <p className="font-semibold text-ink">{c.title}</p>
+            <ul className="mt-3 space-y-2 text-ink-muted">
               {c.links.map((l) => (
                 <li key={l.href}>
                   <Link href={l.href} className="hover:text-ink">

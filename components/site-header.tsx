@@ -14,13 +14,13 @@ export const NAV = [
 export function SiteHeader({ user }: { user: { name: string; role: string } | null }) {
   const accountHref = user?.role === "ADMIN" ? "/admin" : "/dashboard";
   return (
-    <header className="sticky top-0 z-40 border-b border-ink/[0.06] bg-night/85 backdrop-blur">
-      <div className="container-x flex h-16 items-center justify-between gap-4">
+    <header className="sticky top-0 z-40 border-b border-ink/[0.08] bg-night/80 backdrop-blur-xl backdrop-saturate-150">
+      <div className="container-x flex h-12 items-center justify-between gap-4">
         <Link href="/" className="flex shrink-0 items-center" aria-label="Airdvance home">
-          <Logo />
+          <Logo size="sm" />
         </Link>
 
-        <nav className="hidden items-center gap-7 text-sm text-ink-muted lg:flex" aria-label="Main">
+        <nav className="hidden items-center gap-8 text-[13px] text-ink/80 lg:flex" aria-label="Main">
           {NAV.map((n) => (
             <Link key={n.href} href={n.href} className="transition hover:text-ink">
               {n.label}
@@ -43,7 +43,7 @@ export function SiteHeader({ user }: { user: { name: string; role: string } | nu
               <Link href="/login" className="btn btn-sm hidden text-ink-muted hover:text-ink sm:inline-flex">
                 Log in
               </Link>
-              <Link href="/apply" className="btn-primary btn-sm">
+              <Link href="/apply" className="btn-primary btn-sm px-3.5 py-1.5">
                 Apply now
               </Link>
             </>

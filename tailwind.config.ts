@@ -11,16 +11,16 @@ const config: Config = {
     extend: {
       colors: {
         night: {
-          DEFAULT: "#F6F5F1", // page
-          900: "#EEECE6", // footer, admin bar
+          DEFAULT: "#F5F5F7", // page
+          900: "#EDEDF0", // footer, admin bar
           800: "#FFFFFF", // cards, inputs
-          700: "#E6E3DB",
-          600: "#D6D2C8",
+          700: "#E3E3E8",
+          600: "#D2D2D7",
         },
         ink: {
-          DEFAULT: "#12161B",
-          muted: "#4A515B",
-          faint: "#7B818B",
+          DEFAULT: "#1D1D1F",
+          muted: "#6E6E73",
+          faint: "#86868B",
         },
         ember: {
           DEFAULT: "#0B7A55",
@@ -34,17 +34,17 @@ const config: Config = {
         rose: { DEFAULT: "#C2334D", 300: "#A82640" },
       },
       fontFamily: {
-        display: ["'Manrope Variable'", "Manrope", "system-ui", "sans-serif"],
-        body: ["'Inter Variable'", "Inter", "system-ui", "sans-serif"],
+        display: ["-apple-system", "BlinkMacSystemFont", "'Inter Variable'", "Inter", "system-ui", "sans-serif"],
+        body: ["-apple-system", "BlinkMacSystemFont", "'Inter Variable'", "Inter", "system-ui", "sans-serif"],
       },
       borderRadius: {
         xl: "12px",
-        "2xl": "16px",
-        "3xl": "24px",
+        "2xl": "18px",
+        "3xl": "28px",
       },
       boxShadow: {
         glow: "0 1px 2px rgba(11,122,85,.25), 0 6px 16px -6px rgba(11,122,85,.45)",
-        card: "0 1px 2px rgba(18,22,27,.04), 0 8px 24px -16px rgba(18,22,27,.18)",
+        card: "0 2px 12px rgba(0,0,0,.04)",
       },
     },
   },

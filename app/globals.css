@@ -11,14 +11,18 @@ html {
 }
 
 body {
-  background: #f6f5f1;
-  color: #12161b;
+  background: #f5f5f7;
+  color: #1d1d1f;
 }
 
 @layer base {
   h1, h2, h3, .font-display {
-    font-family: "Manrope Variable", Manrope, system-ui, sans-serif;
-    letter-spacing: -0.03em;
+    font-family: -apple-system, BlinkMacSystemFont, "Inter Variable", Inter, system-ui, sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.022em;
+  }
+  body {
+    letter-spacing: -0.01em;
   }
   ::selection {
     background: rgba(11, 122, 85, 0.18);
@@ -34,13 +38,13 @@ body {
   }
   /* Card surface (name kept for compatibility) */
   .glass {
-    @apply rounded-2xl border border-ink/[0.08] bg-night-800 shadow-card;
+    @apply rounded-3xl bg-night-800;
   }
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-[15px] font-medium transition disabled:cursor-not-allowed disabled:opacity-50;
   }
   .btn-primary {
-    @apply btn bg-ember text-white shadow-glow hover:bg-ember-400;
+    @apply btn bg-ember text-white hover:bg-ember-400;
   }
   .btn-ghost {
     @apply btn border border-ink/15 bg-night-800 text-ink hover:border-ink/30;
@@ -48,11 +52,19 @@ body {
   .btn-danger {
     @apply btn border border-rose/40 bg-rose/10 text-rose-300 hover:bg-rose/20;
   }
+  .link-more {
+    @apply inline-flex items-center gap-1 text-[17px] text-ember-300 hover:underline;
+  }
+  .link-more::after {
+    content: "\203A";
+    font-size: 1.15em;
+    line-height: 1;
+  }
   .btn-sm {
     @apply px-4 py-2 text-xs;
   }
   .eyebrow {
-    @apply text-xs font-semibold uppercase tracking-[0.16em] text-ember-300;
+    @apply text-sm font-semibold text-ember-300;
   }
   .text-gradient {
     @apply text-ember;
