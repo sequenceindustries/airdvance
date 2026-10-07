@@ -1,9 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import "@fontsource-variable/inter";
+import "@fontsource-variable/unbounded";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { DemoBanner } from "@/components/demo-banner";
+import { RevealObserver } from "@/components/motion";
 import { getCurrentUser } from "@/lib/auth";
 import { BRAND } from "@/lib/config";
 
@@ -19,7 +21,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#F5F5F7",
+  themeColor: "#000000",
   width: "device-width",
   initialScale: 1,
 };
@@ -31,7 +33,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en-ZA">
       <body className="flex min-h-screen flex-col bg-night font-body text-ink antialiased">
-        <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-ink focus:px-3 focus:py-2 focus:text-white">
+        <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-ink focus:px-3 focus:py-2 focus:text-night">
           Skip to content
         </a>
         <DemoBanner />
@@ -40,6 +42,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           {children}
         </main>
         <SiteFooter />
+        <RevealObserver />
       </body>
     </html>
   );

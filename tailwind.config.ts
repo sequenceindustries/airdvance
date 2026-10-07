@@ -1,9 +1,10 @@
 import type { Config } from "tailwindcss";
 
 /**
- * Airdvance light theme. Token names are kept stable across the codebase:
+ * Airdvance "after dark" theme. Token names are stable across the codebase:
  *  night = surfaces (page, cards, inputs) · ink = text and hairlines
- *  ember = brand accent (emerald) · amber/volt/mint/rose = status colours
+ *  ember = brand accent (emerald) · sun/coral/berry = Highveld-sunset art colours
+ *  amber/volt/mint/rose = status colours (tuned for dark backgrounds)
  */
 const config: Config = {
   content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
@@ -11,31 +12,34 @@ const config: Config = {
     extend: {
       colors: {
         night: {
-          DEFAULT: "#F5F5F7", // page
-          900: "#EDEDF0", // footer, admin bar
-          800: "#FFFFFF", // cards, inputs
-          700: "#E3E3E8",
-          600: "#D2D2D7",
+          DEFAULT: "#000000", // page
+          900: "#08080B", // footer, admin bar
+          800: "#121217", // cards, inputs
+          700: "#1B1B22",
+          600: "#26262F",
         },
         ink: {
-          DEFAULT: "#1D1D1F",
-          muted: "#6E6E73",
-          faint: "#86868B",
+          DEFAULT: "#F4F4F6",
+          muted: "#A8A8B3",
+          faint: "#7A7A86",
         },
         ember: {
-          DEFAULT: "#0B7A55",
-          400: "#0E8F64",
-          300: "#086445", // accent text / links (AA on light)
-          glow: "#0B7A55",
+          DEFAULT: "#34D399", // emerald: buttons (dark text on it)
+          400: "#6EE7B7",
+          300: "#5EEAB0", // links / accent text on dark
+          glow: "#10B981",
         },
-        amber: { DEFAULT: "#8A5A00" },
-        volt: { DEFAULT: "#2F5BD3", 300: "#2349B3" },
-        mint: { DEFAULT: "#0B7A55", 300: "#086445" },
-        rose: { DEFAULT: "#C2334D", 300: "#A82640" },
+        sun: "#FFB020",
+        coral: "#FF5E3A",
+        berry: "#E0367A",
+        amber: { DEFAULT: "#FFC24D" },
+        volt: { DEFAULT: "#7C9CFF", 300: "#A9BEFF" },
+        mint: { DEFAULT: "#34D399", 300: "#6EE7B7" },
+        rose: { DEFAULT: "#FF6B85", 300: "#FF9AAB" },
       },
       fontFamily: {
-        display: ["-apple-system", "BlinkMacSystemFont", "'Inter Variable'", "Inter", "system-ui", "sans-serif"],
-        body: ["-apple-system", "BlinkMacSystemFont", "'Inter Variable'", "Inter", "system-ui", "sans-serif"],
+        display: ["'Unbounded Variable'", "Unbounded", "system-ui", "sans-serif"],
+        body: ["'Inter Variable'", "Inter", "system-ui", "sans-serif"],
       },
       borderRadius: {
         xl: "12px",
@@ -43,8 +47,16 @@ const config: Config = {
         "3xl": "28px",
       },
       boxShadow: {
-        glow: "0 1px 2px rgba(11,122,85,.25), 0 6px 16px -6px rgba(11,122,85,.45)",
-        card: "0 2px 12px rgba(0,0,0,.04)",
+        glow: "0 0 0 1px rgba(52,211,153,.4), 0 10px 40px -10px rgba(16,185,129,.6)",
+        card: "0 30px 60px -30px rgba(0,0,0,.9)",
+      },
+      keyframes: {
+        rise: { from: { opacity: "0", transform: "translateY(18px)" }, to: { opacity: "1", transform: "none" } },
+        marquee: { from: { transform: "translateX(0)" }, to: { transform: "translateX(-50%)" } },
+      },
+      animation: {
+        rise: "rise .9s cubic-bezier(.2,.7,.2,1) both",
+        marquee: "marquee 40s linear infinite",
       },
     },
   },

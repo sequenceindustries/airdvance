@@ -30,10 +30,10 @@ export function MobileMenu({
         </svg>
       </button>
       {open && (
-        <div className="absolute inset-x-0 top-12 border-b border-ink/10 bg-night-900/95 backdrop-blur-xl">
+        <div className="absolute inset-x-0 top-14 border-b border-ink/10 bg-night/95 backdrop-blur-xl">
           <nav className="container-x flex flex-col py-3" aria-label="Mobile">
             {items.map((n) => (
-              <Link key={n.href} href={n.href} className="rounded-xl px-3 py-3 text-base text-ink-muted hover:bg-ink/5 hover:text-ink">
+              <Link key={n.href} href={n.href} className="rounded-xl px-3 py-3.5 font-display text-lg text-ink-muted hover:bg-ink/5 hover:text-ink">
                 {n.label}
               </Link>
             ))}

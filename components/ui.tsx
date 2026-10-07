@@ -18,9 +18,9 @@ export function SectionHeading({
   center?: boolean;
 }) {
   return (
-    <div className={clsx("max-w-2xl", center && "mx-auto text-center")}>
-      {eyebrow && <p className="eyebrow">{eyebrow}</p>}
-      <h2 className="mt-2 text-4xl font-semibold leading-tight tracking-[-0.03em] sm:text-5xl">{title}</h2>
+    <div data-reveal className={clsx("max-w-2xl", center && "mx-auto text-center")}>
+      {eyebrow && <p className="text-sm font-medium text-ember-300">{eyebrow}</p>}
+      <h2 className="mt-3 text-3xl font-semibold leading-tight sm:text-5xl">{title}</h2>
       {intro && <p className="mt-4 text-lg leading-snug text-ink-muted sm:text-xl">{intro}</p>}
     </div>
   );
@@ -28,11 +28,12 @@ export function SectionHeading({
 
 export function PageHero({ eyebrow, title, intro }: { eyebrow?: string; title: React.ReactNode; intro?: React.ReactNode }) {
   return (
-    <section className="relative">
-      <div className="container-x relative pb-12 pt-16 text-center sm:pb-16 sm:pt-24">
-        {eyebrow && <p className="text-lg font-semibold text-ink-muted sm:text-xl">{eyebrow}</p>}
-        <h1 className="mx-auto mt-2 max-w-4xl text-5xl font-semibold leading-[1.05] tracking-[-0.035em] sm:text-7xl">{title}</h1>
-        {intro && <p className="mx-auto mt-6 max-w-2xl text-lg leading-snug text-ink-muted sm:text-2xl">{intro}</p>}
+    <section className="relative overflow-hidden">
+      <div aria-hidden className="pointer-events-none absolute -right-40 -top-40 h-[32rem] w-[32rem] rounded-full bg-[radial-gradient(closest-side,rgba(16,185,129,.22),rgba(79,70,229,.1)_60%,transparent)] blur-2xl" />
+      <div className="container-x relative pb-12 pt-16 sm:pb-16 sm:pt-24">
+        {eyebrow && <p className="text-sm font-medium text-ember-300">{eyebrow}</p>}
+        <h1 className="mt-3 max-w-4xl animate-rise text-4xl font-semibold leading-[1.05] sm:text-6xl">{title}</h1>
+        {intro && <p className="mt-6 max-w-2xl animate-rise text-lg leading-relaxed text-ink-muted [animation-delay:.1s] sm:text-xl">{intro}</p>}
       </div>
     </section>
   );
@@ -49,12 +50,12 @@ export function Check({ className }: { className?: string }) {
 
 export function FaqList({ items }: { items: { q: string; a: string }[] }) {
   return (
-    <div className="divide-y divide-ink/[0.08] rounded-3xl bg-night-800">
+    <div className="divide-y divide-ink/[0.08] rounded-3xl border border-ink/[0.07] bg-night-800">
       {items.map((f) => (
         <details key={f.q} className="group px-5 py-1 sm:px-6">
           <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-5 text-left text-[17px] font-semibold">
             {f.q}
-            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-ink/10 text-ink-muted transition group-open:rotate-45">
+            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-ink/10 text-ink-muted transition-transform duration-300 group-open:rotate-45 group-open:border-ember group-open:text-ember">
               +
             </span>
           </summary>
@@ -67,21 +68,24 @@ export function FaqList({ items }: { items: { q: string; a: string }[] }) {
 
 export function CtaBand() {
   return (
-    <section className="container-x mt-20 sm:mt-28">
-      <div className="relative overflow-hidden rounded-3xl bg-black px-6 py-12 text-center text-white sm:px-12 sm:py-16">
-        <div className="relative">
-          <h2 className="mx-auto max-w-2xl text-4xl font-semibold tracking-[-0.03em] sm:text-6xl">Know your total. Then borrow.</h2>
-          <p className="mx-auto mt-4 max-w-lg text-white/70">
-            Applying takes about 10 minutes. Have your ID, latest payslip and 3 months of bank statements ready.
-          </p>
-          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-            <Link href="/apply" className="btn-primary px-7">
-              Start your application
-            </Link>
-            <Link href="/costs" className="btn border border-white/25 px-7 text-white hover:bg-white/10">
-              See the full costs
-            </Link>
-          </div>
+    <section className="container-x mt-24 sm:mt-32" data-reveal>
+      <div className="relative isolate overflow-hidden rounded-[36px] px-6 py-14 text-center sm:px-12 sm:py-20" style={{ background: "linear-gradient(135deg,#047857 0%,#0E7490 35%,#4338CA 70%,#BE185D 100%)" }}>
+        <svg aria-hidden viewBox="0 0 400 200" preserveAspectRatio="none" className="absolute inset-0 -z-10 h-full w-full opacity-30">
+          {Array.from({ length: 10 }, (_, i) => (
+            <circle key={i} cx="200" cy="230" r={30 + i * 26} fill="none" stroke="white" strokeWidth="1" />
+          ))}
+        </svg>
+        <h2 className="mx-auto max-w-2xl text-3xl font-semibold leading-tight text-white sm:text-5xl">Know your total before you borrow.</h2>
+        <p className="mx-auto mt-4 max-w-lg text-white/85">
+          Applying takes about 10 minutes. Have your ID, latest payslip and 3 months of bank statements ready.
+        </p>
+        <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+          <Link href="/apply" className="btn bg-white px-7 py-3 text-base text-night hover:bg-white/90">
+            Start my application
+          </Link>
+          <Link href="/costs" className="btn border border-white/50 px-7 py-3 text-base text-white hover:bg-white/10">
+            See every fee
+          </Link>
         </div>
       </div>
     </section>

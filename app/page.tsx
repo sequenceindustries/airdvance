@@ -1,10 +1,18 @@
 import Link from "next/link";
 import { Calculator } from "@/components/calculator";
+import { PaydayHero } from "@/components/payday-hero";
+import { POSTERS, Poster } from "@/components/poster";
 import { Check, CtaBand, FaqList } from "@/components/ui";
 import { COMPANY, PRODUCT } from "@/lib/config";
 import { ELIGIBILITY, FAQS, REQUIREMENTS, STEPS } from "@/lib/content";
 import { addDays, defaultPayday, todaySA } from "@/lib/dates";
 import { formatRand, representativeExamples } from "@/lib/pricing";
+
+const CHARGES: { big: string; name: string; body: string; from: string; to: string; ink?: string }[] = [
+  { big: "R165", name: "Initiation fee", body: "Once, when your loan is set up. The same for every amount up to R1,000.", from: "#FFB020", to: "#FF7A45", ink: "#1F1000" },
+  { big: "R2", name: "Service fee per day", body: "R60 a month, charged only for the days you have the money.", from: "#4F46E5", to: "#0EA5A4" },
+  { big: "5%", name: "Interest per month", body: "On the amount you borrow. Drops to 3% for later loans in the same year.", from: "#E0367A", to: "#7C3AED" },
+];
 
 export default function HomePage() {
   const today = todaySA();
@@ -14,123 +22,119 @@ export default function HomePage() {
 
   return (
     <>
-      {/* Hero — dark, centered, oversized type */}
-      <section className="relative overflow-hidden bg-black text-white">
-        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-[-30%] mx-auto h-[70%] max-w-4xl rounded-full bg-[radial-gradient(closest-side,rgba(16,185,129,.35),transparent)] blur-2xl" />
-        <div className="container-x relative pb-24 pt-16 text-center sm:pb-32 sm:pt-24">
-          <p className="text-lg font-semibold text-white/90 sm:text-xl">Airdvance Cash Advance</p>
-          <h1 className="mx-auto mt-3 max-w-4xl text-5xl font-semibold leading-[1.03] tracking-[-0.035em] sm:text-7xl lg:text-[88px]">
-            Payday.
-            <br />
-            <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">A little sooner.</span>
-          </h1>
-          <p className="mx-auto mt-6 max-w-xl text-lg leading-snug text-white/70 sm:text-2xl">
-            R300 to R1,000. One repayment on payday. Every rand shown before you apply.
-          </p>
-          <div className="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-7">
-            <Link href="/apply" className="btn-primary px-6 py-3 text-[17px]">
-              Apply
-            </Link>
-            <Link href="#calculator" className="link-more text-emerald-300">
-              See what it costs
-            </Link>
-          </div>
-          <p className="mt-14 font-semibold tabular-nums tracking-[-0.04em] text-white/90">
-            <span className="block text-sm font-medium tracking-normal text-white/50">Borrow R1,000 for 30 days. Repay</span>
-            <span className="text-6xl sm:text-8xl">{formatRand(r1000.totalRepayable)}</span>
-            <span className="mt-2 block text-sm font-medium tracking-normal text-white/50">
-              Initiation {formatRand(r1000.initiationFee)} · Service {formatRand(r1000.serviceFee)} · Interest {formatRand(r1000.interest)}
-            </span>
-          </p>
-          <p className="mt-10 text-xs text-white/40">
-            Registered credit provider {COMPANY.ncrcp}. Approval subject to an affordability assessment.
+      <PaydayHero exampleTotal={formatRand(r1000.totalRepayable)} />
+
+      {/* Uses marquee */}
+      <section aria-labelledby="uses" className="relative py-16 sm:py-24">
+        <div className="container-x" data-reveal>
+          <h2 id="uses" className="max-w-3xl text-3xl font-semibold leading-tight sm:text-5xl">
+            For the bills that can&rsquo;t wait for the 25th.
+          </h2>
+          <p className="mt-4 max-w-xl text-lg text-ink-muted">
+            A short-term advance for one-off gaps — not for everyday spending or paying off other debt.
           </p>
         </div>
-      </section>
-
-      {/* Configurator */}
-      <section id="calculator" className="scroll-mt-14 py-20 sm:py-28">
-        <div className="container-x">
-          <div className="text-center">
-            <h2 className="text-4xl font-semibold tracking-[-0.03em] sm:text-6xl">Choose your amount.</h2>
-            <p className="mx-auto mt-4 max-w-xl text-lg text-ink-muted sm:text-xl">Move the slider. Pick your payday. The total updates instantly.</p>
-          </div>
-          <div className="mx-auto mt-12 max-w-xl">
-            <Calculator today={today} defaultDue={due} />
-          </div>
-        </div>
-      </section>
-
-      {/* Stats band */}
-      <section className="bg-black py-20 text-white sm:py-28">
-        <div className="container-x">
-          <h2 className="mx-auto max-w-3xl text-center text-4xl font-semibold tracking-[-0.03em] sm:text-6xl">Simple by design.</h2>
-          <dl className="mt-14 grid gap-x-8 gap-y-12 text-center sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              { k: "R300–R1,000", v: "Borrow only what you need, in R50 steps." },
-              { k: "5–31 days", v: "Repay in one go on your next payday." },
-              { k: "R0", v: "Penalty for settling early. Ever." },
-              { k: "1", v: "DebiCheck debit order. Nothing else." },
-            ].map((s) => (
-              <div key={s.k}>
-                <dt className="bg-gradient-to-b from-white to-white/60 bg-clip-text text-4xl font-semibold tracking-[-0.04em] text-transparent sm:whitespace-nowrap lg:text-5xl">{s.k}</dt>
-                <dd className="mx-auto mt-3 max-w-[16rem] text-[17px] leading-snug text-white/60">{s.v}</dd>
-              </div>
+        <div className="group relative mt-12 overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_8%,black_92%,transparent)]">
+          <div className="flex w-max animate-marquee gap-4 group-hover:[animation-play-state:paused] motion-reduce:animate-none">
+            {[...POSTERS, ...POSTERS].map((p, i) => (
+              <Poster key={`${p.key}-${i}`} spec={p} className="w-44 shrink-0 sm:w-56" />
             ))}
-          </dl>
+          </div>
         </div>
       </section>
 
-      {/* Steps — bento */}
-      <section className="py-20 sm:py-28">
-        <div className="container-x">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <h2 className="text-4xl font-semibold tracking-[-0.03em] sm:text-6xl">Five steps. No surprises.</h2>
-            <Link href="/how-it-works" className="link-more">
-              How it works
-            </Link>
+      {/* Calculator */}
+      <section id="calculator" className="relative scroll-mt-16 overflow-hidden py-16 sm:py-24">
+        <div aria-hidden className="pointer-events-none absolute left-[60%] top-1/2 h-[42rem] w-[42rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[conic-gradient(from_200deg,#10B981,#4F46E5,#E0367A,#FFB020,#10B981)] opacity-25 blur-[110px]" />
+        <div className="container-x relative grid items-center gap-12 lg:grid-cols-[1fr_1.05fr]">
+          <div data-reveal>
+            <h2 className="text-3xl font-semibold leading-tight sm:text-5xl">See the whole cost first.</h2>
+            <p className="mt-5 max-w-md text-lg text-ink-muted">
+              Slide to your amount and pick your payday. The total you see is what one debit order collects — nothing is added if you
+              pay on time.
+            </p>
+            <ul className="mt-8 space-y-3 text-ink">
+              {["No credit life insurance or hidden extras", "Settle early and pay less", "A real person reviews every application"].map((t) => (
+                <li key={t} className="flex items-center gap-3">
+                  <Check /> {t}
+                </li>
+              ))}
+            </ul>
           </div>
-          <ol className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
-            {STEPS.map((s, i) => (
-              <li key={s.title} className={`glass flex flex-col p-7 sm:p-8 ${i < 2 ? "lg:col-span-3" : "lg:col-span-2"}`}>
-                <span className="text-5xl font-semibold tracking-[-0.04em] text-ember">{i + 1}</span>
-                <h3 className="mt-6 text-2xl font-semibold tracking-[-0.02em]">{s.title}.</h3>
-                <p className="mt-2 text-[17px] leading-snug text-ink-muted">{s.body}</p>
-              </li>
-            ))}
-          </ol>
+          <div data-reveal className="relative rounded-[32px] bg-gradient-to-br from-ember/60 via-volt/30 to-berry/50 p-px">
+            <div className="rounded-[31px] bg-night-800/95 backdrop-blur">
+              <Calculator today={today} defaultDue={due} />
+            </div>
+          </div>
         </div>
+      </section>
+
+      {/* Steps rail */}
+      <section aria-labelledby="steps" className="py-16 sm:py-24">
+        <div className="container-x flex flex-wrap items-end justify-between gap-4" data-reveal>
+          <h2 id="steps" className="max-w-2xl text-3xl font-semibold leading-tight sm:text-5xl">
+            From application to payout in five steps.
+          </h2>
+          <Link href="/how-it-works" className="link-more">
+            How it works
+          </Link>
+        </div>
+        <ol data-reveal className="container-x mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 [scrollbar-width:none] lg:grid lg:grid-cols-5 lg:overflow-visible">
+          {STEPS.map((s, i) => (
+            <li
+              key={s.title}
+              className="glass relative w-[78vw] max-w-sm shrink-0 snap-start overflow-hidden p-6 sm:w-80 lg:w-auto"
+            >
+              <span aria-hidden className="absolute -right-3 -top-6 font-display text-[7rem] font-bold leading-none text-ink/[0.05]">
+                {i + 1}
+              </span>
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-ember font-display text-sm font-semibold text-night">
+                {i + 1}
+              </span>
+              <h3 className="mt-6 text-lg font-semibold">{s.title}</h3>
+              <p className="mt-2 text-[15px] leading-relaxed text-ink-muted">{s.body}</p>
+            </li>
+          ))}
+        </ol>
       </section>
 
       {/* Costs */}
-      <section className="bg-night-800 py-20 sm:py-28">
+      <section aria-labelledby="costs" className="py-16 sm:py-24">
         <div className="container-x">
-          <div className="text-center">
-            <h2 className="text-4xl font-semibold tracking-[-0.03em] sm:text-6xl">Three charges. All capped by law.</h2>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-ink-muted sm:text-xl">
-              Within National Credit Act limits. No credit life insurance. No application fee. No early-settlement penalty.
-            </p>
+          <div data-reveal>
+            <h2 id="costs" className="max-w-3xl text-3xl font-semibold leading-tight sm:text-5xl">Three charges, each capped by the National Credit Act.</h2>
+            <p className="mt-4 max-w-2xl text-lg text-ink-muted">No application fee. No insurance. No penalty for paying early, and no penalty interest if you pay late.</p>
           </div>
-          <div className="mt-14 grid gap-4 md:grid-cols-3">
-            {[
-              { k: "R165", t: "Initiation fee", d: "Once-off, for assessing your application and setting up your agreement." },
-              { k: "R2/day", t: "Service fee", d: "R60 a month, charged by the day. Ten days costs R20." },
-              { k: "5%", t: "Interest per month", d: "On the amount borrowed, for the days you have it. 3% for later loans the same year." },
-            ].map((c) => (
-              <div key={c.t} className="rounded-3xl bg-night p-8 text-center">
-                <p className="text-5xl font-semibold tracking-[-0.04em] text-ink">{c.k}</p>
-                <p className="mt-3 text-lg font-semibold">{c.t}</p>
-                <p className="mt-2 text-[15px] leading-snug text-ink-muted">{c.d}</p>
+          <div className="mt-12 grid gap-4 md:grid-cols-3">
+            {CHARGES.map((c, i) => (
+              <div
+                key={c.name}
+                data-reveal
+                style={{ transitionDelay: `${i * 90}ms`, background: `linear-gradient(150deg, ${c.from}, ${c.to})`, color: c.ink ?? "#fff" }}
+                className="relative isolate overflow-hidden rounded-[28px] p-7 sm:p-8"
+              >
+                <svg aria-hidden viewBox="0 0 200 200" className="absolute -right-10 -top-10 -z-10 h-56 w-56 opacity-30">
+                  {[20, 40, 60, 80, 100].map((r) => (
+                    <circle key={r} cx="100" cy="100" r={r} fill="none" stroke="currentColor" strokeWidth="1.2" />
+                  ))}
+                </svg>
+                <p className="font-display text-6xl font-semibold tracking-[-0.05em]">{c.big}</p>
+                <p className="mt-8 text-lg font-semibold">{c.name}</p>
+                <p className="mt-1 text-[15px] leading-relaxed opacity-90">{c.body}</p>
               </div>
             ))}
           </div>
 
-          <div className="mx-auto mt-10 max-w-3xl overflow-hidden rounded-3xl bg-night px-3 py-2">
-            <div className="overflow-x-auto">
-              <table className="table-x min-w-[520px]">
+          <div data-reveal className="glass mt-6 overflow-hidden">
+            <div className="flex flex-wrap items-baseline justify-between gap-2 px-6 pt-6">
+              <p className="font-semibold">What you&rsquo;d repay after 30 days</p>
+              <p className="text-sm text-ink-faint">First loan this year</p>
+            </div>
+            <div className="overflow-x-auto px-3 pb-3">
+              <table className="table-x mt-3 min-w-[520px]">
                 <thead>
                   <tr>
-                    <th>Borrow (30 days)</th>
+                    <th>You borrow</th>
                     <th>Initiation</th>
                     <th>Service</th>
                     <th>Interest</th>
@@ -144,16 +148,16 @@ export default function HomePage() {
                       <td className="text-ink-muted">{formatRand(q.initiationFee)}</td>
                       <td className="text-ink-muted">{formatRand(q.serviceFee)}</td>
                       <td className="text-ink-muted">{formatRand(q.interest)}</td>
-                      <td className="text-right font-semibold">{formatRand(q.totalRepayable)}</td>
+                      <td className="text-right font-semibold text-ember-300">{formatRand(q.totalRepayable)}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
           </div>
-          <p className="mx-auto mt-6 max-w-2xl text-center text-sm text-ink-faint">
-            The initiation fee is the same for every amount, so smaller loans cost more as a percentage. Borrow only what you need.{" "}
-            <Link href="/costs" className="link-more text-sm">
+          <p className="mt-5 text-sm text-ink-faint">
+            The initiation fee is fixed, so smaller loans cost more as a share of the amount. Borrow only what you need.{" "}
+            <Link href="/costs" className="text-ember-300 underline underline-offset-2">
               Full cost breakdown
             </Link>
           </p>
@@ -161,24 +165,28 @@ export default function HomePage() {
       </section>
 
       {/* Eligibility */}
-      <section className="py-20 sm:py-28">
+      <section aria-labelledby="eligibility" className="py-16 sm:py-24">
         <div className="container-x">
-          <h2 className="text-center text-4xl font-semibold tracking-[-0.03em] sm:text-6xl">Ready in ten minutes.</h2>
-          <p className="mx-auto mt-4 max-w-xl text-center text-lg text-ink-muted sm:text-xl">Check you qualify. Have your documents to hand.</p>
+          <h2 id="eligibility" data-reveal className="max-w-3xl text-3xl font-semibold leading-tight sm:text-5xl">
+            Check you qualify, then gather three documents.
+          </h2>
           <div className="mt-12 grid gap-4 md:grid-cols-2">
             {[
-              { t: "You can apply if", items: ELIGIBILITY },
-              { t: "You'll need", items: REQUIREMENTS },
-            ].map((c) => (
-              <div key={c.t} className="glass p-8 sm:p-10">
-                <h3 className="text-2xl font-semibold tracking-[-0.02em]">{c.t}</h3>
-                <ul className="mt-6 space-y-3.5 text-[17px] text-ink-muted">
+              { t: "You can apply if", items: ELIGIBILITY, href: "/eligibility", link: "Who can apply" },
+              { t: "Have these ready", items: REQUIREMENTS, href: "/eligibility", link: "Document tips" },
+            ].map((c, i) => (
+              <div key={c.t} data-reveal style={{ transitionDelay: `${i * 90}ms` }} className="glass flex flex-col p-7 sm:p-9">
+                <h3 className="text-xl font-semibold">{c.t}</h3>
+                <ul className="mt-6 flex-1 space-y-3.5 text-ink-muted">
                   {c.items.map((e) => (
                     <li key={e} className="flex gap-3">
                       <Check /> {e}
                     </li>
                   ))}
                 </ul>
+                <Link href={c.href} className="link-more mt-6 text-base">
+                  {c.link}
+                </Link>
               </div>
             ))}
           </div>
@@ -186,38 +194,52 @@ export default function HomePage() {
       </section>
 
       {/* Trust */}
-      <section className="pb-20 sm:pb-28">
-        <div className="container-x grid gap-4 md:grid-cols-3">
-          {[
-            { t: "Affordable. Or not at all.", b: "We check your income and expenses before every loan. If the repayment would stretch you too far, we won't lend." },
-            { t: "Private by default.", b: "ID and bank numbers encrypted. POPIA-compliant. We never sell your data or ask for banking passwords." },
-            { t: "Help when you need it.", b: "Struggling to repay? Talk to us before payday. You can also approach a registered debt counsellor." },
-          ].map((c) => (
-            <div key={c.t} className="glass p-8">
-              <h3 className="text-2xl font-semibold tracking-[-0.02em]">{c.t}</h3>
-              <p className="mt-3 text-[17px] leading-snug text-ink-muted">{c.b}</p>
-            </div>
-          ))}
+      <section aria-labelledby="trust" className="py-16 sm:py-24">
+        <div className="container-x">
+          <h2 id="trust" data-reveal className="max-w-3xl text-3xl font-semibold leading-tight sm:text-5xl">
+            We lend only what you can repay.
+          </h2>
+          <div className="mt-12 grid gap-4 md:grid-cols-3">
+            {[
+              { t: "Affordability first", b: "We check your income, expenses and credit record before every loan. If the repayment would stretch you, we decline and tell you why." },
+              { t: "Your details stay private", b: "ID and bank numbers are encrypted. We follow POPIA, never sell your data and never ask for your banking password." },
+              { t: "Help if things change", b: "Can't pay on payday? Talk to us beforehand. You also have the right to apply to a registered debt counsellor." },
+            ].map((c, i) => (
+              <div key={c.t} data-reveal style={{ transitionDelay: `${i * 90}ms` }} className="glass p-7">
+                <h3 className="text-lg font-semibold">{c.t}</h3>
+                <p className="mt-3 leading-relaxed text-ink-muted">{c.b}</p>
+              </div>
+            ))}
+          </div>
+          <p className="mt-8 text-sm text-ink-faint">
+            Airdvance is a registered credit provider ({COMPANY.ncrcp}).{" "}
+            <Link href="/responsible-lending" className="text-ember-300 underline underline-offset-2">
+              Our responsible lending commitments
+            </Link>
+          </p>
         </div>
-        <p className="mt-8 text-center">
-          <Link href="/responsible-lending" className="link-more">
-            Our responsible lending commitments
-          </Link>
-        </p>
       </section>
 
       {/* FAQ */}
-      <section className="pb-8">
-        <div className="container-x max-w-3xl">
-          <h2 className="text-center text-4xl font-semibold tracking-[-0.03em] sm:text-6xl">Questions? Answered.</h2>
-          <div className="mt-12">
+      <section aria-labelledby="faq" className="py-16 sm:py-24">
+        <div className="container-x grid gap-10 lg:grid-cols-[1fr_1.6fr]">
+          <div data-reveal>
+            <h2 id="faq" className="text-3xl font-semibold leading-tight sm:text-5xl">Questions people ask first.</h2>
+            <p className="mt-4 text-ink-muted">
+              More in the{" "}
+              <Link href="/faq" className="text-ember-300 underline underline-offset-2">
+                full FAQ
+              </Link>{" "}
+              or{" "}
+              <Link href="/contact" className="text-ember-300 underline underline-offset-2">
+                contact us
+              </Link>
+              .
+            </p>
+          </div>
+          <div data-reveal>
             <FaqList items={FAQS.filter((f) => f.home)} />
           </div>
-          <p className="mt-6 text-center">
-            <Link href="/faq" className="link-more">
-              All questions
-            </Link>
-          </p>
         </div>
       </section>
 

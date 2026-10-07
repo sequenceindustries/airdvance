@@ -100,7 +100,7 @@ export default async function DashboardPage() {
 
         <section className="glass p-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold">Messages {unread > 0 && <span className="ml-1 rounded-full bg-ember px-2 py-0.5 text-xs text-white">{unread}</span>}</h2>
+            <h2 className="text-lg font-semibold">Messages {unread > 0 && <span className="ml-1 rounded-full bg-ember px-2 py-0.5 text-xs text-night">{unread}</span>}</h2>
             {unread > 0 && (
               <form action={markNotificationsRead}>
                 <button className="text-xs text-ember-300 hover:underline">Mark all read</button>

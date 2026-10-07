@@ -23,7 +23,7 @@ export default function HowItWorksPage() {
         <ol className="relative space-y-4 border-l border-ink/10 pl-6 sm:pl-10">
           {STEPS.map((s, i) => (
             <li key={s.title} className="glass relative p-5 sm:p-6">
-              <span className="absolute -left-[37px] top-6 flex h-6 w-6 items-center justify-center rounded-full bg-ember text-xs font-bold text-white sm:-left-[53px]">
+              <span className="absolute -left-[37px] top-6 flex h-6 w-6 items-center justify-center rounded-full bg-ember text-xs font-bold text-night sm:-left-[53px]">
                 {i + 1}
               </span>
               <h2 className="text-xl font-semibold">{s.title}</h2>
