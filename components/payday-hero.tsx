@@ -12,18 +12,18 @@ import { useEffect, useRef, useState } from "react";
 
 const RINGS = [0, 1, 2, 3, 4, 5, 6, 7];
 
-// x/y as % offsets from centre, z0 = starting depth (0 far … 1 near), size in vmin
+// x/y as % offsets from centre, z0 = starting depth (0 far … 1 near), s = size in vmin
 const ORBS = [
-  { x: -34, y: -24, z0: 0.92, s: 15, a: "#6EE7B7", b: "#059669" },
-  { x: 33, y: -28, z0: 0.78, s: 11, a: "#FFD27A", b: "#FF7A45" },
-  { x: -28, y: 26, z0: 0.62, s: 13, a: "#F9A8D4", b: "#BE185D" },
-  { x: 37, y: 22, z0: 0.97, s: 17, a: "#A5B4FC", b: "#4338CA" },
-  { x: -6, y: -36, z0: 0.38, s: 8, a: "#67E8F9", b: "#0E7490" },
-  { x: 12, y: 34, z0: 0.48, s: 10, a: "#FDE68A", b: "#D97706" },
-  { x: -44, y: 0, z0: 0.22, s: 9, a: "#C4B5FD", b: "#7C3AED" },
-  { x: 45, y: -2, z0: 0.16, s: 12, a: "#6EE7B7", b: "#047857" },
-  { x: 20, y: -18, z0: 0.06, s: 7, a: "#FDBA74", b: "#EA580C" },
-  { x: -20, y: 16, z0: 0.0, s: 9, a: "#F0ABFC", b: "#A21CAF" },
+  { x: -34, y: -24, z0: 0.92, s: 19, a: "#FFB020", b: "#FF5E3A", label: "Taxi fare to work", amount: "R300" },
+  { x: 33, y: -28, z0: 0.78, s: 17, a: "#FFE066", b: "#FFB020", label: "Prepaid electricity", amount: "R400", dark: true },
+  { x: -28, y: 26, z0: 0.62, s: 18, a: "#FF5E3A", b: "#E0367A", label: "School shoes", amount: "R550" },
+  { x: 37, y: 22, z0: 0.97, s: 20, a: "#34D399", b: "#4F46E5", label: "Data to job-hunt", amount: "R300" },
+  { x: -6, y: -36, z0: 0.38, s: 16, a: "#0EA5A4", b: "#047857", label: "Groceries till Friday", amount: "R700" },
+  { x: 12, y: 34, z0: 0.48, s: 17, a: "#7C9CFF", b: "#1E293B", label: "Car service", amount: "R1,000" },
+  { x: -44, y: 0, z0: 0.22, s: 17, a: "#E0367A", b: "#7C3AED", label: "Rent shortfall", amount: "R950" },
+  { x: 45, y: -2, z0: 0.16, s: 16, a: "#E0367A", b: "#FF5E3A", label: "Gas refill", amount: "R350" },
+  { x: 20, y: -18, z0: 0.06, s: 16, a: "#0EA5A4", b: "#4F46E5", label: "Cracked screen", amount: "R800" },
+  { x: -20, y: 16, z0: 0.0, s: 16, a: "#FFE066", b: "#FF5E3A", label: "Exam fees", amount: "R600", dark: true },
 ];
 
 export function PaydayHero() {
@@ -99,18 +99,23 @@ export function PaydayHero() {
           {ORBS.map((o, n) => (
             <div
               key={n}
-              className={`absolute left-1/2 top-1/2 aspect-square rounded-full will-change-transform ${n >= 7 ? "hidden sm:block" : ""}`}
+              className={`absolute left-1/2 top-1/2 flex flex-col items-center justify-center rounded-full text-center will-change-transform ${n >= 7 ? "hidden sm:flex" : ""}`}
               style={
                 {
-                  width: `${o.s}vmin`,
-                  background: `radial-gradient(circle at 32% 28%, #fff 0%, ${o.a} 18%, ${o.b} 70%, #000 120%)`,
-                  boxShadow: `0 0 60px -10px ${o.a}`,
+                  width: `clamp(104px, ${o.s}vmin, 210px)`,
+                  height: `clamp(104px, ${o.s}vmin, 210px)`,
+                  color: o.dark ? "#2A1600" : "#fff",
+                  background: `radial-gradient(circle at 30% 25%, ${o.a} 0%, ${o.a} 15%, ${o.b} 75%, #000 140%)`,
+                  boxShadow: `0 0 70px -12px ${o.a}, inset 0 -10px 30px rgba(0,0,0,.25)`,
                   "--zp": `calc(${o.z0} + var(--p) * 1.45)`,
                   transform: `translate(-50%, -50%) translate3d(${o.x}vw, ${o.y}vh, calc(var(--zp) * 900px - 1100px))`,
                   opacity: `clamp(0, min(calc(var(--zp) * 2.5), calc((1.95 - var(--zp)) * 3)), 1)`,
                 } as React.CSSProperties
               }
-            />
+            >
+              <span className="font-display text-[clamp(1.1rem,3vmin,1.9rem)] font-extrabold leading-none tracking-tight">{o.amount}</span>
+              <span style={{ width: `clamp(80px, ${o.s * 0.75}vmin, 160px)` }} className="mt-1.5 block text-[clamp(.62rem,1.35vmin,.85rem)] font-medium leading-tight opacity-90">{o.label}</span>
+            </div>
           ))}
         </div>
 
