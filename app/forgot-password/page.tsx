@@ -8,7 +8,7 @@ export default function ForgotPasswordPage() {
   return (
     <AuthShell
       title="Reset your password"
-      intro="We'll send a PIN to the cellphone number on your account."
+      intro="We'll send a PIN to your cellphone."
       footer={<Link href="/login" className="text-ember-300 hover:underline">Back to log in</Link>}
     >
       <ForgotPasswordForm />

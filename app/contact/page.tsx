@@ -9,7 +9,7 @@ export default function ContactPage() {
   const wa = COMPANY.whatsapp.replace(/\D/g, "");
   return (
     <>
-      <PageHero eyebrow="Contact" title="Talk to a person" intro="Questions about applying, your loan or a repayment? We reply within one business day." />
+      <PageHero title="Contact us" intro="We reply within one business day." />
       <section className="container-x grid gap-6 lg:grid-cols-[1.3fr_1fr]">
         <div className="glass p-6 sm:p-8">
           <ContactForm />
@@ -44,7 +44,7 @@ export default function ContactPage() {
           </div>
           <div className="glass p-5 text-sm leading-relaxed text-ink-muted">
             <p className="font-semibold text-ink">Stay safe</p>
-            <p className="mt-1">Airdvance will never ask for your banking password, card PIN or bank OTP, and never asks for an upfront payment before paying out a loan.</p>
+            <p className="mt-1">We'll never ask for your banking password, bank OTP or an upfront fee.</p>
           </div>
         </div>
       </section>

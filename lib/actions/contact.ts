@@ -8,8 +8,8 @@ const Schema = z.object({
   name: z.string().trim().min(2, "Please enter your name.").max(120),
   email: z.string().trim().email("Please enter a valid email address."),
   mobile: z.string().trim().max(30).optional(),
-  topic: z.enum(["General", "My application", "My loan or repayment", "Complaint", "Privacy request"]),
-  message: z.string().trim().min(10, "Please tell us a little more.").max(4000),
+  topic: z.string().max(40).optional().default("General"),
+  message: z.string().trim().min(5, "Please add a message.").max(4000),
   website: z.string().max(0).optional(), // honeypot
 });
 

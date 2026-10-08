@@ -30,7 +30,7 @@ export function Calculator({
       <div className="relative">
         <div className="flex items-baseline justify-between">
           <label htmlFor="calc-amount" className="text-sm font-medium text-ink-muted">
-            I'd like to borrow
+            Borrow
           </label>
           <span className="font-display text-4xl font-semibold tabular-nums sm:text-5xl" aria-live="polite">
             {formatRand(amount, { cents: false })}
@@ -65,7 +65,7 @@ export function Calculator({
 
         <div className="mt-6">
           <label htmlFor="calc-due" className="label">
-            Repay on my next payday
+            Your next payday
           </label>
           <input
             id="calc-due"
@@ -107,8 +107,7 @@ export function Calculator({
               Apply for {formatRand(quote.principal, { cents: false })}
             </Link>
             <p className="mt-3 text-center text-xs leading-relaxed text-ink-faint">
-              Quote for a first loan this year. Your final cost is confirmed in your pre-agreement statement before you
-              sign. Approval depends on an affordability assessment and isn't guaranteed.
+              First-loan pricing. Subject to approval.
             </p>
           </>
         )}

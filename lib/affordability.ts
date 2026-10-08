@@ -22,12 +22,8 @@ export function minimumExpenseNorm(grossMonthly: number): number {
 export interface Finances {
   grossIncome: number;
   netIncome: number;
-  housing: number;
-  food: number;
-  transport: number;
-  utilities: number;
-  education: number;
-  otherExpenses: number;
+  /** Total monthly living costs: rent, food, transport, utilities, school, etc. */
+  livingExpenses: number;
   debtRepayments: number;
 }
 
@@ -45,7 +41,7 @@ export interface Affordability {
 }
 
 export function assessAffordability(f: Finances, repayment: number): Affordability {
-  const declaredLiving = round2(f.housing + f.food + f.transport + f.utilities + f.education + f.otherExpenses);
+  const declaredLiving = round2(f.livingExpenses);
   const norm = minimumExpenseNorm(f.grossIncome);
   const livingUsed = Math.max(declaredLiving, norm);
   const disposable = round2(f.netIncome - livingUsed - f.debtRepayments);

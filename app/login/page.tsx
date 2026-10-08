@@ -12,8 +12,7 @@ export default async function LoginPage({ searchParams }: { searchParams: { next
   return (
     <AuthShell
       title="Welcome back"
-      intro="Log in to track your application, sign your agreement or settle your loan."
-      footer={
+            footer={
         <>
           New to Airdvance?{" "}
           <Link href={`/register${searchParams.next ? `?next=${encodeURIComponent(searchParams.next)}` : ""}`} className="font-medium text-ember-300 hover:underline">

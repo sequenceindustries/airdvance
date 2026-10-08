@@ -7,7 +7,7 @@ import { PRODUCT } from "@/lib/config";
 import { decrypt } from "@/lib/crypto";
 import { one, query } from "@/lib/db";
 import { addDays, formatDate, formatDateTime, todaySA } from "@/lib/dates";
-import { normaliseApplication, type ApplicationRow } from "@/lib/loans";
+import { formatAddress, normaliseApplication, type ApplicationRow } from "@/lib/loans";
 import { formatRand } from "@/lib/pricing";
 import { displayMobile } from "@/lib/sa";
 
@@ -78,12 +78,6 @@ export default async function AdminApplication({ params, searchParams }: { param
                 {a.flags.map((x) => <li key={x}>{x}</li>)}
               </ul>
             )}
-            <details className="mt-4 text-sm">
-              <summary className="cursor-pointer text-ink-muted">Expense breakdown</summary>
-              <dl className="mt-2 grid gap-x-6 gap-y-1 sm:grid-cols-2">
-                {(["housing", "food", "transport", "utilities", "education", "otherExpenses"] as const).map((k) => <KV key={k} k={k} v={formatRand(f[k])} />)}
-              </dl>
-            </details>
             <p className="mt-4 text-xs text-ink-faint">Verify income against the payslip and 3 salary deposits on the statements, and check the bureau report before deciding.</p>
           </section>
 
@@ -103,13 +97,9 @@ export default async function AdminApplication({ params, searchParams }: { param
               <KV k="Date of birth" v={formatDate(app.date_of_birth, { weekday: false })} />
               <KV k="Mobile" v={displayMobile(app.mobile)} />
               <KV k="Email" v={app.email} />
-              <KV k="Marital status" v={`${app.personal.maritalStatus}, ${app.personal.dependants} dependants`} />
               <KV k="SA citizen (per ID)" v={app.personal.citizen ? "Yes" : "No — permanent resident"} />
-              <KV k="Address" v={`${app.address.street}, ${app.address.suburb}, ${app.address.city}, ${app.address.province} ${app.address.postalCode}`} />
-              <KV k="Residence" v={`${app.address.residentialStatus}, ${app.address.yearsAtAddress} yrs`} />
-              <KV k="Employer" v={`${app.employment.employer} (${app.employment.employerPhone})`} />
-              <KV k="Role" v={`${app.employment.occupation} · ${app.employment.employmentType} · since ${app.employment.startDate}`} />
-              <KV k="Paid" v={app.employment.payFrequency} />
+              <KV k="Address" v={formatAddress(app.address)} />
+              <KV k="Employer" v={app.employment.employer ?? "—"} />
               <KV k="Bank" v={`${app.bank.bankName} · ${app.bank.accountType}`} />
               <KV k="Account holder" v={app.bank.accountHolder} />
               <KV k="Account number" v={reveal ? decrypt(app.bank_account_enc) : `••••${app.bank.last4}`} mono />
@@ -117,7 +107,7 @@ export default async function AdminApplication({ params, searchParams }: { param
               <KV k="Customer since" v={formatDateTime(app.customer_since)} />
             </dl>
             <p className="mt-4 text-xs text-ink-faint">
-              Consents captured {formatDateTime(app.consents.at)} from IP {app.consents.ip || "unknown"}: credit check, accuracy, not under debt review, own account, privacy.
+              Credit-check consent and declaration accepted {formatDateTime(app.consents.at)} from IP {app.consents.ip || "unknown"}.
             </p>
           </section>
 

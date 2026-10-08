@@ -45,8 +45,8 @@ export default async function ApplyPage({ searchParams }: { searchParams: { amou
     <section className="relative">
       <Glow className="opacity-60" />
       <div className="container-x relative py-10 sm:py-14">
-        <h1 className="text-3xl font-semibold sm:text-4xl">Apply for a cash advance</h1>
-        <p className="mt-2 max-w-xl text-ink-muted">About 10 minutes. Have your ID, latest payslip and 3 months of bank statements ready.</p>
+        <h1 className="text-3xl font-semibold sm:text-4xl">Apply</h1>
+        <p className="mt-2 max-w-xl text-ink-muted">About 10 minutes.</p>
         <div className="mt-8">
           <ApplyWizard today={today} initialAmount={amount} initialDue={due} fullName={user.full_name} isRepeat={await isRepeatThisYear(user.id, today)} />
         </div>

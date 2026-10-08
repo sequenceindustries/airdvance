@@ -7,44 +7,23 @@ import { assessAffordability } from "@/lib/affordability";
 import { PRODUCT } from "@/lib/config";
 import { addDays, formatDate, isWeekend } from "@/lib/dates";
 import { calculateQuote, formatRand, isQuoteError } from "@/lib/pricing";
-import { PROVINCES, SA_BANKS, parseSaId } from "@/lib/sa";
+import { SA_BANKS, parseSaId } from "@/lib/sa";
 import { Alert } from "@/components/ui";
 
-const STEPS = ["Loan", "About you", "Address", "Work & income", "Expenses", "Bank", "Documents", "Review"] as const;
+const STEPS = ["Amount", "You", "Income", "Bank", "Documents", "Confirm"] as const;
 
 type Form = {
   amount: number;
   dueDate: string;
   idNumber: string;
-  maritalStatus: string;
-  dependants: string;
-  homeLanguage: string;
-  street: string;
-  suburb: string;
-  city: string;
-  province: string;
-  postalCode: string;
-  residentialStatus: string;
-  yearsAtAddress: string;
+  address: string;
   employer: string;
-  employerPhone: string;
-  occupation: string;
-  employmentType: string;
-  startDate: string;
-  payFrequency: string;
   grossIncome: string;
   netIncome: string;
-  housing: string;
-  food: string;
-  transport: string;
-  utilities: string;
-  education: string;
-  otherExpenses: string;
+  livingExpenses: string;
   debtRepayments: string;
   bankName: string;
-  accountHolder: string;
   accountNumber: string;
-  branchCode: string;
   accountType: string;
 };
 
@@ -69,41 +48,20 @@ export function ApplyWizard({
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [files, setFiles] = useState<{ id: File[]; payslip: File[]; statement: File[] }>({ id: [], payslip: [], statement: [] });
-  const [consents, setConsents] = useState({ creditCheck: false, accurate: false, notUnderDebtReview: false, ownAccount: false, privacy: false });
+  const [consents, setConsents] = useState({ creditCheck: false, declaration: false });
   const [f, setF] = useState<Form>({
     amount: initialAmount,
     dueDate: initialDue,
     idNumber: "",
-    maritalStatus: "",
-    dependants: "0",
-    homeLanguage: "",
-    street: "",
-    suburb: "",
-    city: "",
-    province: "",
-    postalCode: "",
-    residentialStatus: "",
-    yearsAtAddress: "",
+    address: "",
     employer: "",
-    employerPhone: "",
-    occupation: "",
-    employmentType: "",
-    startDate: "",
-    payFrequency: "Monthly",
     grossIncome: "",
     netIncome: "",
-    housing: "",
-    food: "",
-    transport: "",
-    utilities: "",
-    education: "",
-    otherExpenses: "",
+    livingExpenses: "",
     debtRepayments: "",
     bankName: "",
-    accountHolder: fullName,
     accountNumber: "",
-    branchCode: "",
-    accountType: "",
+    accountType: "Cheque / current",
   });
   const set = (k: keyof Form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => setF((s) => ({ ...s, [k]: e.target.value }));
 
@@ -111,59 +69,43 @@ export function ApplyWizard({
     () => calculateQuote({ principal: f.amount, startDate: today, dueDate: f.dueDate, isRepeatThisYear: isRepeat }),
     [f.amount, f.dueDate, today, isRepeat],
   );
-  const id = useMemo(() => (f.idNumber.replace(/\D/g, "").length === 13 ? parseSaId(f.idNumber) : null), [f.idNumber]);
+  const id = useMemo(() => (f.idNumber.length === 13 ? parseSaId(f.idNumber) : null), [f.idNumber]);
   const finances = {
     grossIncome: n(f.grossIncome) || 0,
     netIncome: n(f.netIncome) || 0,
-    housing: n(f.housing) || 0,
-    food: n(f.food) || 0,
-    transport: n(f.transport) || 0,
-    utilities: n(f.utilities) || 0,
-    education: n(f.education) || 0,
-    otherExpenses: n(f.otherExpenses) || 0,
+    livingExpenses: n(f.livingExpenses) || 0,
     debtRepayments: n(f.debtRepayments) || 0,
   };
-  const afford = !isQuoteError(quote) && finances.netIncome > 0 ? assessAffordability(finances, quote.totalRepayable) : null;
+  const afford =
+    !isQuoteError(quote) && finances.netIncome > 0 && f.livingExpenses.trim() !== "" ? assessAffordability(finances, quote.totalRepayable) : null;
 
   function validate(s: number): string | null {
-    const req = (keys: (keyof Form)[], msg = "Please complete all the fields.") =>
-      keys.some((k) => String(f[k]).trim() === "") ? msg : null;
     switch (s) {
       case 0:
         return isQuoteError(quote) ? quote.error : null;
       case 1:
-        if (!id) return "Enter your 13-digit South African ID number.";
+        if (!id) return "Enter your 13-digit ID number.";
         if (!id.valid) return id.error!;
         if ((id.age ?? 0) < 18) return "You must be 18 or older to apply.";
-        return req(["maritalStatus"]);
+        if (f.address.trim().length < 8) return "Enter your home address.";
+        return null;
       case 2:
-        if (!/^\d{4}$/.test(f.postalCode)) return req(["street", "suburb", "city", "province", "residentialStatus", "yearsAtAddress"]) ?? "Postal codes have 4 digits.";
-        return req(["street", "suburb", "city", "province", "residentialStatus", "yearsAtAddress"]);
-      case 3: {
-        const r = req(["employer", "employerPhone", "occupation", "employmentType", "startDate", "payFrequency", "grossIncome", "netIncome"]);
-        if (r) return r;
-        if (!(n(f.grossIncome) > 0) || !(n(f.netIncome) > 0)) return "Enter your income as numbers, e.g. 12500.";
-        if (n(f.netIncome) > n(f.grossIncome)) return "Take-home pay can't be more than your gross income.";
+        if (f.employer.trim().length < 2) return "Enter your employer's name.";
+        if (!(n(f.grossIncome) > 0) || !(n(f.netIncome) > 0)) return "Enter both salary amounts, e.g. 12500.";
+        if (n(f.netIncome) > n(f.grossIncome)) return "Salary paid in can't be more than salary before deductions.";
+        if (!(n(f.livingExpenses) >= 0) || !(n(f.debtRepayments) >= 0)) return "Enter your expenses and debt repayments — use 0 if none.";
         return null;
-      }
-      case 4: {
-        const r = req(["housing", "food", "transport", "utilities", "education", "otherExpenses", "debtRepayments"], "Enter an amount for each expense — use 0 if it doesn't apply.");
-        if (r) return r;
-        const bad = (["housing", "food", "transport", "utilities", "education", "otherExpenses", "debtRepayments"] as const).some((k) => !(n(f[k]) >= 0));
-        return bad ? "Enter expenses as numbers, e.g. 3500." : null;
-      }
+      case 3:
+        if (!f.bankName) return "Choose your bank.";
+        if (!/^\d{6,16}$/.test(f.accountNumber)) return "Account numbers have 6 to 16 digits.";
+        return null;
+      case 4:
+        if (!files.id.length) return "Add your ID.";
+        if (!files.payslip.length) return "Add your latest payslip.";
+        if (!files.statement.length) return "Add your bank statements.";
+        return null;
       case 5:
-        if (req(["bankName", "accountHolder", "accountNumber", "branchCode", "accountType"])) return "Please complete all the bank details.";
-        if (!/^\d{6,16}$/.test(f.accountNumber.replace(/\s/g, ""))) return "Account numbers have 6 to 16 digits.";
-        if (!/^\d{6}$/.test(f.branchCode)) return "Branch codes have 6 digits.";
-        return null;
-      case 6:
-        if (!files.id.length) return "Please upload your ID.";
-        if (!files.payslip.length) return "Please upload your latest payslip.";
-        if (!files.statement.length) return "Please upload your bank statements for the last 3 months.";
-        return null;
-      case 7:
-        return Object.values(consents).every(Boolean) ? null : "Please tick each declaration to continue.";
+        return consents.creditCheck && consents.declaration ? null : "Tick both boxes to submit.";
     }
     return null;
   }
@@ -193,32 +135,11 @@ export function ApplyWizard({
     const data = {
       amount: f.amount,
       dueDate: f.dueDate,
-      personal: { idNumber: f.idNumber, maritalStatus: f.maritalStatus, dependants: f.dependants, homeLanguage: f.homeLanguage },
-      address: {
-        street: f.street,
-        suburb: f.suburb,
-        city: f.city,
-        province: f.province,
-        postalCode: f.postalCode,
-        residentialStatus: f.residentialStatus,
-        yearsAtAddress: f.yearsAtAddress,
-      },
-      employment: {
-        employer: f.employer,
-        employerPhone: f.employerPhone,
-        occupation: f.occupation,
-        employmentType: f.employmentType,
-        startDate: f.startDate,
-        payFrequency: f.payFrequency,
-      },
+      idNumber: f.idNumber,
+      address: f.address,
+      employer: f.employer,
       finances,
-      bank: {
-        bankName: f.bankName,
-        accountHolder: f.accountHolder,
-        accountNumber: f.accountNumber.replace(/\s/g, ""),
-        branchCode: f.branchCode,
-        accountType: f.accountType,
-      },
+      bank: { bankName: f.bankName, accountNumber: f.accountNumber, accountType: f.accountType },
       consents,
     };
     const body = new FormData();
@@ -237,7 +158,7 @@ export function ApplyWizard({
       router.push(`/dashboard/applications/${json.id}?submitted=1`);
       router.refresh();
     } catch {
-      setError("We couldn't reach our servers. Check your connection and try again.");
+      setError("We couldn't connect. Check your signal and try again.");
       setSubmitting(false);
     }
   }
@@ -246,7 +167,6 @@ export function ApplyWizard({
 
   return (
     <div ref={top} className="scroll-mt-24">
-      {/* Progress */}
       <div className="mb-6">
         <div className="flex items-center justify-between text-xs text-ink-muted">
           <span>
@@ -268,7 +188,7 @@ export function ApplyWizard({
           )}
 
           {step === 0 && (
-            <Section title="How much do you need?" intro="Borrow only what you need — the initiation fee is the same for every amount.">
+            <Section title="How much do you need?">
               <div className="flex items-baseline justify-between">
                 <span className="label">Amount</span>
                 <span className="font-display text-4xl font-semibold tabular-nums">{formatRand(f.amount, { cents: false })}</span>
@@ -284,125 +204,52 @@ export function ApplyWizard({
                 style={{ ["--fill" as any]: `${fill}%` }}
                 onChange={(e) => setF((s) => ({ ...s, amount: Number(e.target.value) }))}
               />
-              <Field label="Repayment date (your next payday)" hint={isWeekend(f.dueDate) ? "That's a weekend. Choose the day your salary actually reaches your account." : `Between ${formatDate(addDays(today, PRODUCT.minDays), { weekday: false })} and ${formatDate(addDays(today, PRODUCT.maxDays), { weekday: false })}.`}>
+              <Field label="Your next payday" hint={isWeekend(f.dueDate) ? "That's a weekend — pick the day your salary arrives." : undefined}>
                 <input type="date" className="input" min={addDays(today, PRODUCT.minDays)} max={addDays(today, PRODUCT.maxDays)} value={f.dueDate} onChange={set("dueDate")} />
               </Field>
             </Section>
           )}
 
           {step === 1 && (
-            <Section title="About you" intro="We use your ID number to confirm who you are and to check your credit record.">
-              <Field label="South African ID number" hint={id?.valid ? `Date of birth ${formatDate(id.dateOfBirth!, { weekday: false })} · age ${id.age}` : "13 digits, from your ID book or smart ID card."}>
-                <input className="input font-mono tracking-wider" inputMode="numeric" autoComplete="off" maxLength={13} value={f.idNumber} onChange={(e) => setF((s) => ({ ...s, idNumber: e.target.value.replace(/\D/g, "") }))} />
+            <Section title="About you">
+              <Field label="SA ID number" hint={id?.valid ? `Born ${formatDate(id.dateOfBirth!, { weekday: false })}` : undefined}>
+                <input
+                  className="input font-mono tracking-wider"
+                  inputMode="numeric"
+                  autoComplete="off"
+                  maxLength={13}
+                  value={f.idNumber}
+                  onChange={(e) => setF((s) => ({ ...s, idNumber: e.target.value.replace(/\D/g, "") }))}
+                />
               </Field>
               {id && !id.valid && <p className="-mt-2 text-sm text-rose-300">{id.error}</p>}
-              <div className="grid gap-4 sm:grid-cols-2">
-                <Field label="Marital status">
-                  <Select value={f.maritalStatus} onChange={set("maritalStatus")} options={["Single", "Married", "Living together", "Divorced", "Widowed"]} />
-                </Field>
-                <Field label="Number of dependants">
-                  <input type="number" min={0} max={20} inputMode="numeric" className="input" value={f.dependants} onChange={set("dependants")} />
-                </Field>
-              </div>
-              <Field label="Home language (optional)">
-                <Select value={f.homeLanguage} onChange={set("homeLanguage")} options={["English", "isiZulu", "isiXhosa", "Afrikaans", "Sepedi", "Setswana", "Sesotho", "Xitsonga", "siSwati", "Tshivenda", "isiNdebele", "Other"]} />
+              <Field label="Home address">
+                <input className="input" autoComplete="street-address" value={f.address} onChange={set("address")} placeholder="12 Mandela St, Soweto, 1804" />
               </Field>
             </Section>
           )}
 
           {step === 2 && (
-            <Section title="Where do you live?" intro="Your residential address, as it appears on your bank statement if possible.">
-              <Field label="Street address">
-                <input className="input" autoComplete="address-line1" value={f.street} onChange={set("street")} placeholder="12 Mandela Street" />
+            <Section title="Your income">
+              <Field label="Employer">
+                <input className="input" autoComplete="organization" value={f.employer} onChange={set("employer")} />
               </Field>
               <div className="grid gap-4 sm:grid-cols-2">
-                <Field label="Suburb">
-                  <input className="input" autoComplete="address-level3" value={f.suburb} onChange={set("suburb")} />
-                </Field>
-                <Field label="City or town">
-                  <input className="input" autoComplete="address-level2" value={f.city} onChange={set("city")} />
-                </Field>
-                <Field label="Province">
-                  <Select value={f.province} onChange={set("province")} options={PROVINCES} />
-                </Field>
-                <Field label="Postal code">
-                  <input className="input" inputMode="numeric" maxLength={4} autoComplete="postal-code" value={f.postalCode} onChange={set("postalCode")} />
-                </Field>
-                <Field label="Do you">
-                  <Select value={f.residentialStatus} onChange={set("residentialStatus")} options={["Own", "Rent", "Living with family", "Employer provided"]} />
-                </Field>
-                <Field label="Years at this address">
-                  <input type="number" min={0} max={80} step="0.5" inputMode="decimal" className="input" value={f.yearsAtAddress} onChange={set("yearsAtAddress")} />
-                </Field>
+                <Money label="Salary before deductions" value={f.grossIncome} onChange={set("grossIncome")} />
+                <Money label="Salary paid into your account" value={f.netIncome} onChange={set("netIncome")} />
+                <Money label="Monthly living costs" hint="Rent, food, transport, bills" value={f.livingExpenses} onChange={set("livingExpenses")} />
+                <Money label="Monthly debt repayments" hint="Loans, store and credit cards" value={f.debtRepayments} onChange={set("debtRepayments")} />
               </div>
-            </Section>
-          )}
-
-          {step === 3 && (
-            <Section title="Work and income" intro="We'll check these against your payslip and bank statements.">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <Field label="Employer">
-                  <input className="input" autoComplete="organization" value={f.employer} onChange={set("employer")} />
-                </Field>
-                <Field label="Employer phone number">
-                  <input className="input" type="tel" inputMode="tel" value={f.employerPhone} onChange={set("employerPhone")} />
-                </Field>
-                <Field label="Job title">
-                  <input className="input" autoComplete="organization-title" value={f.occupation} onChange={set("occupation")} />
-                </Field>
-                <Field label="Employment type">
-                  <Select value={f.employmentType} onChange={set("employmentType")} options={["Permanent", "Fixed-term contract", "Part-time"]} />
-                </Field>
-                <Field label="Started working there">
-                  <input type="month" className="input" max={today.slice(0, 7)} value={f.startDate} onChange={set("startDate")} />
-                </Field>
-                <Field label="How often are you paid?">
-                  <Select value={f.payFrequency} onChange={set("payFrequency")} options={["Monthly", "Fortnightly", "Weekly"]} />
-                </Field>
-                <Money label="Gross monthly income" hint="Before tax and deductions" value={f.grossIncome} onChange={set("grossIncome")} />
-                <Money label="Take-home pay per month" hint="What lands in your account" value={f.netIncome} onChange={set("netIncome")} />
-              </div>
-            </Section>
-          )}
-
-          {step === 4 && (
-            <Section title="Your monthly expenses" intro="Be honest — this protects you. Include your share of household costs. Use 0 where something doesn't apply.">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <Money label="Rent or bond" value={f.housing} onChange={set("housing")} />
-                <Money label="Groceries & household" value={f.food} onChange={set("food")} />
-                <Money label="Transport" hint="Taxi, fuel, bus" value={f.transport} onChange={set("transport")} />
-                <Money label="Water, electricity, airtime & data" value={f.utilities} onChange={set("utilities")} />
-                <Money label="School fees & childcare" value={f.education} onChange={set("education")} />
-                <Money label="Other regular expenses" hint="Insurance, support for family, etc." value={f.otherExpenses} onChange={set("otherExpenses")} />
-                <Money label="Existing debt repayments" hint="Store cards, loans, credit cards, car" value={f.debtRepayments} onChange={set("debtRepayments")} />
-              </div>
-              {afford && (
-                <div className={`mt-2 rounded-2xl border p-4 text-sm ${afford.passes ? "border-mint/30 bg-mint/[0.07]" : "border-amber/40 bg-amber/10"}`}>
-                  <p className="font-semibold text-ink">
-                    Estimated money left this month after expenses and this repayment: {formatRand(afford.headroomAfterRepayment)}
-                  </p>
-                  <p className="mt-1 text-ink-muted">
-                    {afford.passes
-                      ? "This is an estimate. Our team still verifies your income and expenses before deciding."
-                      : "Based on these figures the repayment may not be affordable. You can still apply, but please consider a smaller amount — or none at all."}
-                    {afford.declaredLiving < afford.norm && " We've used the National Credit Regulator's minimum living-cost estimate for your income, which is higher than what you entered."}
-                  </p>
-                </div>
+              {afford && !afford.passes && (
+                <Alert tone="warn">This repayment may be too much for your budget. Consider a smaller amount.</Alert>
               )}
             </Section>
           )}
 
-          {step === 5 && (
-            <Section title="Your bank account" intro="We pay your cash into this account and collect the repayment from it with one DebiCheck debit order. It must be in your name.">
+          {step === 3 && (
+            <Section title="Where should we pay you?">
               <Field label="Bank">
-                <select
-                  className="input"
-                  value={f.bankName}
-                  onChange={(e) => {
-                    const b = SA_BANKS.find((x) => x.name === e.target.value);
-                    setF((s) => ({ ...s, bankName: e.target.value, branchCode: b?.branchCode ?? s.branchCode }));
-                  }}
-                >
+                <select className="input" value={f.bankName} onChange={set("bankName")}>
                   <option value="">Choose your bank</option>
                   {SA_BANKS.map((b) => (
                     <option key={b.name}>{b.name}</option>
@@ -410,44 +257,44 @@ export function ApplyWizard({
                 </select>
               </Field>
               <div className="grid gap-4 sm:grid-cols-2">
-                <Field label="Account holder">
-                  <input className="input" value={f.accountHolder} onChange={set("accountHolder")} />
+                <Field label="Account number">
+                  <input
+                    className="input font-mono"
+                    inputMode="numeric"
+                    autoComplete="off"
+                    value={f.accountNumber}
+                    onChange={(e) => setF((s) => ({ ...s, accountNumber: e.target.value.replace(/\D/g, "") }))}
+                  />
                 </Field>
                 <Field label="Account type">
-                  <Select value={f.accountType} onChange={set("accountType")} options={["Cheque / current", "Savings", "Transmission"]} />
-                </Field>
-                <Field label="Account number">
-                  <input className="input font-mono" inputMode="numeric" autoComplete="off" value={f.accountNumber} onChange={(e) => setF((s) => ({ ...s, accountNumber: e.target.value.replace(/[^\d\s]/g, "") }))} />
-                </Field>
-                <Field label="Branch code" hint="Filled in for you — change it only if your bank uses a different code.">
-                  <input className="input font-mono" inputMode="numeric" maxLength={6} value={f.branchCode} onChange={set("branchCode")} />
+                  <select className="input" value={f.accountType} onChange={set("accountType")}>
+                    <option>Cheque / current</option>
+                    <option>Savings</option>
+                  </select>
                 </Field>
               </div>
-              <p className="text-xs text-ink-faint">We'll never ask for your online banking password or PIN.</p>
+              <p className="text-xs text-ink-faint">Must be in your name ({fullName}). We repay from the same account on payday.</p>
             </Section>
           )}
 
-          {step === 6 && (
-            <Section title="Upload your documents" intro="PDFs or clear phone photos, up to 8 MB each. Download bank statements as PDFs from your banking app.">
-              <Upload label="ID document or smart ID card (both sides)" multiple files={files.id} onChange={(x) => setFiles((s) => ({ ...s, id: x }))} />
-              <Upload label="Latest payslip" files={files.payslip} onChange={(x) => setFiles((s) => ({ ...s, payslip: x }))} multiple />
-              <Upload label="Bank statements — last 3 months" hint="One file per month is fine." multiple files={files.statement} onChange={(x) => setFiles((s) => ({ ...s, statement: x }))} />
+          {step === 4 && (
+            <Section title="Add your documents" intro="PDFs or clear photos, up to 8 MB each.">
+              <Upload label="ID (both sides of a smart ID)" files={files.id} onChange={(x) => setFiles((s) => ({ ...s, id: x }))} />
+              <Upload label="Latest payslip" files={files.payslip} onChange={(x) => setFiles((s) => ({ ...s, payslip: x }))} />
+              <Upload label="Bank statements, last 3 months" files={files.statement} onChange={(x) => setFiles((s) => ({ ...s, statement: x }))} />
             </Section>
           )}
 
-          {step === 7 && !isQuoteError(quote) && (
-            <Section title="Check and submit" intro="Make sure everything is correct. Giving false information is an offence.">
+          {step === 5 && !isQuoteError(quote) && (
+            <Section title="Check and submit">
               <dl className="divide-y divide-ink/[0.07] rounded-2xl border border-ink/10 text-sm">
                 {[
                   ["Amount", formatRand(quote.principal, { cents: false }), 0],
-                  ["Repay on", formatDate(quote.dueDate), 0],
-                  ["ID number", `•••••••••${f.idNumber.slice(-4)}`, 1],
-                  ["Address", `${f.street}, ${f.suburb}, ${f.city}, ${f.postalCode}`, 2],
-                  ["Employer", `${f.employer} · ${f.employmentType}`, 3],
-                  ["Take-home pay", formatRand(finances.netIncome), 3],
-                  ["Expenses & debt", formatRand(afford ? afford.declaredLiving + afford.debtRepayments : 0), 4],
-                  ["Bank", `${f.bankName} ••••${f.accountNumber.replace(/\s/g, "").slice(-4)}`, 5],
-                  ["Documents", `${files.id.length + files.payslip.length + files.statement.length} files`, 6],
+                  ["Repay", `${formatRand(quote.totalRepayable)} on ${formatDate(quote.dueDate, { weekday: false })}`, 0],
+                  ["ID", `•••••••••${f.idNumber.slice(-4)}`, 1],
+                  ["Salary paid in", formatRand(finances.netIncome, { cents: false }), 2],
+                  ["Bank", `${f.bankName} ••••${f.accountNumber.slice(-4)}`, 3],
+                  ["Documents", `${files.id.length + files.payslip.length + files.statement.length} files`, 4],
                 ].map(([k, v, s]) => (
                   <div key={k as string} className="flex items-center justify-between gap-4 px-4 py-3">
                     <dt className="text-ink-muted">{k}</dt>
@@ -460,36 +307,20 @@ export function ApplyWizard({
                   </div>
                 ))}
               </dl>
-              <div className="space-y-3 pt-2">
-                {(
-                  [
-                    ["creditCheck", "I consent to Airdvance verifying my identity, employment, income and bank account, and obtaining my credit report from registered credit bureaus to assess this application."],
-                    ["accurate", "The information and documents I've provided are true, complete and my own, and I've declared all my debts and expenses."],
-                    ["notUnderDebtReview", "I am not under debt review, sequestration or administration, and have not applied for debt review."],
-                    ["ownAccount", "The bank account above is in my own name."],
-                    ["privacy", "I have read the privacy policy and agree to my personal information being processed as described."],
-                  ] as const
-                ).map(([k, label]) => (
-                  <label key={k} className="flex items-start gap-3 text-sm text-ink-muted">
-                    <input type="checkbox" className="mt-0.5 h-5 w-5 shrink-0 accent-ember" checked={consents[k]} onChange={(e) => setConsents((c) => ({ ...c, [k]: e.target.checked }))} />
-                    <span>
-                      {label}
-                      {k === "privacy" && (
-                        <>
-                          {" "}
-                          <Link href="/privacy" target="_blank" className="text-ember-300 underline">
-                            Read it
-                          </Link>
-                        </>
-                      )}
-                    </span>
-                  </label>
-                ))}
-              </div>
-              <p className="rounded-xl bg-ink/[0.04] px-4 py-3 text-xs leading-relaxed text-ink-faint">
-                Submitting doesn't commit you to a loan and doesn't guarantee approval. If we approve you, you'll see your
-                pre-agreement statement and decide whether to sign.
-              </p>
+              <label className="flex items-start gap-3 text-sm text-ink-muted">
+                <input type="checkbox" className="mt-0.5 h-5 w-5 shrink-0 accent-ember" checked={consents.creditCheck} onChange={(e) => setConsents((c) => ({ ...c, creditCheck: e.target.checked }))} />
+                <span>I agree to a credit check and to Airdvance verifying my ID, income and bank account.</span>
+              </label>
+              <label className="flex items-start gap-3 text-sm text-ink-muted">
+                <input type="checkbox" className="mt-0.5 h-5 w-5 shrink-0 accent-ember" checked={consents.declaration} onChange={(e) => setConsents((c) => ({ ...c, declaration: e.target.checked }))} />
+                <span>
+                  My details are true and complete, the account is mine, I&rsquo;m not under debt review, and I accept the{" "}
+                  <Link href="/privacy" target="_blank" className="text-ember-300 underline">
+                    privacy policy
+                  </Link>
+                  .
+                </span>
+              </label>
             </Section>
           )}
 
@@ -511,24 +342,21 @@ export function ApplyWizard({
           </div>
         </div>
 
-        {/* Summary */}
         <aside className="glass p-5 lg:sticky lg:top-24">
-          <p className="text-xs font-semibold uppercase tracking-wider text-ink-faint">Your quote</p>
+          <p className="text-sm font-medium text-ink-muted">Your quote</p>
           {isQuoteError(quote) ? (
             <p className="mt-3 text-sm text-rose-300">{quote.error}</p>
           ) : (
             <dl className="mt-3 space-y-2 text-sm">
-              <Line k="You receive" v={formatRand(quote.principal)} />
-              <Line k="Initiation fee" v={formatRand(quote.initiationFee)} />
-              <Line k={`Service fee (${quote.days} days)`} v={formatRand(quote.serviceFee)} />
-              <Line k={`Interest (${(quote.monthlyRate * 100).toFixed(0)}% p.m.)`} v={formatRand(quote.interest)} />
+              <Line k="You get" v={formatRand(quote.principal)} />
+              <Line k="Fees and interest" v={formatRand(quote.costOfCredit)} />
               <div className="mt-3 border-t border-ink/10 pt-3">
-                <Line k={`Repay on ${formatDate(quote.dueDate, { year: false })}`} v={formatRand(quote.totalRepayable)} strong />
+                <Line k={`Repay ${formatDate(quote.dueDate, { weekday: false, year: false })}`} v={formatRand(quote.totalRepayable)} strong />
               </div>
-              {isRepeat && <p className="pt-2 text-xs text-mint-300">Returning customer rate: 3% per month.</p>}
             </dl>
           )}
-          <p className="mt-4 text-xs leading-relaxed text-ink-faint">Subject to affordability assessment. Final figures appear in your pre-agreement statement.</p>
+          {isRepeat && <p className="mt-3 text-xs text-mint-300">Returning customer rate: 3% per month.</p>}
+          <p className="mt-4 text-xs text-ink-faint">Subject to approval.</p>
         </aside>
       </div>
     </div>
@@ -539,7 +367,7 @@ function Section({ title, intro, children }: { title: string; intro?: string; ch
   return (
     <div>
       <h2 className="text-2xl font-semibold">{title}</h2>
-      {intro && <p className="mt-1.5 text-sm leading-relaxed text-ink-muted">{intro}</p>}
+      {intro && <p className="mt-1.5 text-sm text-ink-muted">{intro}</p>}
       <div className="mt-6 space-y-4">{children}</div>
     </div>
   );
@@ -555,17 +383,6 @@ function Field({ label, hint, children }: { label: string; hint?: string; childr
   );
 }
 
-function Select({ value, onChange, options }: { value: string; onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void; options: string[] }) {
-  return (
-    <select className="input" value={value} onChange={onChange}>
-      <option value="">Choose…</option>
-      {options.map((o) => (
-        <option key={o}>{o}</option>
-      ))}
-    </select>
-  );
-}
-
 function Money({ label, hint, value, onChange }: { label: string; hint?: string; value: string; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void }) {
   return (
     <Field label={label} hint={hint}>
@@ -577,31 +394,27 @@ function Money({ label, hint, value, onChange }: { label: string; hint?: string;
   );
 }
 
-function Upload({ label, hint, files, onChange, multiple }: { label: string; hint?: string; files: File[]; onChange: (f: File[]) => void; multiple?: boolean }) {
+function Upload({ label, files, onChange }: { label: string; files: File[]; onChange: (f: File[]) => void }) {
   return (
-    <div className="rounded-2xl border border-dashed border-ink/15 p-4">
-      <p className="text-sm font-medium">{label}</p>
-      {hint && <p className="text-xs text-ink-faint">{hint}</p>}
-      <label className="btn-ghost btn-sm mt-3 cursor-pointer">
-        {files.length ? "Replace files" : "Choose files"}
+    <div className="flex items-center justify-between gap-4 rounded-2xl border border-dashed border-ink/15 p-4">
+      <div className="min-w-0">
+        <p className="text-sm font-medium">{label}</p>
+        {files.length > 0 && (
+          <p className="mt-0.5 truncate text-xs text-ember-300">
+            {files.length === 1 ? files[0].name : `${files.length} files added`}
+          </p>
+        )}
+      </div>
+      <label className="btn-ghost btn-sm shrink-0 cursor-pointer">
+        {files.length ? "Change" : "Add"}
         <input
           type="file"
           className="sr-only"
           accept="application/pdf,image/jpeg,image/png,image/webp,image/heic"
-          multiple={multiple}
+          multiple
           onChange={(e) => onChange(Array.from(e.target.files ?? []))}
         />
       </label>
-      {files.length > 0 && (
-        <ul className="mt-3 space-y-1 text-xs text-ink-muted">
-          {files.map((x) => (
-            <li key={x.name + x.size} className="flex justify-between gap-3">
-              <span className="truncate">{x.name}</span>
-              <span className={x.size > 8 * 1024 * 1024 ? "text-rose-300" : ""}>{(x.size / 1024 / 1024).toFixed(1)} MB</span>
-            </li>
-          ))}
-        </ul>
-      )}
     </div>
   );
 }

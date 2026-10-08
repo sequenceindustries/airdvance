@@ -12,8 +12,8 @@ export default async function VerifyPage({ searchParams }: { searchParams: { nex
   if (user.mobile_verified_at) redirect(next);
   return (
     <AuthShell
-      title="Confirm your cellphone number"
-      intro="We use your number to keep your account secure and to contact you about your application. Airdvance will never ask you for this PIN."
+      title="Confirm your number"
+      intro="Enter the PIN we sent you. Never share it."
     >
       <VerifyForm next={next} autoSend={searchParams.send === "1"} mobile={displayMobile(user.mobile)} />
     </AuthShell>

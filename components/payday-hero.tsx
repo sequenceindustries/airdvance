@@ -104,18 +104,18 @@ export function PaydayHero({ exampleTotal }: { exampleTotal: string }) {
             <div aria-hidden className="absolute -inset-x-24 -inset-y-20 -z-10 bg-[radial-gradient(closest-side,rgba(0,0,0,.92),rgba(0,0,0,.75)_55%,transparent)]" />
             <h1 className="animate-rise text-[2.4rem] font-semibold leading-[1.02] sm:text-6xl lg:text-7xl">Cash before payday.</h1>
             <p className="mx-auto mt-5 max-w-xl animate-rise text-base text-ink-muted [animation-delay:.12s] sm:text-xl">
-              Borrow R300 to R1,000 for the gap before your salary lands. One repayment on payday — every fee shown before you apply.
+              R300 to R1,000, repaid in one go on payday.
             </p>
             <div className="mt-8 flex animate-rise flex-col items-center justify-center gap-3 [animation-delay:.24s] sm:flex-row">
               <Link href="/apply" className="btn bg-ink px-7 py-3 text-base text-night hover:bg-white">
-                Start my application
+                Apply now
               </Link>
               <Link href="#calculator" className="btn-ghost px-7 py-3 text-base">
-                Work out my cost
+                See my cost
               </Link>
             </div>
             <p className="mt-6 animate-rise text-xs text-ink-faint [animation-delay:.36s]">
-              Example: borrow R1,000 for 30 days, repay {exampleTotal}. Approval depends on an affordability check.
+              Subject to approval.
             </p>
           </div>
         </div>

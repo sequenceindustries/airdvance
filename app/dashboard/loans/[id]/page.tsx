@@ -7,7 +7,7 @@ import { requireVerifiedUser } from "@/lib/auth";
 import { COLLECTION_ACCOUNT, COMPANY } from "@/lib/config";
 import { one, query } from "@/lib/db";
 import { formatDate, formatDateTime } from "@/lib/dates";
-import { loanBalance, normaliseApplication, normaliseLoan, type ApplicationRow, type LoanRow } from "@/lib/loans";
+import { formatAddress, loanBalance, normaliseApplication, normaliseLoan, type ApplicationRow, type LoanRow } from "@/lib/loans";
 import { formatRand } from "@/lib/pricing";
 import { displayMobile } from "@/lib/sa";
 import { declineOffer } from "@/lib/actions/customer";
@@ -26,7 +26,7 @@ export default async function LoanPage({ params, searchParams }: { params: { id:
   );
   const quote = loan.final_quote ?? loan.offer_quote;
   const bal = loanBalance(loan);
-  const address = `${app.address.street}, ${app.address.suburb}, ${app.address.city}, ${app.address.postalCode}`;
+  const address = formatAddress(app.address);
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">

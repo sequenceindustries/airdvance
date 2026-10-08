@@ -9,7 +9,7 @@ import { insertDocs, prepareFiles, type DocKind } from "@/lib/documents";
 import { isRepeatThisYear, openItemsFor } from "@/lib/loans";
 import { calculateQuote, formatRand, isQuoteError } from "@/lib/pricing";
 import { audit, makeReference, notify } from "@/lib/records";
-import { parseSaId } from "@/lib/sa";
+import { SA_BANKS, parseSaId } from "@/lib/sa";
 
 export const runtime = "nodejs";
 
@@ -40,7 +40,9 @@ export async function POST(req: Request) {
   if (!parsed.success) return fail(parsed.error.issues[0].message);
   const d = parsed.data;
 
-  const id = parseSaId(d.personal.idNumber);
+  const bank = SA_BANKS.find((b) => b.name === d.bank.bankName);
+  if (!bank) return fail("Choose your bank from the list.");
+  const id = parseSaId(d.idNumber);
   if (!id.valid) return fail(id.error ?? "Please check your ID number.");
   if ((id.age ?? 0) < 18) return fail("You must be 18 or older to apply.");
 
@@ -73,7 +75,7 @@ export async function POST(req: Request) {
   if ("error" in docs) return fail(docs.error);
 
   const affordability = assessAffordability(d.finances, quote.totalRepayable);
-  const digits = d.personal.idNumber.replace(/\D/g, "");
+  const digits = d.idNumber.replace(/\D/g, "");
   const ip = clientIp();
   const consentStamp = { ...d.consents, at: new Date().toISOString(), ip };
   const reference = makeReference("AD");
@@ -93,14 +95,14 @@ export async function POST(req: Request) {
           encrypt(digits),
           digits.slice(-4),
           id.dateOfBirth,
-          JSON.stringify({ maritalStatus: d.personal.maritalStatus, dependants: d.personal.dependants, homeLanguage: d.personal.homeLanguage, gender: id.gender, citizen: id.citizen }),
-          JSON.stringify(d.address),
-          JSON.stringify(d.employment),
+          JSON.stringify({ gender: id.gender, citizen: id.citizen }),
+          JSON.stringify({ line: d.address }),
+          JSON.stringify({ employer: d.employer }),
           JSON.stringify(d.finances),
           JSON.stringify({
             bankName: d.bank.bankName,
-            accountHolder: d.bank.accountHolder,
-            branchCode: d.bank.branchCode,
+            accountHolder: user.full_name,
+            branchCode: bank.branchCode,
             accountType: d.bank.accountType,
             last4: d.bank.accountNumber.slice(-4),
           }),

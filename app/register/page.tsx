@@ -11,7 +11,7 @@ export default async function RegisterPage({ searchParams }: { searchParams: { n
   return (
     <AuthShell
       title="Create your account"
-      intro="Takes about a minute. Then you can apply straight away."
+      intro="Takes a minute."
       footer={
         <>
           Already have an account?{" "}

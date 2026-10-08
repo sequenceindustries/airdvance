@@ -67,13 +67,13 @@ export function RegisterForm({ next }: { next?: string }) {
       <Feedback state={state} />
       {next && <input type="hidden" name="next" value={next} />}
       <div>
-        <label htmlFor="full_name" className="label">Full name (as on your ID)</label>
+        <label htmlFor="full_name" className="label">Full name</label>
         <input id="full_name" name="full_name" autoComplete="name" required className="input" defaultValue={state?.fields?.full_name} />
       </div>
       <div>
         <label htmlFor="mobile" className="label">Cellphone number</label>
         <input id="mobile" name="mobile" type="tel" inputMode="tel" autoComplete="tel" placeholder="082 123 4567" required className="input" defaultValue={state?.fields?.mobile} />
-        <span className="hint">We'll send a PIN to confirm it's yours.</span>
+        
       </div>
       <div>
         <label htmlFor="email" className="label">Email</label>
@@ -82,7 +82,7 @@ export function RegisterForm({ next }: { next?: string }) {
       <div>
         <label htmlFor="password" className="label">Password</label>
         <input id="password" name="password" type="password" autoComplete="new-password" minLength={10} required className="input" />
-        <span className="hint">At least 10 characters, with letters and a number.</span>
+        <span className="hint">10+ characters, including a number.</span>
       </div>
       <label className="flex items-start gap-3 text-sm text-ink-muted">
         <input type="checkbox" name="terms" required className="mt-0.5 h-5 w-5 shrink-0 accent-ember" />
@@ -90,10 +90,6 @@ export function RegisterForm({ next }: { next?: string }) {
           I accept the <Link href="/terms" className="text-ember-300 underline" target="_blank">terms</Link> and{" "}
           <Link href="/privacy" className="text-ember-300 underline" target="_blank">privacy policy</Link>.
         </span>
-      </label>
-      <label className="flex items-start gap-3 text-sm text-ink-muted">
-        <input type="checkbox" name="marketing" className="mt-0.5 h-5 w-5 shrink-0 accent-ember" />
-        <span>Send me occasional product news. (Optional — you can opt out any time.)</span>
       </label>
       <Submit>Create account</Submit>
     </form>

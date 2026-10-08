@@ -64,6 +64,13 @@ export function isoDate(v: unknown): string {
   return String(v).slice(0, 10);
 }
 
+/** Works for the current one-line address and the older multi-field shape. */
+export function formatAddress(a: Record<string, any> | null | undefined): string {
+  if (!a) return "";
+  if (typeof a.line === "string") return a.line;
+  return [a.street, a.suburb, a.city, a.province, a.postalCode].filter(Boolean).join(", ");
+}
+
 export function normaliseLoan(l: LoanRow): LoanRow {
   return { ...l, due_date: isoDate(l.due_date), disbursed_on: l.disbursed_on ? isoDate(l.disbursed_on) : null };
 }

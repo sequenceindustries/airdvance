@@ -6,7 +6,7 @@ import { Alert, StatusBadge } from "@/components/ui";
 import { cancelLoan, collectDebitOrder, disburseLoan, recordRepayment } from "@/lib/actions/admin";
 import { one, query } from "@/lib/db";
 import { formatDate, formatDateTime } from "@/lib/dates";
-import { loanBalance, normaliseApplication, normaliseLoan, type ApplicationRow, type LoanRow } from "@/lib/loans";
+import { formatAddress, loanBalance, normaliseApplication, normaliseLoan, type ApplicationRow, type LoanRow } from "@/lib/loans";
 import { isDemoPayments } from "@/lib/payments";
 import { formatRand } from "@/lib/pricing";
 import { displayMobile } from "@/lib/sa";
@@ -83,7 +83,7 @@ export default async function AdminLoan({ params, searchParams }: { params: { id
               <AgreementTerms
                 quote={quote}
                 reference={loan.reference}
-                customer={{ name: raw.full_name, idLast4: app.id_number_last4, mobile: displayMobile(raw.mobile), address: app.address.city }}
+                customer={{ name: raw.full_name, idLast4: app.id_number_last4, mobile: displayMobile(raw.mobile), address: formatAddress(app.address) }}
                 bank={{ bankName: app.bank.bankName, last4: app.bank.last4 }}
               />
             </div>

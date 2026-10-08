@@ -22,7 +22,6 @@ const RegisterSchema = z.object({
     .max(200)
     .refine((p) => /[A-Za-z]/.test(p) && /\d/.test(p), "Include letters and at least one number."),
   terms: z.literal("on", { errorMap: () => ({ message: "Please accept the terms and privacy policy to continue." }) }),
-  marketing: z.string().optional(),
   next: z.string().optional(),
 });
 
@@ -46,9 +45,9 @@ export async function register(_prev: FormState, form: FormData): Promise<FormSt
   }
 
   const user = await one<{ id: string }>(
-    `insert into users (email, password_hash, full_name, mobile, marketing_opt_in)
-     values ($1, $2, $3, $4, $5) returning id`,
-    [parsed.data.email, await hashPassword(parsed.data.password), parsed.data.full_name, mobile, parsed.data.marketing === "on"],
+    `insert into users (email, password_hash, full_name, mobile)
+     values ($1, $2, $3, $4) returning id`,
+    [parsed.data.email, await hashPassword(parsed.data.password), parsed.data.full_name, mobile],
   );
   await audit(null, { actorId: user!.id, action: "USER_REGISTERED", entity: "user", entityId: user!.id, ip: clientIp() });
   await createSession(user!.id);

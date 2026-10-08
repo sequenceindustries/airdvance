@@ -6,7 +6,7 @@ export const metadata = { title: "FAQ" };
 export default function FaqPage() {
   return (
     <>
-      <PageHero eyebrow="FAQ" title="Frequently asked questions" intro="Straight answers about borrowing with Airdvance." />
+      <PageHero title="FAQ" />
       <section className="container-x max-w-3xl">
         <FaqList items={FAQS} />
       </section>

@@ -4,7 +4,7 @@ import { AgreementClauses, AgreementTerms } from "@/components/agreement";
 import { requireVerifiedUser } from "@/lib/auth";
 import { one } from "@/lib/db";
 import { formatDateTime } from "@/lib/dates";
-import { normaliseApplication, normaliseLoan, type ApplicationRow, type LoanRow } from "@/lib/loans";
+import { formatAddress, normaliseApplication, normaliseLoan, type ApplicationRow, type LoanRow } from "@/lib/loans";
 import { displayMobile } from "@/lib/sa";
 import { PrintButton } from "./print-button";
 
@@ -28,7 +28,7 @@ export default async function AgreementPage({ params }: { params: { id: string }
       <AgreementTerms
         quote={loan.offer_quote}
         reference={loan.reference}
-        customer={{ name: owner!.full_name, idLast4: app.id_number_last4, mobile: displayMobile(owner!.mobile), address: `${app.address.street}, ${app.address.city}` }}
+        customer={{ name: owner!.full_name, idLast4: app.id_number_last4, mobile: displayMobile(owner!.mobile), address: formatAddress(app.address) }}
         bank={{ bankName: app.bank.bankName, last4: app.bank.last4 }}
       />
       {loan.final_quote && loan.final_quote.totalRepayable !== loan.offer_quote.totalRepayable && (

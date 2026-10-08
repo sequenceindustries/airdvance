@@ -38,9 +38,7 @@ export function SiteFooter() {
       <div className="container-x grid gap-10 py-14 md:grid-cols-[1.4fr_repeat(3,1fr)]">
         <div>
           <Logo size="sm" />
-          <p className="mt-4 max-w-xs leading-relaxed text-ink-muted">
-            Short-term cash advances of R300 to R1,000, repaid on your next payday. Every cost shown before you apply.
-          </p>
+          <p className="mt-4 max-w-xs leading-relaxed text-ink-muted">R300 to R1,000 until payday.</p>
           <p className="mt-4 text-xs text-ink-faint">
             {COMPANY.email}
             {COMPANY.phone ? ` · ${COMPANY.phone}` : ""}
@@ -64,16 +62,10 @@ export function SiteFooter() {
       <div className="border-t border-ink/[0.06]">
         <div className="container-x space-y-2 py-6 text-xs leading-relaxed text-ink-faint">
           <p>
-            Airdvance is a trading name of {COMPANY.legalName}, a registered credit provider ({COMPANY.ncrcp})
-            {COMPANY.registrationNumber ? `, company registration ${COMPANY.registrationNumber}` : ""}. All credit is
-            subject to an affordability assessment and the National Credit Act 34 of 2005. Approval is not guaranteed.
+            Airdvance is a trading name of {COMPANY.legalName}, registered credit provider {COMPANY.ncrcp}. Credit is subject to
+            an affordability check.
           </p>
-          <p>
-            Representative example: borrow R1,000 for 30 days — initiation fee R165.00, service fee R60.00, interest
-            R49.32 (5% per month, 60% per year) — total repayable R1,274.32. Late or missed payments may be reported to
-            credit bureaus and can make it harder to borrow in future.
-          </p>
-          <p>© {new Date().getFullYear()} {COMPANY.legalName}. All rights reserved.</p>
+          <p>Example: R1,000 for 30 days costs R274.32 (R165 initiation, R60 service, R49.32 interest at 5% a month). You repay R1,274.32.</p>
         </div>
       </div>
     </footer>

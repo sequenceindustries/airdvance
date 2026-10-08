@@ -76,15 +76,13 @@ export function CtaBand() {
           ))}
         </svg>
         <h2 className="mx-auto max-w-2xl text-3xl font-semibold leading-tight text-white sm:text-5xl">Know your total before you borrow.</h2>
-        <p className="mx-auto mt-4 max-w-lg text-white/85">
-          Applying takes about 10 minutes. Have your ID, latest payslip and 3 months of bank statements ready.
-        </p>
+        <p className="mx-auto mt-4 max-w-lg text-white/85">Apply in about 10 minutes.</p>
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
           <Link href="/apply" className="btn bg-white px-7 py-3 text-base text-night hover:bg-white/90">
-            Start my application
+            Apply now
           </Link>
           <Link href="/costs" className="btn border border-white/50 px-7 py-3 text-base text-white hover:bg-white/10">
-            See every fee
+            See all fees
           </Link>
         </div>
       </div>

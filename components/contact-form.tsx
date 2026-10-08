@@ -18,26 +18,14 @@ export function ContactForm() {
           <input id="c-name" name="name" required className="input" autoComplete="name" />
         </div>
         <div>
-          <label htmlFor="c-mobile" className="label">Cellphone (optional)</label>
-          <input id="c-mobile" name="mobile" type="tel" className="input" autoComplete="tel" />
+          <label htmlFor="c-email" className="label">Email</label>
+          <input id="c-email" name="email" type="email" required className="input" autoComplete="email" />
         </div>
-      </div>
-      <div>
-        <label htmlFor="c-email" className="label">Email</label>
-        <input id="c-email" name="email" type="email" required className="input" autoComplete="email" />
-      </div>
-      <div>
-        <label htmlFor="c-topic" className="label">Topic</label>
-        <select id="c-topic" name="topic" className="input" defaultValue="General">
-          {["General", "My application", "My loan or repayment", "Complaint", "Privacy request"].map((t) => (
-            <option key={t}>{t}</option>
-          ))}
-        </select>
       </div>
       <div>
         <label htmlFor="c-message" className="label">Message</label>
         <textarea id="c-message" name="message" rows={5} required className="input" />
-        <span className="hint">Please don't include your full ID or bank account number.</span>
+        <span className="hint">Don't include ID or account numbers.</span>
       </div>
       <Submit>Send message</Submit>
     </form>

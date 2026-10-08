@@ -92,14 +92,14 @@ test("minimum expense norms (Reg. 23A)", () => {
 
 test("affordability uses the higher of declared expenses and norm", () => {
   const a = assessAffordability(
-    { grossIncome: 15000, netIncome: 12500, housing: 0, food: 500, transport: 300, utilities: 0, education: 0, otherExpenses: 0, debtRepayments: 2000 },
+    { grossIncome: 15000, netIncome: 12500, livingExpenses: 800, debtRepayments: 2000 },
     1274.32,
   );
   assert.equal(a.livingUsed, 1955.38);
   assert.equal(a.disposable, 8544.62);
   assert.equal(a.passes, true);
   const b = assessAffordability(
-    { grossIncome: 6000, netIncome: 5200, housing: 2500, food: 1500, transport: 800, utilities: 300, education: 0, otherExpenses: 0, debtRepayments: 0 },
+    { grossIncome: 6000, netIncome: 5200, livingExpenses: 5100, debtRepayments: 0 },
     715.79,
   );
   assert.equal(b.passes, false);
