@@ -11,8 +11,9 @@ import { formatAddress, loanBalance, normaliseApplication, normaliseLoan, type A
 import { formatRand } from "@/lib/pricing";
 import { displayMobile } from "@/lib/sa";
 import { declineOffer } from "@/lib/actions/customer";
+import { privateMetadata } from "@/lib/site";
 
-export const metadata = { title: "Your loan" };
+export const metadata = privateMetadata("Your loan");
 
 export default async function LoanPage({ params, searchParams }: { params: { id: string }; searchParams: { signed?: string } }) {
   const user = await requireVerifiedUser();

@@ -10,6 +10,7 @@ import { isDemoPayments, payments } from "@/lib/payments";
 import { formatRand } from "@/lib/pricing";
 import { audit, notify } from "@/lib/records";
 import type { FormState } from "./auth";
+import { flashEvent } from "@/lib/analytics-server";
 
 const norm = (s: string) => s.toLowerCase().replace(/\s+/g, " ").trim();
 
@@ -62,6 +63,7 @@ export async function acceptOffer(_prev: FormState, form: FormData): Promise<For
       `/dashboard/loans/${loan.id}`,
     );
   });
+  flashEvent("sign_agreement");
   revalidatePath("/dashboard");
   redirect(`/dashboard/loans/${loan.id}?signed=1`);
 }

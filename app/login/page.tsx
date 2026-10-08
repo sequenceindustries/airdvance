@@ -3,8 +3,9 @@ import { redirect } from "next/navigation";
 import { AuthShell } from "@/components/auth-shell";
 import { LoginForm } from "@/components/auth-forms";
 import { getCurrentUser, safeNext } from "@/lib/auth";
+import { privateMetadata } from "@/lib/site";
 
-export const metadata = { title: "Log in" };
+export const metadata = privateMetadata("Log in");
 
 export default async function LoginPage({ searchParams }: { searchParams: { next?: string } }) {
   const user = await getCurrentUser();

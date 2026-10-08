@@ -21,7 +21,7 @@ const config: Config = {
         ink: {
           DEFAULT: "#F4F4F6",
           muted: "#A8A8B3",
-          faint: "#7A7A86",
+          faint: "#9090A0",
         },
         ember: {
           DEFAULT: "#34D399", // emerald: buttons (dark text on it)

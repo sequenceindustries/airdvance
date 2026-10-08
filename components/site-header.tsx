@@ -43,7 +43,7 @@ export function SiteHeader({ user }: { user: { name: string; role: string } | nu
               <Link href="/login" className="btn-ghost btn-sm hidden px-4 py-2 sm:inline-flex">
                 Log in
               </Link>
-              <Link href="/apply" className="btn btn-sm bg-ink px-4 py-2 text-night hover:bg-white">
+              <Link href="/apply" data-track="apply_click" data-track-location="header" className="btn btn-sm bg-ink px-4 py-2 text-night hover:bg-white">
                 Apply now
               </Link>
             </>

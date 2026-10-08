@@ -1,6 +1,8 @@
+import { longDate, page } from "@/lib/site";
 import { PageHero } from "./ui";
 
-export function LegalPage({ title, intro, updated, children }: { title: string; intro?: string; updated: string; children: React.ReactNode }) {
+export function LegalPage({ title, intro, path, children }: { title: string; intro?: string; path: string; children: React.ReactNode }) {
+  const updated = longDate(page(path).updated);
   return (
     <>
       <PageHero eyebrow="Airdvance" title={title} intro={intro} />

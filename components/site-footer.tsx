@@ -1,6 +1,12 @@
 import Link from "next/link";
 import { Logo } from "./logo";
 import { COMPANY } from "@/lib/config";
+import { addDays } from "@/lib/dates";
+import { calculateQuote, formatRand, type Quote } from "@/lib/pricing";
+import { CookieSettingsButton } from "./analytics";
+
+// Representative example, computed from the live pricing rules so it can never drift.
+const EX = calculateQuote({ principal: 1000, startDate: "2026-01-01", dueDate: addDays("2026-01-01", 30), allowShortTerm: true }) as Quote;
 
 const COLS = [
   {
@@ -50,11 +56,16 @@ export function SiteFooter() {
             <ul className="mt-3 space-y-2 text-ink-muted">
               {c.links.map((l) => (
                 <li key={l.href}>
-                  <Link href={l.href} className="hover:text-ink">
+                  <Link href={l.href} className="hover:text-ink" {...(l.href === "/apply" ? { "data-track": "apply_click", "data-track-location": "footer" } : {})}>
                     {l.label}
                   </Link>
                 </li>
               ))}
+              {c.title === "Legal" && (
+                <li>
+                  <CookieSettingsButton />
+                </li>
+              )}
             </ul>
           </div>
         ))}
@@ -62,10 +73,14 @@ export function SiteFooter() {
       <div className="border-t border-ink/[0.06]">
         <div className="container-x space-y-2 py-6 text-xs leading-relaxed text-ink-faint">
           <p>
-            Airdvance is a trading name of {COMPANY.legalName}, registered credit provider {COMPANY.ncrcp}. Credit is subject to
-            an affordability check.
+            Airdvance is a trading name of {COMPANY.legalName}
+            {COMPANY.registrationNumber ? ` (reg. ${COMPANY.registrationNumber})` : ""}, registered credit provider {COMPANY.ncrcp}. Credit is
+            subject to an affordability assessment.
           </p>
-          <p>Example: R1,000 for 30 days costs R274.32 (R165 initiation, R60 service, R49.32 interest at 5% a month). You repay R1,274.32.</p>
+          <p>
+            Example: {formatRand(EX.principal, { cents: false })} for {EX.days} days costs {formatRand(EX.costOfCredit)} ({formatRand(EX.initiationFee, { cents: false })} initiation fee,{" "}
+            {formatRand(EX.serviceFee, { cents: false })} service fee, {formatRand(EX.interest)} interest at 5% a month on a first loan). You repay {formatRand(EX.totalRepayable)} in one payment.
+          </p>
         </div>
       </div>
     </footer>

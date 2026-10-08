@@ -5,8 +5,9 @@ import { requireVerifiedUser } from "@/lib/auth";
 import { PRODUCT } from "@/lib/config";
 import { daysBetween, defaultPayday, isIsoDate, todaySA } from "@/lib/dates";
 import { isRepeatThisYear, openItemsFor } from "@/lib/loans";
+import { privateMetadata } from "@/lib/site";
 
-export const metadata = { title: "Apply" };
+export const metadata = privateMetadata("Apply");
 
 export default async function ApplyPage({ searchParams }: { searchParams: { amount?: string; due?: string } }) {
   const qs = new URLSearchParams(searchParams as Record<string, string>).toString();

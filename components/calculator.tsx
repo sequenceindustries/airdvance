@@ -102,6 +102,8 @@ export function Calculator({
             </div>
             <Link
               href={`/apply?amount=${quote.principal}&due=${quote.dueDate}`}
+              data-track="apply_click"
+              data-track-location="calculator"
               className="btn-primary mt-5 w-full py-3.5 text-base"
             >
               Apply for {formatRand(quote.principal, { cents: false })}

@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { assessAffordability } from "@/lib/affordability";
 import { PRODUCT } from "@/lib/config";
 import { addDays, formatDate, isWeekend } from "@/lib/dates";
 import { calculateQuote, formatRand, isQuoteError } from "@/lib/pricing";
 import { SA_BANKS, parseSaId } from "@/lib/sa";
 import { Alert } from "@/components/ui";
+import { track } from "@/lib/analytics";
 
 const STEPS = ["Amount", "You", "Income", "Bank", "Documents", "Confirm"] as const;
 
@@ -45,6 +46,7 @@ export function ApplyWizard({
   const router = useRouter();
   const top = useRef<HTMLDivElement>(null);
   const [step, setStep] = useState(0);
+  useEffect(() => track("begin_application"), []);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [files, setFiles] = useState<{ id: File[]; payslip: File[]; statement: File[] }>({ id: [], payslip: [], statement: [] });
@@ -113,6 +115,7 @@ export function ApplyWizard({
   function go(to: number) {
     setError(null);
     setStep(to);
+    track("application_step", { step: STEPS[to] });
     top.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
   function next() {
@@ -155,6 +158,7 @@ export function ApplyWizard({
         setSubmitting(false);
         return;
       }
+      track("generate_lead");
       router.push(`/dashboard/applications/${json.id}?submitted=1`);
       router.refresh();
     } catch {

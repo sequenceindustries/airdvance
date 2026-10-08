@@ -2,14 +2,15 @@ import Link from "next/link";
 import { ContactForm } from "@/components/contact-form";
 import { PageHero } from "@/components/ui";
 import { COMPANY } from "@/lib/config";
+import { publicMetadata } from "@/lib/site";
 
-export const metadata = { title: "Contact us" };
+export const metadata = publicMetadata("/contact");
 
 export default function ContactPage() {
   const wa = COMPANY.whatsapp.replace(/\D/g, "");
   return (
     <>
-      <PageHero title="Contact us" intro="We reply within one business day." />
+      <PageHero title="Contact us" intro="We aim to reply within one business day." />
       <section className="container-x grid gap-6 lg:grid-cols-[1.3fr_1fr]">
         <div className="glass p-6 sm:p-8">
           <ContactForm />

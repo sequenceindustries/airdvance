@@ -1,5 +1,8 @@
 import Link from "next/link";
 import { Glow } from "@/components/ui";
+import { privateMetadata } from "@/lib/site";
+
+export const metadata = privateMetadata("Page not found");
 
 export default function NotFound() {
   return (

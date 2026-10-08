@@ -78,7 +78,7 @@ export function CtaBand() {
         <h2 className="mx-auto max-w-2xl text-3xl font-semibold leading-tight text-white sm:text-5xl">Know your total before you borrow.</h2>
         <p className="mx-auto mt-4 max-w-lg text-white/85">Apply in about 10 minutes.</p>
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-          <Link href="/apply" className="btn bg-white px-7 py-3 text-base text-night hover:bg-white/90">
+          <Link href="/apply" data-track="apply_click" data-track-location="cta_band" className="btn bg-white px-7 py-3 text-base text-night hover:bg-white/90">
             Apply now
           </Link>
           <Link href="/costs" className="btn border border-white/50 px-7 py-3 text-base text-white hover:bg-white/10">
@@ -134,4 +134,23 @@ export function Alert({ tone = "info", children }: { tone?: "info" | "error" | "
     warn: "border-amber/30 bg-amber/10 text-amber",
   }[tone];
   return <div role={tone === "error" ? "alert" : "status"} className={clsx("rounded-xl border px-4 py-3 text-sm", styles)}>{children}</div>;
+}
+
+/** Contextual internal links at the foot of a content page. */
+export function RelatedLinks({ links }: { links: { href: string; label: string; note?: string }[] }) {
+  return (
+    <nav aria-label="Related pages" className="container-x mt-16">
+      <h2 className="text-sm font-semibold uppercase tracking-wider text-ink-faint">Read next</h2>
+      <ul className="mt-4 grid gap-3 sm:grid-cols-3">
+        {links.map((l) => (
+          <li key={l.href}>
+            <Link href={l.href} className="glass block h-full p-5 transition hover:border-ember/50">
+              <span className="font-semibold text-ink">{l.label} &rarr;</span>
+              {l.note && <span className="mt-1 block text-sm text-ink-muted">{l.note}</span>}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
 }

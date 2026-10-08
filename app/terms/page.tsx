@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { LegalPage } from "@/components/legal-page";
 import { COMPANY } from "@/lib/config";
+import { publicMetadata } from "@/lib/site";
 
-export const metadata = { title: "Terms & conditions" };
+export const metadata = publicMetadata("/terms");
 
 export default function TermsPage() {
   return (
-    <LegalPage title="Terms & conditions" updated="7 October 2026" intro="These terms govern your use of the Airdvance website and accounts. Each loan is also governed by its own credit agreement, which you sign before any money is paid out.">
+    <LegalPage title="Terms & conditions" path="/terms" intro="These terms govern your use of the Airdvance website and accounts. Each loan is also governed by its own credit agreement, which you sign before any money is paid out.">
       <h2>1. Who we are</h2>
       <p>Airdvance is a trading name of {COMPANY.legalName} ("we", "us"), a registered credit provider ({COMPANY.ncrcp}) under the National Credit Act 34 of 2005 ("NCA"). Contact: {COMPANY.email}.</p>
 

@@ -8,8 +8,9 @@ import { loanBalance, normaliseLoan, OPEN_LOAN, type LoanRow } from "@/lib/loans
 import { formatRand } from "@/lib/pricing";
 import { markNotificationsRead } from "@/lib/actions/customer";
 import { displayMobile } from "@/lib/sa";
+import { privateMetadata } from "@/lib/site";
 
-export const metadata = { title: "My account" };
+export const metadata = privateMetadata("My account");
 
 export default async function DashboardPage() {
   const user = await requireVerifiedUser("/dashboard");

@@ -128,7 +128,7 @@ export function PaydayHero() {
               R300 to R1,000, repaid in one go on payday.
             </p>
             <div className="mt-8 animate-rise [animation-delay:.24s]">
-              <Link href="/apply" className="btn bg-ink px-8 py-3.5 text-base text-night hover:bg-white">
+              <Link href="/apply" data-track="apply_click" data-track-location="hero" className="btn bg-ink px-8 py-3.5 text-base text-night hover:bg-white">
                 Apply now
               </Link>
             </div>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { requireAdmin } from "@/lib/auth";
+import { privateMetadata } from "@/lib/site";
 
 const NAV = [
   { href: "/admin", label: "Overview" },
@@ -8,7 +9,7 @@ const NAV = [
   { href: "/admin/messages", label: "Messages" },
 ];
 
-export const metadata = { title: "Admin", robots: { index: false } };
+export const metadata = privateMetadata("Admin");
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const admin = await requireAdmin();

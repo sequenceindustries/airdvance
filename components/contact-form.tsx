@@ -1,12 +1,17 @@
 "use client";
 
+import { useEffect } from "react";
 import { useFormState } from "react-dom";
+import { track } from "@/lib/analytics";
 import { sendContactMessage } from "@/lib/actions/contact";
 import { Submit } from "./auth-forms";
 import { Alert } from "./ui";
 
 export function ContactForm() {
   const [state, action] = useFormState(sendContactMessage, undefined);
+  useEffect(() => {
+    if (state?.message) track("contact_submitted");
+  }, [state?.message]);
   if (state?.message) return <Alert tone="success">{state.message}</Alert>;
   return (
     <form action={action} className="space-y-4">

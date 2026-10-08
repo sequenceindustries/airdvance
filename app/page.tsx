@@ -5,6 +5,11 @@ import { Check, CtaBand, FaqList } from "@/components/ui";
 import { PRODUCT } from "@/lib/config";
 import { ELIGIBILITY, FAQS, REQUIREMENTS, STEPS } from "@/lib/content";
 import { defaultPayday, todaySA } from "@/lib/dates";
+import { SITE_URL, publicMetadata } from "@/lib/site";
+import { COMPANY } from "@/lib/config";
+import { JsonLd } from "@/components/json-ld";
+
+export const metadata = publicMetadata("/");
 
 const CHARGES: { big: string; name: string; from: string; to: string; ink?: string }[] = [
   { big: "R165", name: "Once-off initiation fee", from: "#FFB020", to: "#FF7A45", ink: "#1F1000" },
@@ -18,6 +23,23 @@ export default function HomePage() {
 
   return (
     <>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              "@id": `${SITE_URL}/#organization`,
+              name: "Airdvance",
+              legalName: COMPANY.legalName,
+              url: SITE_URL,
+              email: COMPANY.email,
+              areaServed: { "@type": "Country", name: "South Africa" },
+            },
+            { "@type": "WebSite", "@id": `${SITE_URL}/#website`, name: "Airdvance", url: SITE_URL, inLanguage: "en-ZA", publisher: { "@id": `${SITE_URL}/#organization` } },
+          ],
+        }}
+      />
       <PaydayHero />
 
 
@@ -27,7 +49,7 @@ export default function HomePage() {
         <div className="container-x relative grid items-center gap-10 lg:grid-cols-[1fr_1.05fr]">
           <div data-reveal>
             <h2 className="text-3xl font-semibold leading-tight sm:text-5xl">See your total first.</h2>
-            <p className="mt-4 max-w-sm text-lg text-ink-muted">What you see is what you repay. No extras.</p>
+            <p className="mt-4 max-w-sm text-lg text-ink-muted">Repay on time and the total you see is all you pay.</p>
           </div>
           <div data-reveal className="relative rounded-[32px] bg-gradient-to-br from-ember/60 via-volt/30 to-berry/50 p-px">
             <div className="rounded-[31px] bg-night-800/95 backdrop-blur">
@@ -47,7 +69,7 @@ export default function HomePage() {
             Details
           </Link>
         </div>
-        <ol data-reveal className="container-x mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 [scrollbar-width:none] lg:grid lg:grid-cols-5 lg:overflow-visible">
+        <ol data-reveal tabIndex={0} aria-label="Steps to get a cash advance" className="container-x mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 [scrollbar-width:none] lg:grid lg:grid-cols-5 lg:overflow-visible">
           {STEPS.map((s, i) => (
             <li key={s.title} className="glass w-[70vw] max-w-xs shrink-0 snap-start p-6 sm:w-72 lg:w-auto">
               <span className="flex h-9 w-9 items-center justify-center rounded-full bg-ember font-display text-sm font-semibold text-night">{i + 1}</span>

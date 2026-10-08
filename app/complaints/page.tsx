@@ -1,13 +1,14 @@
 import { LegalPage } from "@/components/legal-page";
 import { COMPANY } from "@/lib/config";
+import { publicMetadata } from "@/lib/site";
 
-export const metadata = { title: "Complaints" };
+export const metadata = publicMetadata("/complaints");
 
 export default function ComplaintsPage() {
   return (
-    <LegalPage title="Complaints" updated="7 October 2026" intro="If we've got something wrong, we want to fix it quickly and fairly.">
+    <LegalPage title="Complaints" path="/complaints" intro="If we've got something wrong, we want to fix it quickly and fairly.">
       <h2>1. Tell us</h2>
-      <p>Email {COMPANY.complaintsEmail} or use the contact form with the topic "Complaint". Include your name, cellphone number, loan or application reference and what you'd like us to do.</p>
+      <p>Email {COMPANY.complaintsEmail} or use the contact form and start your message with "Complaint". Include your name, cellphone number, loan or application reference and what you'd like us to do.</p>
       <h2>2. What happens next</h2>
       <ul>
         <li>We acknowledge your complaint within 2 business days.</li>

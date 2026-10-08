@@ -4,8 +4,9 @@ import { VerifyForm } from "@/components/auth-forms";
 import { requireUser, safeNext } from "@/lib/auth";
 import { smsEnabled } from "@/lib/messaging";
 import { displayMobile } from "@/lib/sa";
+import { privateMetadata } from "@/lib/site";
 
-export const metadata = { title: "Confirm your number" };
+export const metadata = privateMetadata("Confirm your number");
 
 export default async function VerifyPage({ searchParams }: { searchParams: { next?: string; send?: string } }) {
   const user = await requireUser("/verify");

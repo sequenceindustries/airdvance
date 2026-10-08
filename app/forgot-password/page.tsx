@@ -2,8 +2,9 @@ import Link from "next/link";
 import { AuthShell } from "@/components/auth-shell";
 import { ForgotPasswordForm } from "@/components/auth-forms";
 import { smsEnabled } from "@/lib/messaging";
+import { privateMetadata } from "@/lib/site";
 
-export const metadata = { title: "Reset your password" };
+export const metadata = privateMetadata("Reset your password");
 
 export default function ForgotPasswordPage() {
   const sms = smsEnabled();

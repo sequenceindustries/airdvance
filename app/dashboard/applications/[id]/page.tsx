@@ -8,8 +8,9 @@ import { formatDate, formatDateTime } from "@/lib/dates";
 import { normaliseApplication, type ApplicationRow } from "@/lib/loans";
 import { formatRand } from "@/lib/pricing";
 import { withdrawApplication } from "@/lib/actions/customer";
+import { privateMetadata } from "@/lib/site";
 
-export const metadata = { title: "Application" };
+export const metadata = privateMetadata("Application");
 
 const STAGES = ["Submitted", "Under review", "Decision", "Sign", "Paid out"];
 
@@ -31,7 +32,7 @@ export default async function ApplicationPage({ params, searchParams }: { params
       <Link href="/dashboard" className="text-sm text-ink-muted hover:text-ink">← My account</Link>
       {searchParams.submitted && (
         <Alert tone="success">
-          Application received. We'll review it and let you know by SMS and on this page — we aim to respond within one business day.
+          Application received. We'll review it and let you know on this page — we aim to respond within one business day.
         </Alert>
       )}
       <div className="glass p-6">

@@ -7,16 +7,16 @@ import { SiteFooter } from "@/components/site-footer";
 import { RevealObserver } from "@/components/motion";
 import { Analytics } from "@/components/analytics";
 import { getCurrentUser } from "@/lib/auth";
-import { BRAND } from "@/lib/config";
+import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.APP_URL ?? `https://${BRAND.domain}`),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Airdvance — Cash advances from R300 to R1,000",
+    default: "Airdvance — Cash advance before payday",
     template: "%s · Airdvance",
   },
-  description:
-    "Borrow R300 to R1,000 until payday, entirely online. See every rand of the cost before you apply. Registered credit provider. Approval subject to an affordability assessment.",
+  applicationName: "Airdvance",
+  formatDetection: { telephone: false },
   openGraph: { siteName: "Airdvance", locale: "en_ZA", type: "website" },
 };
 

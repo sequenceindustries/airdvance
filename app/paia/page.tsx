@@ -1,11 +1,12 @@
 import { LegalPage } from "@/components/legal-page";
 import { COMPANY } from "@/lib/config";
+import { publicMetadata } from "@/lib/site";
 
-export const metadata = { title: "PAIA manual" };
+export const metadata = publicMetadata("/paia");
 
 export default function PaiaPage() {
   return (
-    <LegalPage title="PAIA manual" updated="7 October 2026" intro="Summary of how to request access to records held by Airdvance under the Promotion of Access to Information Act 2 of 2000.">
+    <LegalPage title="PAIA manual" path="/paia" intro="Summary of how to request access to records held by Airdvance under the Promotion of Access to Information Act 2 of 2000.">
       <h2>1. Contact details</h2>
       <ul>
         <li>Private body: {COMPANY.legalName}, trading as Airdvance</li>

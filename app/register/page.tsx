@@ -3,8 +3,9 @@ import { redirect } from "next/navigation";
 import { AuthShell } from "@/components/auth-shell";
 import { RegisterForm } from "@/components/auth-forms";
 import { getCurrentUser } from "@/lib/auth";
+import { privateMetadata } from "@/lib/site";
 
-export const metadata = { title: "Create an account" };
+export const metadata = privateMetadata("Create an account");
 
 export default async function RegisterPage({ searchParams }: { searchParams: { next?: string } }) {
   if (await getCurrentUser()) redirect("/dashboard");

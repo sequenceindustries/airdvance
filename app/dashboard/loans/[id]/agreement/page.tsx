@@ -7,8 +7,9 @@ import { formatDateTime } from "@/lib/dates";
 import { formatAddress, normaliseApplication, normaliseLoan, type ApplicationRow, type LoanRow } from "@/lib/loans";
 import { displayMobile } from "@/lib/sa";
 import { PrintButton } from "./print-button";
+import { privateMetadata } from "@/lib/site";
 
-export const metadata = { title: "Credit agreement" };
+export const metadata = privateMetadata("Credit agreement");
 
 export default async function AgreementPage({ params }: { params: { id: string } }) {
   const user = await requireVerifiedUser();

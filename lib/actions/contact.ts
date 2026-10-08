@@ -24,5 +24,5 @@ export async function sendContactMessage(_prev: FormState, form: FormData): Prom
     d.topic,
     d.message,
   ]);
-  return { message: "Thanks — we've received your message and will reply within one business day." };
+  return { message: "Thanks — we've received your message and aim to reply within one business day." };
 }

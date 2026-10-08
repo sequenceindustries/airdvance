@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { LegalPage } from "@/components/legal-page";
+import { publicMetadata } from "@/lib/site";
 
-export const metadata = { title: "Responsible lending" };
+export const metadata = publicMetadata("/responsible-lending");
 
 export default function ResponsibleLendingPage() {
   return (
-    <LegalPage title="Responsible lending" updated="7 October 2026" intro="A short-term loan can help with a one-off gap. It isn't a solution for ongoing money trouble, and we'd rather decline than lend you money you can't repay.">
+    <LegalPage title="Responsible lending" path="/responsible-lending" intro="A short-term loan can help with a one-off gap. It isn't a solution for ongoing money trouble, and we'd rather decline than lend you money you can't repay.">
       <h2>Before you borrow</h2>
       <ul>
         <li>Borrow only for something essential, and only what you need.</li>

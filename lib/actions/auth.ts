@@ -1,5 +1,6 @@
 "use server";
 
+import { flashEvent } from "@/lib/analytics-server";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { one, query } from "@/lib/db";
@@ -51,6 +52,7 @@ export async function register(_prev: FormState, form: FormData): Promise<FormSt
   );
   await audit(null, { actorId: user!.id, action: "USER_REGISTERED", entity: "user", entityId: user!.id, ip: clientIp() });
   await createSession(user!.id);
+  flashEvent("sign_up");
   const next = safeNext(parsed.data.next, "/apply");
   if (!smsEnabled()) redirect(next);
   redirect(`/verify?next=${encodeURIComponent(next)}&send=1`);
@@ -83,6 +85,7 @@ export async function login(_prev: FormState, form: FormData): Promise<FormState
   await audit(null, { actorId: user.id, action: "LOGIN", entity: "user", entityId: user.id, ip: clientIp() });
 
   if (user.role === "ADMIN") redirect("/admin");
+  flashEvent("login");
   const next = safeNext(form.get("next"), "/dashboard");
   if (smsEnabled() && !user.mobile_verified_at) redirect(`/verify?next=${encodeURIComponent(next)}&send=1`);
   redirect(next);
