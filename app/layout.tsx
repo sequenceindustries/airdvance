@@ -9,7 +9,7 @@ import { Analytics } from "@/components/analytics";
 import { getCurrentUser } from "@/lib/auth";
 import { SITE_URL } from "@/lib/site";
 
-export const metadata: Metadata = {
+const baseMetadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
     default: "Airdvance — Cash advance before payday",
@@ -19,6 +19,15 @@ export const metadata: Metadata = {
   formatDetection: { telephone: false },
   openGraph: { siteName: "Airdvance", locale: "en_ZA", type: "website" },
 };
+
+/**
+ * Read at request time so Search Console's HTML-tag verification can be switched on with the
+ * GOOGLE_SITE_VERIFICATION Railway variable (the content="" value Google gives you), no rebuild.
+ */
+export function generateMetadata(): Metadata {
+  const google = process.env.GOOGLE_SITE_VERIFICATION?.trim();
+  return google ? { ...baseMetadata, verification: { google } } : baseMetadata;
+}
 
 export const viewport: Viewport = {
   themeColor: "#000000",
