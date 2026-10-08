@@ -41,7 +41,7 @@ export default function PrivacyPage() {
       <p>You may ask what information we hold about you, ask us to correct or delete it (where the law allows), object to processing, and withdraw marketing consent. Use our <Link href="/contact">contact form</Link> (topic "Privacy request") or email {COMPANY.privacyEmail}. You may complain to the Information Regulator at www.inforegulator.org.za. See also our <Link href="/paia">PAIA manual</Link>.</p>
 
       <h2>Cookies</h2>
-      <p>We use one essential cookie to keep you logged in. We don't use advertising cookies.</p>
+      <p>We use one essential cookie to keep you logged in, and Google Analytics cookies to see how the site is used (pages visited, device type, rough location). We don't use advertising cookies, and we never send your application details to Google.</p>
     </LegalPage>
   );
 }

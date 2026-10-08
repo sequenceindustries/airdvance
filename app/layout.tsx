@@ -5,6 +5,7 @@ import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { RevealObserver } from "@/components/motion";
+import { Analytics } from "@/components/analytics";
 import { getCurrentUser } from "@/lib/auth";
 import { BRAND } from "@/lib/config";
 
@@ -41,6 +42,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         </main>
         <SiteFooter />
         <RevealObserver />
+        <Analytics />
       </body>
     </html>
   );
