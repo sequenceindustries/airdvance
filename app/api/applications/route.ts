@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { clientIp, getCurrentUser } from "@/lib/auth";
+import { smsEnabled } from "@/lib/messaging";
 import { ApplicationSchema } from "@/lib/application-schema";
 import { assessAffordability } from "@/lib/affordability";
 import { encrypt } from "@/lib/crypto";
@@ -20,7 +21,7 @@ function fail(error: string, status = 400) {
 export async function POST(req: Request) {
   const user = await getCurrentUser();
   if (!user) return fail("Your session has expired. Please log in again.", 401);
-  if (!user.mobile_verified_at) return fail("Please confirm your cellphone number first.", 403);
+  if (smsEnabled() && !user.mobile_verified_at) return fail("Please confirm your cellphone number first.", 403);
   if (user.role !== "CUSTOMER") return fail("Admin accounts can't apply for loans.", 403);
 
   let form: FormData;

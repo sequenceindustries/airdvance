@@ -47,6 +47,11 @@ export function messaging(): MessagingProvider {
   return new MockMessaging();
 }
 
+/** True once a real SMS/WhatsApp provider is configured. Until then, no PIN steps. */
+export function smsEnabled() {
+  return messaging().name !== "mock";
+}
+
 export function isDemoMessaging() {
   return messaging().name === "mock";
 }

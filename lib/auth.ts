@@ -3,6 +3,7 @@ import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { one, query } from "./db";
 import { randomToken, sha256 } from "./crypto";
+import { smsEnabled } from "./messaging";
 
 export const SESSION_COOKIE = "ad_session";
 const SESSION_DAYS = 14;
@@ -64,7 +65,7 @@ export async function requireUser(next?: string): Promise<User> {
 /** Customers must verify their mobile number before applying or borrowing. */
 export async function requireVerifiedUser(next?: string): Promise<User> {
   const user = await requireUser(next);
-  if (!user.mobile_verified_at) redirect(`/verify${next ? `?next=${encodeURIComponent(next)}` : ""}`);
+  if (smsEnabled() && !user.mobile_verified_at) redirect(`/verify${next ? `?next=${encodeURIComponent(next)}` : ""}`);
   return user;
 }
 

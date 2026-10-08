@@ -6,7 +6,7 @@ import { one, query } from "@/lib/db";
 import { hashPassword, verifyPassword } from "@/lib/crypto";
 import { clientIp, createSession, destroySession, getCurrentUser, safeNext } from "@/lib/auth";
 import { sendOtp, verifyOtp } from "@/lib/otp";
-import { isDemoMessaging } from "@/lib/messaging";
+import { isDemoMessaging, smsEnabled } from "@/lib/messaging";
 import { audit } from "@/lib/records";
 import { normaliseMobile } from "@/lib/sa";
 
@@ -52,6 +52,7 @@ export async function register(_prev: FormState, form: FormData): Promise<FormSt
   await audit(null, { actorId: user!.id, action: "USER_REGISTERED", entity: "user", entityId: user!.id, ip: clientIp() });
   await createSession(user!.id);
   const next = safeNext(parsed.data.next, "/apply");
+  if (!smsEnabled()) redirect(next);
   redirect(`/verify?next=${encodeURIComponent(next)}&send=1`);
 }
 
@@ -83,7 +84,7 @@ export async function login(_prev: FormState, form: FormData): Promise<FormState
 
   if (user.role === "ADMIN") redirect("/admin");
   const next = safeNext(form.get("next"), "/dashboard");
-  if (!user.mobile_verified_at) redirect(`/verify?next=${encodeURIComponent(next)}&send=1`);
+  if (smsEnabled() && !user.mobile_verified_at) redirect(`/verify?next=${encodeURIComponent(next)}&send=1`);
   redirect(next);
 }
 

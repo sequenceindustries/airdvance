@@ -154,15 +154,10 @@ export async function disburseLoan(_prev: FormState, form: FormData): Promise<Fo
   if (isQuoteError(final)) return { error: final.error };
   if (final.totalRepayable > loan.offer_quote.totalRepayable) return { error: "Re-priced total would exceed the signed offer." };
 
-  const payout = await payments().payout({
-    loanReference: loan.reference,
-    accountHolder: app.bank.accountHolder,
-    bankName: app.bank.bankName,
-    branchCode: app.bank.branchCode,
-    accountNumber: decrypt(app.bank_account_enc),
-    amount: Number(loan.principal),
-  });
-  if (!payout.ok) return { error: `Payout failed: ${payout.message ?? "unknown error"}` };
+  // Manual payouts: the admin pays by EFT from the bank and records the reference here.
+  const reference = String(form.get("reference") ?? "").trim();
+  if (reference.length < 3) return { error: "Enter the bank payment reference for this payout." };
+  const payout = { reference };
 
   await tx(async (c) => {
     await c.query(

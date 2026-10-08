@@ -38,7 +38,7 @@ const config: Config = {
         rose: { DEFAULT: "#FF6B85", 300: "#FF9AAB" },
       },
       fontFamily: {
-        display: ["'Unbounded Variable'", "Unbounded", "system-ui", "sans-serif"],
+        display: ["'Montserrat Variable'", "Montserrat", "system-ui", "sans-serif"],
         body: ["'Inter Variable'", "Inter", "system-ui", "sans-serif"],
       },
       borderRadius: {

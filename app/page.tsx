@@ -1,12 +1,10 @@
 import Link from "next/link";
 import { Calculator } from "@/components/calculator";
 import { PaydayHero } from "@/components/payday-hero";
-import { POSTERS, Poster } from "@/components/poster";
 import { Check, CtaBand, FaqList } from "@/components/ui";
 import { PRODUCT } from "@/lib/config";
 import { ELIGIBILITY, FAQS, REQUIREMENTS, STEPS } from "@/lib/content";
-import { addDays, defaultPayday, todaySA } from "@/lib/dates";
-import { formatRand, representativeExamples } from "@/lib/pricing";
+import { defaultPayday, todaySA } from "@/lib/dates";
 
 const CHARGES: { big: string; name: string; from: string; to: string; ink?: string }[] = [
   { big: "R165", name: "Once-off initiation fee", from: "#FFB020", to: "#FF7A45", ink: "#1F1000" },
@@ -17,25 +15,11 @@ const CHARGES: { big: string; name: string; from: string; to: string; ink?: stri
 export default function HomePage() {
   const today = todaySA();
   const due = defaultPayday(today, PRODUCT.minDays, PRODUCT.maxDays);
-  const r1000 = representativeExamples(today, addDays(today, 30))[3];
 
   return (
     <>
-      <PaydayHero exampleTotal={formatRand(r1000.totalRepayable)} />
+      <PaydayHero />
 
-      {/* Uses */}
-      <section aria-labelledby="uses" className="py-16 sm:py-24">
-        <h2 id="uses" data-reveal className="container-x max-w-3xl text-3xl font-semibold leading-tight sm:text-5xl">
-          For bills that can&rsquo;t wait for payday.
-        </h2>
-        <div className="group relative mt-10 overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_8%,black_92%,transparent)]">
-          <div className="flex w-max animate-marquee gap-4 group-hover:[animation-play-state:paused] motion-reduce:animate-none">
-            {[...POSTERS, ...POSTERS].map((p, i) => (
-              <Poster key={`${p.key}-${i}`} spec={p} className="w-44 shrink-0 sm:w-56" />
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Calculator */}
       <section id="calculator" className="relative scroll-mt-16 overflow-hidden py-16 sm:py-24">

@@ -3,11 +3,10 @@ import { notFound } from "next/navigation";
 import { ActionForm } from "@/components/action-form";
 import { AgreementTerms } from "@/components/agreement";
 import { Alert, StatusBadge } from "@/components/ui";
-import { cancelLoan, collectDebitOrder, disburseLoan, recordRepayment } from "@/lib/actions/admin";
+import { cancelLoan, disburseLoan, recordRepayment } from "@/lib/actions/admin";
 import { one, query } from "@/lib/db";
 import { formatDate, formatDateTime } from "@/lib/dates";
 import { formatAddress, loanBalance, normaliseApplication, normaliseLoan, type ApplicationRow, type LoanRow } from "@/lib/loans";
-import { isDemoPayments } from "@/lib/payments";
 import { formatRand } from "@/lib/pricing";
 import { displayMobile } from "@/lib/sa";
 
@@ -34,7 +33,6 @@ export default async function AdminLoan({ params, searchParams }: { params: { id
   );
   const bal = loanBalance(loan);
   const quote = loan.final_quote ?? loan.offer_quote;
-  const demo = isDemoPayments();
 
   return (
     <div className="space-y-6">
@@ -136,13 +134,15 @@ export default async function AdminLoan({ params, searchParams }: { params: { id
           )}
           {loan.status === "ACCEPTED" && (
             <section className="glass border-ember/40 p-5">
-              <h2 className="font-semibold">Pay out</h2>
+              <h2 className="font-semibold">Mark as paid out</h2>
               <p className="mt-2 text-sm text-ink-muted">
-                Pays {formatRand(Number(loan.principal))} to {app.bank.bankName} ••••{app.bank.last4} and re-prices from today to the due date.
-                {demo && " Demo mode: no money moves."}
+                Pay {formatRand(Number(loan.principal))} by EFT to {app.bank.bankName} ••••{app.bank.last4} (reveal the full number on the application),
+                then record it here. Fees are re-priced from today.
               </p>
               <div className="mt-4">
-                <ActionForm action={disburseLoan} hidden={{ loanId: loan.id }} submit="Pay out now" confirm={`Pay ${formatRand(Number(loan.principal))} to ${raw.full_name}?`} />
+                <ActionForm action={disburseLoan} hidden={{ loanId: loan.id }} submit="Mark as paid out" confirm={`Confirm you've paid ${formatRand(Number(loan.principal))} to ${raw.full_name}?`}>
+                  <input name="reference" className="input" placeholder="Bank payment reference" />
+                </ActionForm>
               </div>
             </section>
           )}
@@ -158,13 +158,6 @@ export default async function AdminLoan({ params, searchParams }: { params: { id
           )}
           {(loan.status === "ACTIVE" || loan.status === "ARREARS") && bal && (
             <>
-              <section className="glass p-5">
-                <h2 className="font-semibold">Collect by DebiCheck</h2>
-                <p className="mt-2 text-sm text-ink-muted">Collects the outstanding {formatRand(bal.outstanding)} on mandate {loan.mandate_reference}.{demo && " Demo mode: no money moves."}</p>
-                <div className="mt-4">
-                  <ActionForm action={collectDebitOrder} hidden={{ loanId: loan.id }} submit="Run collection" submitClass="btn-ghost" confirm={`Collect ${formatRand(bal.outstanding)}?`} />
-                </div>
-              </section>
               <section className="glass p-5">
                 <h2 className="font-semibold">Record a payment</h2>
                 <div className="mt-4">

@@ -39,8 +39,6 @@ export default function ContactPage() {
             <p className="mt-1">
               {COMPANY.complaintsEmail} — see our <Link href="/complaints" className="text-ember-300 underline">complaints process</Link>.
             </p>
-            <p className="mt-4 font-semibold text-ink">Address</p>
-            <p className="mt-1">{COMPANY.physicalAddress}</p>
           </div>
           <div className="glass p-5 text-sm leading-relaxed text-ink-muted">
             <p className="font-semibold text-ink">Stay safe</p>

@@ -6,7 +6,7 @@ import { clientIp, requireVerifiedUser } from "@/lib/auth";
 import { decrypt } from "@/lib/crypto";
 import { one, query, tx } from "@/lib/db";
 import { normaliseApplication, normaliseLoan, type ApplicationRow, type LoanRow } from "@/lib/loans";
-import { payments } from "@/lib/payments";
+import { isDemoPayments, payments } from "@/lib/payments";
 import { formatRand } from "@/lib/pricing";
 import { audit, notify } from "@/lib/records";
 import type { FormState } from "./auth";
@@ -30,7 +30,8 @@ export async function acceptOffer(_prev: FormState, form: FormData): Promise<For
   }
 
   const app = normaliseApplication((await one<ApplicationRow>("select * from applications where id = $1", [loan.application_id]))!);
-  const mandate = await payments().createMandate({
+  // Debit orders are set up manually for now; keep the seam for a future provider.
+  const mandate = isDemoPayments() ? { ok: true, reference: "MANUAL" } : await payments().createMandate({
     loanReference: loan.reference,
     accountHolder: app.bank.accountHolder,
     bankName: app.bank.bankName,

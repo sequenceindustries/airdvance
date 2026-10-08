@@ -1,10 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import "@fontsource-variable/inter";
-import "@fontsource-variable/unbounded";
+import "@fontsource-variable/montserrat";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { DemoBanner } from "@/components/demo-banner";
 import { RevealObserver } from "@/components/motion";
 import { getCurrentUser } from "@/lib/auth";
 import { BRAND } from "@/lib/config";
@@ -36,7 +35,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-ink focus:px-3 focus:py-2 focus:text-night">
           Skip to content
         </a>
-        <DemoBanner />
         <SiteHeader user={user ? { name: user.full_name, role: user.role } : null} />
         <main id="main" className="flex-1">
           {children}
